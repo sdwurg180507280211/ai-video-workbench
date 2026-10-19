@@ -1,0 +1,637 @@
+{
+ "updated": "2026-10-19",
+ "srcTypes": {
+  "实测": "我们自己跑过、有记录",
+  "官方": "官方文档或官方页面",
+  "二手": "第三方文章或个人整理，可能过时",
+  "推断": "没实测，按原理推出来的",
+  "待核实": "只有零散说法，别当真"
+ },
+ "card": {
+  "name": "纯 Opus 写代码",
+  "fg": "#2f4a66",
+  "lt": "#3d6fe0",
+  "say": "画面是网页逐帧渲染的 MG 动画，配乐是代码合成的，不调视频模型。",
+  "cost": "≈ ¥0：只有 Claude 用量；旁白在豆包免费额度内",
+  "time": "一支 1 分钟的片约半天（含试错），整片渲染 13 分钟",
+  "models": "Claude Opus 5.5 · 豆包语音 2.0",
+  "fit": "技术解说、知识科普、数据故事；以后试睡前故事",
+  "skill": "opus-code-video"
+ },
+ "steps": [
+  {
+   "key": "script",
+   "short": "节拍和旁白稿",
+   "name": "定题和旁白",
+   "icon": "text",
+   "fg": "#2f62b0",
+   "lt": "#5b8be0",
+   "tint": "#d7e3f7",
+   "out": "选题、分章节的旁白稿",
+   "tool": "Claude Opus 5.5",
+   "cost": "不花钱",
+   "done": true,
+   "try": "script",
+   "how": [
+    {
+     "who": "你",
+     "do": "定题材、发在哪、横屏还是竖屏、要不要旁白"
+    },
+    {
+     "who": "Claude",
+     "do": "拆成 6 章：钩子、6 个步骤、总览、高潮、结尾，每章 6～10 秒",
+     "tip": "钩子在 0.5 秒内出现"
+    },
+    {
+     "who": "Claude",
+     "do": "写旁白稿表格：时间、画面、旁白，每秒约 4 个字",
+     "src": {
+      "type": "实测",
+      "title": "10 句 270 字，按 4 字/秒估",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "你",
+     "do": "确认旁白稿；台词改动都要你点头"
+    },
+    {
+     "who": "Claude",
+     "do": "核对事实：示意数字标「示例」，网址和 IP 用文档专用的 example.com、203.0.113.10"
+    }
+   ],
+   "alts": [
+    {
+     "name": "让另一个 AI 打分再改",
+     "who": "mg-styles-15 rubric.md",
+     "what": "成片交给另一个模型按评审标准打分，贴回来改一轮；原作者每支片改了两轮。",
+     "where": "接在渲染之后，回到画面这一步",
+     "price": "只有模型用量",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "官方",
+       "title": "GitHub Vincentwei1021/mg-styles-15（许可证与说明）",
+       "url": "https://github.com/Vincentwei1021/mg-styles-15",
+       "date": "2026-10-19"
+      }
+     ]
+    },
+    {
+     "name": "改编古典名篇",
+     "who": "参考《南柯一梦》",
+     "what": "唐传奇、寓言这类老故事结构完整、没有版权问题，3～5 分钟刚好讲完；适合以后做睡前故事。",
+     "where": "替换「定题」",
+     "price": "不花钱",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "实测",
+       "title": "拆解《南柯一梦》（Opus + Muse 制作）",
+       "date": "2026-10-19"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "cues",
+   "short": "cues.json",
+   "name": "节拍表",
+   "icon": "clips",
+   "fg": "#3a6aa8",
+   "lt": "#6a94d0",
+   "tint": "#d8e2f0",
+   "out": "film/cues_base.json：每个事件发生在第几秒",
+   "tool": "Claude",
+   "cost": "不花钱",
+   "done": true,
+   "try": "cues",
+   "how": [
+    {
+     "who": "Claude",
+     "do": "把每个动作、砸点、转场写成时间点，画面和配乐都只读这一份",
+     "tip": "代码里不写死秒数"
+    },
+    {
+     "who": "脚本",
+     "do": "有旁白时按逐字时间戳把装不下的段拉长，生成 cues.json 和字幕",
+     "src": {
+      "type": "实测",
+      "title": "retime.py：60 → 67.5 秒，36 条字幕",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "Claude",
+     "do": "关键数字用锚点字钉住：「四百四十一」的「四」正好落在 441 砸下那一帧"
+    }
+   ],
+   "alts": [
+    {
+     "name": "画面不动，配音变速去凑",
+     "who": "反例",
+     "what": "整段旁白加速塞进原时长，听起来赶；只在差得不多时整体快 10% 以内。",
+     "where": "替换「以配音为准重排」",
+     "price": "不花钱",
+     "cn": true,
+     "api": true,
+     "bad": true,
+     "src": [
+      {
+       "type": "推断",
+       "title": "按配音节奏的经验"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "visual",
+   "short": "index.html",
+   "name": "画面代码",
+   "icon": "code",
+   "fg": "#ff5a36",
+   "lt": "#ff8a5c",
+   "tint": "#ffd9cc",
+   "core": true,
+   "out": "一个网页：renderAt(t) 画出任意时刻",
+   "tool": "Opus 5.5 写 SVG + JS",
+   "cost": "不花钱",
+   "done": true,
+   "try": "visual",
+   "how": [
+    {
+     "who": "Claude",
+     "do": "按风格写画面：冷灰点阵大画布、白描边贴纸、镜头平移缩放",
+     "src": {
+      "type": "实测",
+      "title": "贴纸科普风格，约 800 行",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "脚本",
+     "do": "先渲染 6～10 张关键帧",
+     "tip": "11 张只要 6 秒"
+    },
+    {
+     "who": "Claude",
+     "do": "逐张看图改：压线、出安全区、字太小、标题被挡",
+     "src": {
+      "type": "实测",
+      "title": "关键帧里发现并改掉 6 处问题",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "Claude",
+     "do": "下一章的元素在镜头飞到 42% 时就弹出，落地不空",
+     "src": {
+      "type": "实测",
+      "title": "修掉每次换章半秒多的空画布",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "你",
+     "do": "看关键帧和成片，说哪一秒不对"
+    }
+   ],
+   "alts": [
+    {
+     "name": "claude-code-video-toolkit",
+     "who": "digitalsamba，MIT",
+     "what": "Remotion 做画面，集成 Qwen3-TTS 配音和 ACE-Step 作曲，有 9:16 概念解说样例。",
+     "where": "替换整个画面加配乐流程",
+     "price": "开源免费；云 GPU 另算",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "二手",
+       "title": "个人研究文档（personal-workbench/data，2026-10-19）：综合制作首批验证对象",
+       "url": "https://github.com/sdwurg180507280211/personal-workbench/blob/main/data/Opus5.5%E5%85%A8%E6%B5%81%E7%A8%8B%E7%9F%AD%E8%A7%86%E9%A2%91%E5%88%B6%E4%BD%9C_GitHub%E9%A1%B9%E7%9B%AE%E7%A0%94%E7%A9%B6.md",
+       "date": "2026-10-19"
+      }
+     ]
+    },
+    {
+     "name": "HyperFrames",
+     "who": "HeyGen，Apache-2.0",
+     "what": "HTML、CSS、媒体按时间渲染成视频，适合动态字体、图表、界面和 2.5D 运镜。",
+     "where": "替换渲染器",
+     "price": "开源免费",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "二手",
+       "title": "个人研究文档（personal-workbench/data，2026-10-19）：热门的 HTML 视频底座",
+       "url": "https://github.com/sdwurg180507280211/personal-workbench/blob/main/data/Opus5.5%E5%85%A8%E6%B5%81%E7%A8%8B%E7%9F%AD%E8%A7%86%E9%A2%91%E5%88%B6%E4%BD%9C_GitHub%E9%A1%B9%E7%9B%AE%E7%A0%94%E7%A9%B6.md",
+       "date": "2026-10-19"
+      }
+     ]
+    },
+    {
+     "name": "lemo-opuscar",
+     "who": "MIT，51 种风格",
+     "what": "纯代码画风合集，带导演方法、TTS、代码作曲和混音的技术指南。",
+     "where": "换风格时参考",
+     "price": "开源免费",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "二手",
+       "title": "个人研究文档（personal-workbench/data，2026-10-19）：最贴近纯代码动画",
+       "url": "https://github.com/sdwurg180507280211/personal-workbench/blob/main/data/Opus5.5%E5%85%A8%E6%B5%81%E7%A8%8B%E7%9F%AD%E8%A7%86%E9%A2%91%E5%88%B6%E4%BD%9C_GitHub%E9%A1%B9%E7%9B%AE%E7%A0%94%E7%A9%B6.md",
+       "date": "2026-10-19"
+      }
+     ]
+    },
+    {
+     "name": "插几个生成视频镜头",
+     "who": "Seedance 等",
+     "what": "抽象比喻、实拍感空镜用视频模型生成，再剪进代码动画。",
+     "where": "画面里点缀",
+     "price": "Seedance 2.5 720p 约 ¥1.51/秒",
+     "cn": true,
+     "api": true,
+     "note": "这一类的优势就是不花生成费，能不用就不用",
+     "src": [
+      {
+       "type": "官方",
+       "title": "火山方舟价格（seedance-short-drama 摘录）"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "music",
+   "short": "bed.wav",
+   "name": "配乐音效",
+   "icon": "music",
+   "fg": "#6a4fb0",
+   "lt": "#9a80e0",
+   "tint": "#e3dcf5",
+   "out": "按节拍合成的配乐和音效",
+   "tool": "mgaudio（代码合成）",
+   "cost": "不花钱",
+   "done": true,
+   "try": "music",
+   "how": [
+    {
+     "who": "Claude",
+     "do": "选配方：explainer 马林巴科技解说床，112 bpm、D 大调"
+    },
+    {
+     "who": "Claude",
+     "do": "音效按节拍放：章节弹出、消息往返、印章、贴纸、高潮 riser 加砸下",
+     "tip": "砸下前抽空 3 帧"
+    },
+    {
+     "who": "脚本",
+     "do": "说话处配乐压低 8 dB，整体 -14 LUFS",
+     "src": {
+      "type": "实测",
+      "title": "60 秒配乐约 1.5 分钟合成完",
+      "date": "2026-10-19"
+     }
+    }
+   ],
+   "alts": [
+    {
+     "name": "ACE-Step 1.5",
+     "who": "开源音乐模型，代码 MIT",
+     "what": "按情绪、速度、配器生成背景音乐；不同型号显存需求差很多。",
+     "where": "替换代码配乐",
+     "price": "开源；要 GPU",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "二手",
+       "title": "个人研究文档（personal-workbench/data，2026-10-19）：配乐路线",
+       "url": "https://github.com/sdwurg180507280211/personal-workbench/blob/main/data/Opus5.5%E5%85%A8%E6%B5%81%E7%A8%8B%E7%9F%AD%E8%A7%86%E9%A2%91%E5%88%B6%E4%BD%9C_GitHub%E9%A1%B9%E7%9B%AE%E7%A0%94%E7%A9%B6.md",
+       "date": "2026-10-19"
+      }
+     ]
+    },
+    {
+     "name": "免费曲库",
+     "who": "CC0 / 可商用曲库",
+     "what": "挑一首现成的，Claude 按节拍剪辑对点。",
+     "where": "替换配乐，音效仍用代码",
+     "price": "免费",
+     "cn": true,
+     "api": false,
+     "src": [
+      {
+       "type": "推断",
+       "title": "按 seedance-short-drama 配乐计划"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "voice",
+   "short": "旁白 + 字幕",
+   "name": "配音和字幕",
+   "icon": "voice",
+   "fg": "#1f8a7a",
+   "lt": "#44b8a4",
+   "tint": "#d0eee8",
+   "out": "每句一条 mp3 + 逐字时间戳 + 字幕",
+   "tool": "豆包语音 2.0「萌丫头」",
+   "cost": "免费额度内",
+   "done": true,
+   "try": "voice",
+   "how": [
+    {
+     "who": "Claude",
+     "do": "同一段 66 字用 9 个音色试音，报每段时长",
+     "src": {
+      "type": "实测",
+      "title": "8～21 秒不等",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "你",
+     "do": "听试音选音色",
+     "tip": "选了女孩声「萌丫头」"
+    },
+    {
+     "who": "脚本",
+     "do": "逐句合成，拿回逐字时间戳",
+     "src": {
+      "type": "官方",
+      "title": "豆包语音 V3 异步接口，enable_timestamp",
+      "url": "https://www.volcengine.com/docs/6561/1257584",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "脚本",
+     "do": "按标点切字幕，「点 com」显示成 .com，「四百四十一毫秒」显示成 441 毫秒"
+    },
+    {
+     "who": "Claude",
+     "do": "删掉和旁白重复的画面说明，给底部字幕让位"
+    }
+   ],
+   "alts": [
+    {
+     "name": "CosyVoice",
+     "who": "阿里通义，Apache-2.0",
+     "what": "国产开源 TTS 第一梯队，中文好；Intel Mac 上 PyTorch 新版装不上，没实测。",
+     "where": "替换豆包，免费",
+     "price": "开源免费",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "官方",
+       "title": "GitHub FunAudioLLM/CosyVoice（许可证与说明）",
+       "url": "https://github.com/FunAudioLLM/CosyVoice",
+       "date": "2026-10-19"
+      }
+     ]
+    },
+    {
+     "name": "Qwen3-TTS",
+     "who": "阿里通义，代码 Apache-2.0",
+     "what": "支持设计音色和声音克隆；权重许可以模型页为准。",
+     "where": "替换豆包",
+     "price": "开源免费",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "官方",
+       "title": "GitHub QwenLM/Qwen3-TTS（许可证与说明）",
+       "url": "https://github.com/QwenLM/Qwen3-TTS",
+       "date": "2026-10-19"
+      }
+     ]
+    },
+    {
+     "name": "Kokoro / MeloTTS",
+     "who": "Apache-2.0 / MIT",
+     "what": "小模型，CPU 就能跑，但中文偏机械。",
+     "where": "快速出一版对节奏",
+     "price": "开源免费",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "官方",
+       "title": "GitHub hexgrad/kokoro（许可证与说明）",
+       "url": "https://github.com/hexgrad/kokoro",
+       "date": "2026-10-19"
+      },
+      {
+       "type": "官方",
+       "title": "GitHub myshell-ai/MeloTTS（许可证与说明）",
+       "url": "https://github.com/myshell-ai/MeloTTS",
+       "date": "2026-10-19"
+      }
+     ]
+    },
+    {
+     "name": "F5-TTS、ChatTTS",
+     "who": "权重 CC-BY-NC",
+     "what": "中文效果好，但模型权重不能商用。",
+     "where": "不建议用在要发布的片子",
+     "price": "开源",
+     "cn": true,
+     "api": true,
+     "bad": true,
+     "src": [
+      {
+       "type": "官方",
+       "title": "GitHub SWivid/F5-TTS（许可证与说明）",
+       "url": "https://github.com/SWivid/F5-TTS",
+       "date": "2026-10-19"
+      },
+      {
+       "type": "官方",
+       "title": "GitHub 2noise/ChatTTS（许可证与说明）",
+       "url": "https://github.com/2noise/ChatTTS",
+       "date": "2026-10-19"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "render",
+   "short": "mp4",
+   "name": "渲染质检",
+   "icon": "film",
+   "fg": "#263646",
+   "lt": "#5e6e7e",
+   "tint": "#dde3ea",
+   "out": "1920×1080 30fps 成片",
+   "tool": "无头 Chrome + ffmpeg",
+   "cost": "不花钱",
+   "done": true,
+   "try": "render",
+   "how": [
+    {
+     "who": "脚本",
+     "do": "无头 Chrome 逐帧截图，ffmpeg 合成",
+     "src": {
+      "type": "实测",
+      "title": "8 次采样运动模糊、4 路并行，67 秒片约 13 分钟",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "Claude",
+     "do": "运动模糊要 8 次采样",
+     "tip": "3 次会出三重叠影",
+     "src": {
+      "type": "实测",
+      "title": "v1 第一次渲染时踩到",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "脚本",
+     "do": "qc.py 查时长、帧数、响度、峰值、黑帧",
+     "src": {
+      "type": "实测",
+      "title": "v2：67.5 秒、-14.0 LUFS、峰值 -1.6",
+      "date": "2026-10-19"
+     }
+    },
+    {
+     "who": "Claude",
+     "do": "每 2 秒抽一帧看节奏，自评打分，写出最弱的三点"
+    }
+   ],
+   "alts": [
+    {
+     "name": "不加运动模糊",
+     "who": "省时间",
+     "what": "约 5 分钟出片；快速运镜会有点跳。",
+     "where": "预览和改片时用",
+     "price": "不花钱",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "实测",
+       "title": "v1 无模糊渲染 4 分 43 秒",
+       "date": "2026-10-19"
+      }
+     ]
+    },
+    {
+     "name": "Remotion",
+     "who": "React 视频框架",
+     "what": "组件化写视频，生态大；公司使用另有许可规则。",
+     "where": "替换渲染器",
+     "price": "个人免费，公司看许可",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "二手",
+       "title": "个人研究文档（personal-workbench/data，2026-10-19）：Remotion 许可提醒",
+       "url": "https://github.com/sdwurg180507280211/personal-workbench/blob/main/data/Opus5.5%E5%85%A8%E6%B5%81%E7%A8%8B%E7%9F%AD%E8%A7%86%E9%A2%91%E5%88%B6%E4%BD%9C_GitHub%E9%A1%B9%E7%9B%AE%E7%A0%94%E7%A9%B6.md",
+       "date": "2026-10-19"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "publish",
+   "short": "封面 + 标题",
+   "name": "封面发布",
+   "icon": "image",
+   "fg": "#b0602f",
+   "lt": "#e08a50",
+   "tint": "#f5dcc8",
+   "out": "横 4:3、竖 3:4 封面，标题和简介",
+   "tool": "Pillow（cover.py）",
+   "cost": "不花钱",
+   "done": true,
+   "try": "publish",
+   "how": [
+    {
+     "who": "脚本",
+     "do": "按片子的配色和字体画封面",
+     "tip": "平台推荐的封面常是模糊帧"
+    },
+    {
+     "who": "Claude",
+     "do": "写标题（≤30 字）和简介，带话题"
+    },
+    {
+     "who": "你",
+     "do": "发布时勾选「内容由 AI 生成」，不叠平台音乐"
+    },
+    {
+     "who": "Claude",
+     "do": "账号角色做成 12 种表情 + 8 种动作贴纸，插进以后的片子",
+     "src": {
+      "type": "实测",
+      "title": "生图网关参考图出图，cutout.py 抠透明",
+      "date": "2026-10-19"
+     }
+    }
+   ],
+   "alts": [
+    {
+     "name": "出 9:16 竖版",
+     "who": "抖音推荐流更友好",
+     "what": "上标题条、中间横版画面、下字幕区；横屏在推荐流里只占一条。",
+     "where": "渲染后加一步",
+     "price": "不花钱",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "推断",
+       "title": "按抖音推荐流的显示方式"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "ideas": [
+  {
+   "title": "睡前故事",
+   "say": "古典名篇或寓言 + 旁白，画风换成水彩、剪纸；不调视频模型，成本几乎为零"
+  },
+  {
+   "title": "换一种风格讲同一件事",
+   "say": "mg-styles-15 有 15 种风格：像素、线条、等距 2.5D、赛博 HUD……同一个题目换皮再做一支"
+  },
+  {
+   "title": "数据故事",
+   "say": "一张会动的图表讲清一个数字：条形图生长、地图连线、数字滚动"
+  },
+  {
+   "title": "账号角色当主持人",
+   "say": "角色贴纸做开场、提问、踩坑、结尾的固定动作，一个系列一个固定面孔"
+  },
+  {
+   "title": "一支片出多个版本",
+   "say": "同一份节拍表出横版、竖版，旁白换英文出海外版"
+  },
+  {
+   "title": "和公众号联动",
+   "say": "每篇技术文章挑一章做成 1 分钟解说，片尾指回文章"
+  }
+ ]
+}

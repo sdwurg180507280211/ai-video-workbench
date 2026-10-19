@@ -1,0 +1,617 @@
+{
+ "updated": "2026-10-18",
+ "srcTypes": {
+  "实测": "我们自己跑过、有记录",
+  "官方": "官方文档或官方页面",
+  "二手": "第三方文章或比价站，可能过时",
+  "推断": "没实测，按原理推出来的",
+  "待核实": "只有零散说法，别当真"
+ },
+ "routes": [
+  {
+   "name": "一站式平台",
+   "say": "把剧本交给平台，角色、分镜、视频它全包。",
+   "good": "上手快，不用懂技术",
+   "bad": "细节改不动，换不了模型",
+   "eg": "小云雀短剧 Agent、可灵、Museshort、LibTV",
+   "src": [
+    {
+     "type": "二手",
+     "title": "科技日报：小云雀上线短剧 Agent",
+     "url": "https://www.stdaily.com/web/gdxw/2026-03/20/content_488925.html",
+     "date": "2026-03-20"
+    },
+    {
+     "type": "二手",
+     "title": "Museshort 官网",
+     "url": "https://museshort.cn/home",
+     "date": "2026-10-18"
+    }
+   ]
+  },
+  {
+   "name": "自己拼接口",
+   "ours": true,
+   "say": "Claude 当导演，一步一步调用各家模型的接口。",
+   "good": "每一步都能控制、能换工具，花多少钱一清二楚",
+   "bad": "要先把流程搭起来",
+   "eg": "第 1 集走的就是这条"
+  }
+ ],
+ "steps": [
+  {
+   "key": "script",
+   "short": "提示词",
+   "name": "剧本",
+   "icon": "text",
+   "fg": "#c9820f",
+   "lt": "#f2b544",
+   "tint": "#f8e2bd",
+   "out": "剧本 + 分段表 + 每段一份提示词",
+   "tool": "Claude",
+   "cost": "免费",
+   "done": true,
+   "how": [
+    {
+     "who": "你",
+     "do": "给方向，回答剧本里看不出来的事：发哪、什么画风、预算多少、哪几下拍到就满意"
+    },
+    {
+     "who": "Claude",
+     "do": "写剧本，按清单自查因果、前 3 秒、钩子"
+    },
+    {
+     "who": "Claude",
+     "do": "切段：一段 4～12 秒，放 2～4 个镜头",
+     "tip": "一段 = 调一次视频模型"
+    },
+    {
+     "who": "你",
+     "do": "确认台词",
+     "tip": "改台词必须你点头"
+    },
+    {
+     "who": "Claude",
+     "do": "每段写一份提示词：参考图、镜头、台词、音效、限制",
+     "tip": "写什么就出什么：“坚定”会演成凶",
+     "src": {
+      "type": "实测",
+      "title": "S5 表演实验",
+      "file": "实验_表演对比/记录.md"
+     }
+    }
+   ],
+   "try": "prompt",
+   "alts": [
+    {
+     "name": "小云雀短剧 Agent",
+     "who": "字节（剪映团队）",
+     "what": "上传剧本（最多 10 万字），确认画风、画幅后自动做角色、分镜和视频，模型是 Seedance 2.0。",
+     "where": "把剧本到视频四步一起包了",
+     "price": "待核实",
+     "cn": true,
+     "api": false,
+     "src": [
+      {
+       "type": "二手",
+       "title": "科技日报 2026-03-20",
+       "url": "https://www.stdaily.com/web/gdxw/2026-03/20/content_488925.html",
+       "date": "2026-03-20"
+      },
+      {
+       "type": "二手",
+       "title": "爱范儿实测",
+       "url": "https://www.ifanr.com/1658787",
+       "date": "2026-10-18"
+      }
+     ]
+    },
+    {
+     "name": "Museshort",
+     "who": "开发方未标明",
+     "what": "一句话起头，AI 帮你延伸成剧本，再出原画、分镜和视频。",
+     "where": "一站式，从剧本开始全包",
+     "price": "待核实",
+     "cn": true,
+     "api": false,
+     "src": [
+      {
+       "type": "二手",
+       "title": "Museshort 官网首页",
+       "url": "https://museshort.cn/home",
+       "date": "2026-10-18"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "role",
+   "short": "三视图",
+   "name": "角色形象",
+   "icon": "role",
+   "fg": "#c2502b",
+   "lt": "#ee8d58",
+   "tint": "#f7d6c4",
+   "out": "每个角色一张三视图",
+   "tool": "Seedream 5.0 Pro",
+   "cost": "约 ¥0.3 / 张",
+   "done": true,
+   "how": [
+    {
+     "who": "Claude",
+     "do": "写三视图提示词：长相、服装，加一个辨识特征（痣、疤、补丁）",
+     "tip": "表情写中性，性格别写进去"
+    },
+    {
+     "who": "模型",
+     "do": "Seedream 文生图：一张图里放胸像、正面全身、侧面全身"
+    },
+    {
+     "who": "你",
+     "do": "看图，挑定"
+    },
+    {
+     "who": "Claude",
+     "do": "原图整张交给视频模型，不裁、不压、不转格式",
+     "tip": "裁过的写实人像会被当成真人拒掉",
+     "src": {
+      "type": "实测",
+      "title": "Skill 文档：写实人像审核"
+     }
+    }
+   ],
+   "try": "faces",
+   "alts": [
+    {
+     "name": "即梦（网页）",
+     "who": "字节",
+     "what": "字节官方的生图、生视频网站，用的是同一家的模型，手动点。",
+     "where": "想先手动试画风时用",
+     "price": "待核实",
+     "cn": true,
+     "api": false,
+     "src": [
+      {
+       "type": "二手",
+       "title": "知乎：2026 国内 AI 短剧工具盘点",
+       "url": "https://zhuanlan.zhihu.com/p/2078505752164045720",
+       "date": "2026-10-18"
+      }
+     ]
+    },
+    {
+     "name": "GPT 生图（你自己的网关）",
+     "who": "OpenAI 模型",
+     "what": "画质好、不按张收费。",
+     "where": "只做没有人脸的素材：场景、道具、片尾卡",
+     "price": "不按张计费",
+     "cn": true,
+     "api": true,
+     "note": "有人脸的角色别用：拿去当视频参考会被审核拦下",
+     "src": [
+      {
+       "type": "实测",
+       "title": "Skill 文档：写实人像审核"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "voice",
+   "short": "台词 · 音效",
+   "name": "声音",
+   "icon": "voice",
+   "fg": "#d8651a",
+   "lt": "#f7a04a",
+   "tint": "#fadcc0",
+   "out": "台词、音效和口型（拍视频时一起出来）",
+   "tool": "Seedance 自带",
+   "cost": "含在视频费里",
+   "done": true,
+   "how": [
+    {
+     "who": "Claude",
+     "do": "台词写进 { }，音效写进 < >"
+    },
+    {
+     "who": "模型",
+     "do": "Seedance 打开 generate_audio，声音和口型跟画面一起生成",
+     "tip": "不用另外对口型",
+     "src": {
+      "type": "官方",
+      "title": "火山方舟接口文档（Skill 摘录）"
+     }
+    },
+    {
+     "who": "Claude",
+     "do": "从认可的片段里截 2～4 秒干净台词，做成每个角色的音色参考",
+     "tip": "不挂参考，同一个人每段声音会变",
+     "src": {
+      "type": "实测",
+      "title": "第 1 集：主任 S1 基频 115～123 Hz，S3 变成 137 Hz",
+      "file": "1_文档/审查报告_剧本与实现.md"
+     }
+    },
+    {
+     "who": "Claude",
+     "do": "提示词写明：@音频1 只提供音色，不采用语气和节奏"
+    },
+    {
+     "who": "你",
+     "do": "听台词和语气",
+     "tip": "脚本听不出表演，只能靠你听"
+    }
+   ],
+   "try": "voices",
+   "alts": [
+    {
+     "name": "ElevenLabs",
+     "who": "美国",
+     "what": "专业 AI 配音：用一句话描述就能设计出新音色，也能克隆音色。",
+     "where": "生成前做音色参考：导出 wav 交给 Seedance，口型仍由 Seedance 对",
+     "price": "待核实（看官网 API 价格页）",
+     "cn": false,
+     "api": true,
+     "src": [
+      {
+       "type": "官方",
+       "title": "ElevenLabs API 价格页",
+       "url": "https://elevenlabs.io/pricing/api",
+       "date": "2026-10-18"
+      }
+     ]
+    },
+    {
+     "name": "豆包语音合成",
+     "who": "字节（火山引擎）",
+     "what": "国内的语音合成，可以按情绪出声。",
+     "where": "同上，做音色或情绪参考",
+     "price": "待核实",
+     "cn": true,
+     "api": true,
+     "note": "要另开语音服务的 App ID 和 Token，本机还没有",
+     "src": [
+      {
+       "type": "实测",
+       "title": "第 1 集：方舟 /models 里没有语音模型"
+      }
+     ]
+    },
+    {
+     "name": "后期整段换配音",
+     "who": "做法",
+     "what": "视频出来后把声音换成别家配的。",
+     "where": "不推荐",
+     "price": "—",
+     "cn": true,
+     "api": true,
+     "bad": true,
+     "note": "换了声音口型就对不上，还得再找对口型工具",
+     "src": [
+      {
+       "type": "推断",
+       "title": "口型是 Seedance 按它自己的声音生成的"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "video",
+   "short": "每段 mp4",
+   "name": "视频生成",
+   "icon": "video",
+   "fg": "#d4361f",
+   "lt": "#fa7a44",
+   "tint": "#f9cfc2",
+   "core": true,
+   "out": "每段一条 mp4",
+   "tool": "Seedance 2.5",
+   "cost": "720p 约 ¥1.51 / 秒",
+   "done": true,
+   "how": [
+    {
+     "who": "Claude",
+     "do": "报价：哪个模型、多少秒、多少钱，等你点头",
+     "tip": "只有生成成功的才收费",
+     "src": {
+      "type": "官方",
+      "title": "火山方舟价格（Skill 摘录，2026-10 核对）"
+     }
+    },
+    {
+     "who": "脚本",
+     "do": "先试跑 1～2 段，过了再批量，同时最多 3 个"
+    },
+    {
+     "who": "脚本",
+     "do": "下载 mp4",
+     "tip": "视频链接 24 小时后失效"
+    },
+    {
+     "who": "Claude",
+     "do": "审片：脚本查画面文字、切镜和音量，Claude 逐句看表演"
+    },
+    {
+     "who": "你",
+     "do": "看片，只说看到的现象；原因和方案 Claude 给"
+    },
+    {
+     "who": "Claude",
+     "do": "不过关就改提示词，只重抽有问题的那一段"
+    }
+   ],
+   "try": "video",
+   "alts": [
+    {
+     "name": "可灵",
+     "who": "快手",
+     "what": "官方开放平台列出 3.0 系列支持音画同出、智能分镜、主体参考；4.0 能原生直出 30 秒。",
+     "where": "可以直接替换 Seedance 这一步",
+     "price": "3.0 带音频 720p 约 $0.126 / 秒",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "官方",
+       "title": "可灵 AI 开放平台",
+       "url": "https://www.klingai.com/dev",
+       "date": "2026-10-18"
+      },
+      {
+       "type": "二手",
+       "title": "modelpick 价格页（2026-10-09 核对）",
+       "url": "https://modelpick.dev/zh/media-pricing/kling-3-0/",
+       "date": "2026-10-09"
+      }
+     ]
+    },
+    {
+     "name": "Veo 3.1",
+     "who": "Google",
+     "what": "原生带声音和对白；分 Standard、Fast、Lite 三档。",
+     "where": "可以替换这一步，但国内要走代理",
+     "price": "Standard 带音频约 $0.40 / 秒",
+     "cn": false,
+     "api": true,
+     "src": [
+      {
+       "type": "二手",
+       "title": "Veo 3.1 各渠道价格对比",
+       "url": "https://www.veopricing.com/veo-3-1-api-providers/",
+       "date": "2026-10-18"
+      }
+     ]
+    },
+    {
+     "name": "Seedance 2.0 Mini",
+     "who": "字节（同一家）",
+     "what": "价格约 2.5 的三分之一，切镜和脸稳，但演不出细微表情，皮肤油光。",
+     "where": "只适合测结构：大动作崩不崩、站位对不对",
+     "price": "720p 约 ¥0.50 / 秒",
+     "cn": true,
+     "api": true,
+     "src": [
+      {
+       "type": "实测",
+       "title": "Skill 文档：型号与价格"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "music",
+   "short": "音乐轨",
+   "name": "配乐",
+   "icon": "music",
+   "fg": "#a8304f",
+   "lt": "#e06282",
+   "tint": "#f2cfd8",
+   "out": "一条贯穿全片的音乐轨",
+   "tool": "还没做",
+   "cost": "—",
+   "done": false,
+   "how": [
+    {
+     "who": "Claude",
+     "do": "按段落定好音乐从哪起、在哪收、哪里推高"
+    },
+    {
+     "who": "你",
+     "do": "生成或挑曲子",
+     "tip": "选曲靠你的耳朵"
+    },
+    {
+     "who": "脚本",
+     "do": "ffmpeg 把音乐混进成片，有台词的地方自动压低"
+    },
+    {
+     "who": "Claude",
+     "do": "视频提示词里写“没有背景音乐”",
+     "tip": "画面里本身没音乐，后加的不会打架"
+    }
+   ],
+   "try": "music",
+   "alts": [
+    {
+     "name": "Suno",
+     "who": "美国",
+     "what": "输入风格描述，生成整首歌或纯音乐。",
+     "where": "生成配乐，再交给 ffmpeg 混进去",
+     "price": "付费订阅才能商用（待核实）",
+     "cn": false,
+     "api": false,
+     "note": "没找到官方公开的接口，第三方渠道不稳",
+     "src": [
+      {
+       "type": "二手",
+       "title": "Suno 价格与商用说明",
+       "url": "https://sonilo.com/blog/suno-v5-5-pricing-commercial-use",
+       "date": "2026-10-18"
+      }
+     ]
+    },
+    {
+     "name": "ElevenLabs Music",
+     "who": "美国",
+     "what": "同一家的音乐生成，有接口。",
+     "where": "同上，可以让 Claude 直接调用",
+     "price": "约 $0.15 / 分钟（2026-07）",
+     "cn": false,
+     "api": true,
+     "src": [
+      {
+       "type": "二手",
+       "title": "第三方整理的 ElevenAPI 价格",
+       "url": "https://magichour.ai/blog/elevenlabs-pricing",
+       "date": "2026-07"
+      }
+     ]
+    },
+    {
+     "name": "Seedance 提示词里写音乐",
+     "who": "做法",
+     "what": "在提示词 ( ) 里写音乐，跟画面一起生成。",
+     "where": "不推荐做整片配乐",
+     "price": "—",
+     "cn": true,
+     "api": true,
+     "bad": true,
+     "note": "每段单独生成，接起来音乐会断",
+     "src": [
+      {
+       "type": "推断",
+       "title": "每段独立生成，没实测"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "edit",
+   "short": "成片",
+   "name": "剪辑字幕",
+   "icon": "edit",
+   "fg": "#8c2f4e",
+   "lt": "#cc5b7f",
+   "tint": "#eed0da",
+   "out": "成片 mp4",
+   "tool": "ffmpeg",
+   "cost": "免费",
+   "done": true,
+   "how": [
+    {
+     "who": "Claude",
+     "do": "写剪辑表：每段从哪进、从哪出，要不要推近裁掉字",
+     "tip": "能剪掉的就别重拍"
+    },
+    {
+     "who": "脚本",
+     "do": "ffmpeg 按表出片，每段音量拉齐，段与段之间淡化 0.08 秒"
+    },
+    {
+     "who": "脚本",
+     "do": "加片尾卡：下集钩子、声明"
+    },
+    {
+     "who": "模型",
+     "do": "字幕（还没做）：语音识别把台词转成文字，ffmpeg 压进画面"
+    },
+    {
+     "who": "你",
+     "do": "看成片，说现象"
+    }
+   ],
+   "try": "film",
+   "alts": [
+    {
+     "name": "Whisper",
+     "who": "OpenAI 开源",
+     "what": "在本机跑的语音识别，免费，能直接输出字幕文件。",
+     "where": "出字幕：转文字后交给 ffmpeg",
+     "price": "免费（本机算）",
+     "cn": true,
+     "api": true,
+     "note": "中文准确率还没测",
+     "src": [
+      {
+       "type": "官方",
+       "title": "openai/whisper",
+       "url": "https://github.com/openai/whisper",
+       "date": "2026-10-18"
+      }
+     ]
+    },
+    {
+     "name": "火山语音识别",
+     "who": "字节（火山引擎）",
+     "what": "国内的语音识别接口，中文场景多。",
+     "where": "同上",
+     "price": "待核实",
+     "cn": true,
+     "api": true,
+     "note": "同样要另开语音服务的 App ID 和 Token",
+     "src": [
+      {
+       "type": "待核实",
+       "title": "还没查官方价格页"
+      }
+     ]
+    },
+    {
+     "name": "剪映的 AI 字幕",
+     "who": "字节",
+     "what": "据说有自动识别字幕、AI 成片等功能，免费额度说法不一。",
+     "where": "手动剪辑时用，接不进自动流程",
+     "price": "待核实",
+     "cn": true,
+     "api": false,
+     "src": [
+      {
+       "type": "待核实",
+       "title": "只找到内容农场文章，互相矛盾",
+       "url": "https://www.tixiaolu.com/posts/ai-capcut-ai-features-2026/",
+       "date": "2026-10-18"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "card": {
+  "name": "Opus 导演 + 视频模型",
+  "fg": "#c2502b",
+  "lt": "#fa7a44",
+  "say": "Claude 写剧本、提示词、分段表，Seedance 生成写实画面，自带台词和口型。",
+  "cost": "约 ¥100 / 分钟（Seedance 2.5 720p）",
+  "time": "1 分钟约 2 天（含边学边做）",
+  "models": "Claude Opus 5.5 · Seedance 2.5 · Seedream 5.0",
+  "fit": "剧情短剧、写实人物、需要表演的内容",
+  "skill": "seedance-short-drama"
+ },
+ "ideas": [
+  {
+   "title": "旁白讲故事，少对口型",
+   "say": "《南柯一梦》几乎全靠旁白加画面，避开了 AI 最弱的表演和口型"
+  },
+  {
+   "title": "画风区分现实和梦",
+   "say": "现实写实、梦里工笔画，观众不用解释就知道切换了，也藏住了角色一致性"
+  },
+  {
+   "title": "先拆一条爆款再写",
+   "say": "拆解脚本出镜头表和节奏，对照自己的片子看差在哪"
+  },
+  {
+   "title": "真人 + AI",
+   "say": "平台从 2026-07 起对纯 AI 流水线短剧下调分成，真人出镜加 AI 画面可能更吃香（二手消息）"
+  },
+  {
+   "title": "混用两类做法",
+   "say": "剧情镜头用视频模型，片头、数据、解释段落用代码动画，省一大半生成费"
+  }
+ ]
+}
