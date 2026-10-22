@@ -1,0 +1,1299 @@
+{
+  "date": "2026-10-22",
+  "gates": [
+    {
+      "id": "items-read",
+      "label": "每个地点都认了图，4–20 件东西",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "item-shape",
+      "label": "东西的名字不重复，平面位置和图上位置都是合法的框",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "location-ref",
+      "label": "每一场的地点都有认图结果",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "cast-complete",
+      "label": "每一场的出场人物正好各一条",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "present-set",
+      "label": "每个人都定了开场在不在，至少一个人在场",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "place-valid",
+      "label": "在场的人落在认出来的东西上，方位、坐站、朝向合法",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "no-overlap",
+      "label": "同一侧的人不叠在一处",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "extras",
+      "label": "群演人数是整数，有群演写明在哪",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "geometry": {
+    "shotCount": 28,
+    "mainAxisPassed": true,
+    "coupleAxisPassed": true,
+    "cameraOutsideFurniture": true,
+    "nonoverlappingPeople": true
+  },
+  "limits": [
+    "单图透视推算，不含米制测量",
+    "只验证平面轴侧/基本占位，不验证真实三维遮挡和成片质量"
+  ],
+  "shots": [
+    {
+      "shot": "V8_01-1",
+      "camera": "M",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦",
+        "丈夫",
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.5816881553028617,
+          "u": 0.11774502104273293,
+          "screenX": 0.20241949224740158,
+          "angle": 11.44316514074799,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.5603295256440158,
+          "u": -0.18811452015076358,
+          "screenX": -0.33572123463341286,
+          "angle": -18.557995486383412,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.3133325837748283,
+          "u": 0.014549637280364597,
+          "screenX": 0.04643512367938239,
+          "angle": 2.6586268434005236,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.49,
+        0.5
+      ],
+      "background": "东北检查床/蓝帘与北墙；屏幕西端物件仅边缘。"
+    },
+    {
+      "shot": "V8_01-2",
+      "camera": "T",
+      "axis": "couple",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦",
+        "医生",
+        "丈夫"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.539283745640176,
+          "u": 0.028249631648962367,
+          "screenX": 0.052383614149964106,
+          "angle": 2.998619230502353,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.2971594256000986,
+          "u": -0.1598515742087625,
+          "screenX": -0.537932033910586,
+          "angle": -28.277231367944786,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.2834006492100933,
+          "u": 0.15935203803936007,
+          "screenX": 0.5622853669655065,
+          "angle": 29.348410914056977,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.4875,
+        0.61
+      ],
+      "background": "桌面和医生方向局部；夫妻转头互看，保持两张侧脸清楚。"
+    },
+    {
+      "shot": "V8_02-1",
+      "camera": "D",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4187182823808868,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.13789104137439873,
+          "u": -0.12305409667574613,
+          "screenX": -0.8924009525871398,
+          "angle": -41.74575274708264,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.20274968534279417,
+          "u": 0.1897934801129848,
+          "screenX": 0.9360975322457149,
+          "angle": 43.109592634104914,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.505,
+        0.36000000000000004
+      ],
+      "background": "北墙、蓝帘与检查床；避开新增门位。"
+    },
+    {
+      "shot": "V8_02-2",
+      "camera": "P",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴北侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.16022104746845406,
+          "u": 0.05704573558217481,
+          "screenX": 0.3560439560439558,
+          "angle": 19.59796468068274,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.46147183012617354,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.2312654706806707,
+          "u": -0.2215519850302584,
+          "screenX": -0.9579985476352215,
+          "angle": -43.77112424980545,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.3275,
+        0.61
+      ],
+      "background": "朝南侧未确认区域；用紧景别和浅景深，不生成木门或完整南墙。"
+    },
+    {
+      "shot": "V8_02-3",
+      "camera": "D",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4187182823808868,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.13789104137439873,
+          "u": -0.12305409667574613,
+          "screenX": -0.8924009525871398,
+          "angle": -41.74575274708264,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.20274968534279417,
+          "u": 0.1897934801129848,
+          "screenX": 0.9360975322457149,
+          "angle": 43.109592634104914,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.505,
+        0.36000000000000004
+      ],
+      "background": "北墙、蓝帘与检查床；避开新增门位。"
+    },
+    {
+      "shot": "V8_03-1",
+      "camera": "P",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴北侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.16022104746845406,
+          "u": 0.05704573558217481,
+          "screenX": 0.3560439560439558,
+          "angle": 19.59796468068274,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.46147183012617354,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.2312654706806707,
+          "u": -0.2215519850302584,
+          "screenX": -0.9579985476352215,
+          "angle": -43.77112424980545,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.3275,
+        0.61
+      ],
+      "background": "朝南侧未确认区域；用紧景别和浅景深，不生成木门或完整南墙。"
+    },
+    {
+      "shot": "V8_03-2",
+      "camera": "D",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4187182823808868,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.13789104137439873,
+          "u": -0.12305409667574613,
+          "screenX": -0.8924009525871398,
+          "angle": -41.74575274708264,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.20274968534279417,
+          "u": 0.1897934801129848,
+          "screenX": 0.9360975322457149,
+          "angle": 43.109592634104914,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.505,
+        0.36000000000000004
+      ],
+      "background": "北墙、蓝帘与检查床；避开新增门位。"
+    },
+    {
+      "shot": "V8_04-1",
+      "camera": "D",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4187182823808868,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.13789104137439873,
+          "u": -0.12305409667574613,
+          "screenX": -0.8924009525871398,
+          "angle": -41.74575274708264,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.20274968534279417,
+          "u": 0.1897934801129848,
+          "screenX": 0.9360975322457149,
+          "angle": 43.109592634104914,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.505,
+        0.36000000000000004
+      ],
+      "background": "北墙、蓝帘与检查床；避开新增门位。"
+    },
+    {
+      "shot": "V8_04-2",
+      "camera": "P",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴北侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.16022104746845406,
+          "u": 0.05704573558217481,
+          "screenX": 0.3560439560439558,
+          "angle": 19.59796468068274,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.46147183012617354,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.2312654706806707,
+          "u": -0.2215519850302584,
+          "screenX": -0.9579985476352215,
+          "angle": -43.77112424980545,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.3275,
+        0.61
+      ],
+      "background": "朝南侧未确认区域；用紧景别和浅景深，不生成木门或完整南墙。"
+    },
+    {
+      "shot": "V8_05-1",
+      "camera": "D",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4187182823808868,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.13789104137439873,
+          "u": -0.12305409667574613,
+          "screenX": -0.8924009525871398,
+          "angle": -41.74575274708264,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.20274968534279417,
+          "u": 0.1897934801129848,
+          "screenX": 0.9360975322457149,
+          "angle": 43.109592634104914,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.505,
+        0.36000000000000004
+      ],
+      "background": "北墙、蓝帘与检查床；避开新增门位。"
+    },
+    {
+      "shot": "V8_05-2",
+      "camera": "C",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴北侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "丈夫",
+        "林悦"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.1351665420451267,
+          "u": 0.10322308807414655,
+          "screenX": 0.7636733655558376,
+          "angle": 37.36800853332476,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.439454589317665,
+          "u": 0.14084002956419198,
+          "screenX": 0.3204882438089276,
+          "angle": 17.77004385264203,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.28784868737638597,
+          "u": -0.1403999044718038,
+          "screenX": -0.4877559309076137,
+          "angle": -26.00108039716343,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.4875,
+        0.61
+      ],
+      "background": "朝南侧未确认区域；两人背后仅中性焦外，不添加诊室门。"
+    },
+    {
+      "shot": "V8_06-1",
+      "camera": "P",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴北侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.16022104746845406,
+          "u": 0.05704573558217481,
+          "screenX": 0.3560439560439558,
+          "angle": 19.59796468068274,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.46147183012617354,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.2312654706806707,
+          "u": -0.2215519850302584,
+          "screenX": -0.9579985476352215,
+          "angle": -43.77112424980545,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.3275,
+        0.61
+      ],
+      "background": "朝南侧未确认区域；用紧景别和浅景深，不生成木门或完整南墙。"
+    },
+    {
+      "shot": "V8_06-2",
+      "camera": "D",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4187182823808868,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.13789104137439873,
+          "u": -0.12305409667574613,
+          "screenX": -0.8924009525871398,
+          "angle": -41.74575274708264,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.20274968534279417,
+          "u": 0.1897934801129848,
+          "screenX": 0.9360975322457149,
+          "angle": 43.109592634104914,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.505,
+        0.36000000000000004
+      ],
+      "background": "北墙、蓝帘与检查床；避开新增门位。"
+    },
+    {
+      "shot": "V8_07-1",
+      "camera": "C",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴北侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "丈夫",
+        "林悦"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.1351665420451267,
+          "u": 0.10322308807414655,
+          "screenX": 0.7636733655558376,
+          "angle": 37.36800853332476,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.439454589317665,
+          "u": 0.14084002956419198,
+          "screenX": 0.3204882438089276,
+          "angle": 17.77004385264203,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.28784868737638597,
+          "u": -0.1403999044718038,
+          "screenX": -0.4877559309076137,
+          "angle": -26.00108039716343,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.4875,
+        0.61
+      ],
+      "background": "朝南侧未确认区域；两人背后仅中性焦外，不添加诊室门。"
+    },
+    {
+      "shot": "V8_07-2",
+      "camera": "W",
+      "axis": "couple",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4424552471746264,
+          "u": 0.2936977259830933,
+          "screenX": 0.6637908079032858,
+          "angle": 33.57584136045933,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.5304773793480736,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.22782781077022926,
+          "u": 0.10238890877260409,
+          "screenX": 0.4494135655627494,
+          "angle": 24.199797217389868,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.3275,
+        0.61
+      ],
+      "background": "桌西端焦外；丈夫少量肩部在右前景，妻子看身体东侧。"
+    },
+    {
+      "shot": "V8_08-1",
+      "camera": "H",
+      "axis": "couple",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "丈夫"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.42657307066755096,
+          "u": -0.26881297472640064,
+          "screenX": -0.6301686468527677,
+          "angle": -32.217844480747665,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.12081179107689394,
+          "u": -0.2460909611033955,
+          "screenX": -2.036978004462861,
+          "angle": -63.85250192719706,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.32457510687050534,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.6469999999999999,
+        0.61
+      ],
+      "background": "东北床/帘在焦外；妻子少量肩部在左前景，丈夫看身体西侧。"
+    },
+    {
+      "shot": "V8_08-2",
+      "camera": "D",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4187182823808868,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.13789104137439873,
+          "u": -0.12305409667574613,
+          "screenX": -0.8924009525871398,
+          "angle": -41.74575274708264,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.20274968534279417,
+          "u": 0.1897934801129848,
+          "screenX": 0.9360975322457149,
+          "angle": 43.109592634104914,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.505,
+        0.36000000000000004
+      ],
+      "background": "北墙、蓝帘与检查床；避开新增门位。"
+    },
+    {
+      "shot": "V8_09-1",
+      "camera": "W",
+      "axis": "couple",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4424552471746264,
+          "u": 0.2936977259830933,
+          "screenX": 0.6637908079032858,
+          "angle": 33.57584136045933,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.5304773793480736,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.22782781077022926,
+          "u": 0.10238890877260409,
+          "screenX": 0.4494135655627494,
+          "angle": 24.199797217389868,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.3275,
+        0.61
+      ],
+      "background": "桌西端焦外；丈夫少量肩部在右前景，妻子看身体东侧。"
+    },
+    {
+      "shot": "V8_09-2",
+      "camera": "H",
+      "axis": "couple",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "丈夫"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.42657307066755096,
+          "u": -0.26881297472640064,
+          "screenX": -0.6301686468527677,
+          "angle": -32.217844480747665,
+          "visible": false
+        },
+        {
+          "id": "L",
+          "depth": 0.12081179107689394,
+          "u": -0.2460909611033955,
+          "screenX": -2.036978004462861,
+          "angle": -63.85250192719706,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.32457510687050534,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.6469999999999999,
+        0.61
+      ],
+      "background": "东北床/帘在焦外；妻子少量肩部在左前景，丈夫看身体西侧。"
+    },
+    {
+      "shot": "V8_10-1",
+      "camera": "T",
+      "axis": "couple",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦",
+        "医生",
+        "丈夫"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.539283745640176,
+          "u": 0.028249631648962367,
+          "screenX": 0.052383614149964106,
+          "angle": 2.998619230502353,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.2971594256000986,
+          "u": -0.1598515742087625,
+          "screenX": -0.537932033910586,
+          "angle": -28.277231367944786,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.2834006492100933,
+          "u": 0.15935203803936007,
+          "screenX": 0.5622853669655065,
+          "angle": 29.348410914056977,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.4875,
+        0.61
+      ],
+      "background": "桌面和医生方向局部；夫妻转头互看，保持两张侧脸清楚。"
+    },
+    {
+      "shot": "V8_10-2",
+      "camera": "T",
+      "axis": "couple",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦",
+        "医生",
+        "丈夫"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.539283745640176,
+          "u": 0.028249631648962367,
+          "screenX": 0.052383614149964106,
+          "angle": 2.998619230502353,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.2971594256000986,
+          "u": -0.1598515742087625,
+          "screenX": -0.537932033910586,
+          "angle": -28.277231367944786,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.2834006492100933,
+          "u": 0.15935203803936007,
+          "screenX": 0.5622853669655065,
+          "angle": 29.348410914056977,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.4875,
+        0.61
+      ],
+      "background": "桌面和医生方向局部；夫妻转头互看，保持两张侧脸清楚。"
+    },
+    {
+      "shot": "V8_11-1",
+      "camera": "M",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦",
+        "丈夫",
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.5816881553028617,
+          "u": 0.11774502104273293,
+          "screenX": 0.20241949224740158,
+          "angle": 11.44316514074799,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.5603295256440158,
+          "u": -0.18811452015076358,
+          "screenX": -0.33572123463341286,
+          "angle": -18.557995486383412,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.3133325837748283,
+          "u": 0.014549637280364597,
+          "screenX": 0.04643512367938239,
+          "angle": 2.6586268434005236,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.49,
+        0.5
+      ],
+      "background": "东北检查床/蓝帘与北墙；屏幕西端物件仅边缘。"
+    },
+    {
+      "shot": "V8_11-2",
+      "camera": "D",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4187182823808868,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.13789104137439873,
+          "u": -0.12305409667574613,
+          "screenX": -0.8924009525871398,
+          "angle": -41.74575274708264,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.20274968534279417,
+          "u": 0.1897934801129848,
+          "screenX": 0.9360975322457149,
+          "angle": 43.109592634104914,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.505,
+        0.36000000000000004
+      ],
+      "background": "北墙、蓝帘与检查床；避开新增门位。"
+    },
+    {
+      "shot": "V8_12-1",
+      "camera": "P",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴北侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦",
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.16022104746845406,
+          "u": 0.05704573558217481,
+          "screenX": 0.3560439560439558,
+          "angle": 19.59796468068274,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.46147183012617354,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.2312654706806707,
+          "u": -0.2215519850302584,
+          "screenX": -0.9579985476352215,
+          "angle": -43.77112424980545,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.3275,
+        0.61
+      ],
+      "background": "朝南侧未确认区域；用紧景别和浅景深，不生成木门或完整南墙。"
+    },
+    {
+      "shot": "V8_12-2",
+      "camera": "D",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.4187182823808868,
+          "u": 0,
+          "screenX": 0,
+          "angle": 0,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.13789104137439873,
+          "u": -0.12305409667574613,
+          "screenX": -0.8924009525871398,
+          "angle": -41.74575274708264,
+          "visible": false
+        },
+        {
+          "id": "H",
+          "depth": 0.20274968534279417,
+          "u": 0.1897934801129848,
+          "screenX": 0.9360975322457149,
+          "angle": 43.109592634104914,
+          "visible": false
+        }
+      ],
+      "target": [
+        0.505,
+        0.36000000000000004
+      ],
+      "background": "北墙、蓝帘与检查床；避开新增门位。"
+    },
+    {
+      "shot": "V8_13-1",
+      "camera": "M",
+      "axis": "doctor-patient",
+      "axisSide": "主轴东侧",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦",
+        "丈夫",
+        "医生"
+      ],
+      "points": [
+        {
+          "id": "D",
+          "depth": 0.5816881553028617,
+          "u": 0.11774502104273293,
+          "screenX": 0.20241949224740158,
+          "angle": 11.44316514074799,
+          "visible": true
+        },
+        {
+          "id": "L",
+          "depth": 0.5603295256440158,
+          "u": -0.18811452015076358,
+          "screenX": -0.33572123463341286,
+          "angle": -18.557995486383412,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.3133325837748283,
+          "u": 0.014549637280364597,
+          "screenX": 0.04643512367938239,
+          "angle": 2.6586268434005236,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.49,
+        0.5
+      ],
+      "background": "东北检查床/蓝帘与北墙；屏幕西端物件仅边缘。"
+    },
+    {
+      "shot": "V8_14-1",
+      "camera": "K",
+      "axis": "couple",
+      "axisSide": "走廊",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦",
+        "丈夫"
+      ],
+      "points": [
+        {
+          "id": "L",
+          "depth": 0.4248944582122406,
+          "u": -0.04460604645702809,
+          "screenX": -0.10498147385755444,
+          "angle": -5.993043052404653,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.3754454695684494,
+          "u": 0.044606046457028176,
+          "screenX": 0.1188083225729158,
+          "angle": 6.775455113835202,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.576,
+        0.6
+      ],
+      "background": "蓝椅左、木门右、通道朝远窗；不迎面拍。"
+    },
+    {
+      "shot": "V8_15-1",
+      "camera": "K2",
+      "axis": "couple",
+      "axisSide": "走廊",
+      "coupleSide": "夫妻轴南侧",
+      "sideOk": true,
+      "pairOk": true,
+      "occupied": false,
+      "screenOrder": [
+        "林悦",
+        "丈夫"
+      ],
+      "points": [
+        {
+          "id": "L",
+          "depth": 0.5823275633546928,
+          "u": 0.042656874679074086,
+          "screenX": 0.07325237093936424,
+          "angle": 4.189568770694473,
+          "visible": true
+        },
+        {
+          "id": "H",
+          "depth": 0.5328785747109017,
+          "u": 0.13186896759313035,
+          "screenX": 0.24746532109059208,
+          "angle": 13.899478487281018,
+          "visible": true
+        }
+      ],
+      "target": [
+        0.576,
+        0.6
+      ],
+      "background": "接K同一机位，保持原摄影方向，二人向北移动。"
+    }
+  ]
+}

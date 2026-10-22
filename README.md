@@ -13,6 +13,11 @@
 
 两个 Skill 在 [my-skills](https://github.com/sdwurg180507280211/my-skills)。
 
+## 剧本与制作资料
+
+`AI视频/` 放每部作品的剧本、分镜、提示词、审稿和改稿记录，以及两篇 GitHub 项目调研，入口是 [AI视频/README.md](AI视频/README.md)。
+素材、生成片段和成片仍在本机总文件夹，不进仓库。
+
 ## 运行
 
 ```bash
