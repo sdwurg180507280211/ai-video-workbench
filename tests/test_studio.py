@@ -132,6 +132,10 @@ class WorkbenchTests(unittest.TestCase):
         self.assertEqual(studio.parse_script("**颜色规则**：先灰后彩"), [{"t": "p", "text": "**颜色规则**：先灰后彩"}])
         self.assertEqual(studio.parse_script("**制作要求**"), [{"t": "p", "text": "**制作要求**"}])
 
+    def test_pick_lan_skips_loopback_and_proxy_tun(self):
+        self.assertEqual(studio.pick_lan(["127.0.0.1", "198.18.0.1", "192.168.8.101"]), "192.168.8.101")
+        self.assertIsNone(studio.pick_lan(["127.0.0.1", "198.18.0.1", "坏地址"]))
+
     def test_days_since(self):
         self.assertEqual(studio.days_since("2026-10-17", date(2026, 10, 22)), 6)
         self.assertIsNone(studio.days_since(None))

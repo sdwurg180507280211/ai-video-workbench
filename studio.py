@@ -17,6 +17,7 @@ python3 studio.py [--root AI视频总文件夹] [--port 8765] [--lan] [--no-open
 """
 import argparse
 import hashlib
+import ipaddress
 import json
 import os
 import re
@@ -382,14 +383,35 @@ def make_server(root, host="127.0.0.1", port=8765, tries=20):
     raise last
 
 
+HOME_NETS = [ipaddress.ip_network(n) for n in ("192.168.0.0/16", "10.0.0.0/8", "172.16.0.0/12")]
+
+
+def pick_lan(candidates):
+    """从网卡地址里挑家用局域网那个；代理软件的虚拟网卡（如 198.18.x）不算。"""
+    for ip in candidates:
+        try:
+            if any(ipaddress.ip_address(ip) in n for n in HOME_NETS):
+                return ip
+        except ValueError:
+            continue
+    return None
+
+
 def lan_ip():
-    """本机在局域网里的地址（UDP connect 不发包，只用来让系统选出口网卡）。"""
+    """本机在局域网里的地址：先看 ifconfig 列出的网卡，再退回 UDP connect（不发包）选出口网卡。"""
+    found = []
+    try:
+        out = subprocess.run(["ifconfig"], capture_output=True, text=True, timeout=5).stdout
+        found += re.findall(r"inet (?:addr:)?(\d+\.\d+\.\d+\.\d+)", out)
+    except (OSError, subprocess.SubprocessError):
+        pass
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             s.connect(("192.168.0.1", 9))
-            return s.getsockname()[0]
+            found.append(s.getsockname()[0])
     except OSError:
-        return None
+        pass
+    return pick_lan(found)
 
 
 def main(argv=None):
