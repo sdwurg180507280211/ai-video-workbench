@@ -127,151 +127,19 @@
   ],
   "shots": [
     {
-      "shot": "V8_01-1",
-      "segment": "V8_01",
+      "shot": "V9_01-1",
+      "segment": "V9_01",
       "sceneId": "ROOM",
       "camera": "M",
-      "actor": "H",
+      "actor": "L",
       "looksAt": "D",
       "axis": "doctor-patient",
       "fov": 66,
       "notes": "诊室反打采用真实机位推导屏幕位置"
     },
     {
-      "shot": "V8_01-2",
-      "segment": "V8_01",
-      "sceneId": "ROOM",
-      "camera": "T",
-      "actor": "L",
-      "looksAt": "H",
-      "axis": "couple",
-      "fov": 68,
-      "notes": "夫妻朝向转成互看；身体与座位不变"
-    },
-    {
-      "shot": "V8_02-1",
-      "segment": "V8_02",
-      "sceneId": "ROOM",
-      "camera": "D",
-      "actor": "D",
-      "looksAt": "L",
-      "axis": "doctor-patient",
-      "fov": 32,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_02-2",
-      "segment": "V8_02",
-      "sceneId": "ROOM",
-      "camera": "P",
-      "actor": "L",
-      "looksAt": "D",
-      "axis": "doctor-patient",
-      "fov": 34,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_02-3",
-      "segment": "V8_02",
-      "sceneId": "ROOM",
-      "camera": "D",
-      "actor": "D",
-      "looksAt": "L",
-      "axis": "doctor-patient",
-      "fov": 32,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_03-1",
-      "segment": "V8_03",
-      "sceneId": "ROOM",
-      "camera": "P",
-      "actor": "L",
-      "looksAt": "D",
-      "axis": "doctor-patient",
-      "fov": 34,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_03-2",
-      "segment": "V8_03",
-      "sceneId": "ROOM",
-      "camera": "D",
-      "actor": "D",
-      "looksAt": "L",
-      "axis": "doctor-patient",
-      "fov": 32,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_04-1",
-      "segment": "V8_04",
-      "sceneId": "ROOM",
-      "camera": "D",
-      "actor": "D",
-      "looksAt": "L",
-      "axis": "doctor-patient",
-      "fov": 32,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_04-2",
-      "segment": "V8_04",
-      "sceneId": "ROOM",
-      "camera": "P",
-      "actor": "L",
-      "looksAt": "D",
-      "axis": "doctor-patient",
-      "fov": 34,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_05-1",
-      "segment": "V8_05",
-      "sceneId": "ROOM",
-      "camera": "D",
-      "actor": "D",
-      "looksAt": "L",
-      "axis": "doctor-patient",
-      "fov": 32,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_05-2",
-      "segment": "V8_05",
-      "sceneId": "ROOM",
-      "camera": "C",
-      "actor": "L",
-      "looksAt": "D",
-      "axis": "doctor-patient",
-      "fov": 56,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_06-1",
-      "segment": "V8_06",
-      "sceneId": "ROOM",
-      "camera": "P",
-      "actor": "L",
-      "looksAt": "D",
-      "axis": "doctor-patient",
-      "fov": 34,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_06-2",
-      "segment": "V8_06",
-      "sceneId": "ROOM",
-      "camera": "D",
-      "actor": "D",
-      "looksAt": "L",
-      "axis": "doctor-patient",
-      "fov": 32,
-      "notes": "诊室反打采用真实机位推导屏幕位置"
-    },
-    {
-      "shot": "V8_07-1",
-      "segment": "V8_07",
+      "shot": "V9_01-2",
+      "segment": "V9_01",
       "sceneId": "ROOM",
       "camera": "C",
       "actor": "H",
@@ -281,8 +149,129 @@
       "notes": "诊室反打采用真实机位推导屏幕位置"
     },
     {
-      "shot": "V8_07-2",
-      "segment": "V8_07",
+      "shot": "V9_02-1",
+      "segment": "V9_02",
+      "sceneId": "ROOM",
+      "camera": "T",
+      "actor": "L",
+      "looksAt": "H",
+      "axis": "couple",
+      "fov": 68,
+      "notes": "夫妻朝向转成互看；身体与座位不变"
+    },
+    {
+      "shot": "V9_02-2",
+      "segment": "V9_02",
+      "sceneId": "ROOM",
+      "camera": "D",
+      "actor": "D",
+      "looksAt": "L",
+      "axis": "doctor-patient",
+      "fov": 32,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_03-1",
+      "segment": "V9_03",
+      "sceneId": "ROOM",
+      "camera": "P",
+      "actor": "L",
+      "looksAt": "D",
+      "axis": "doctor-patient",
+      "fov": 34,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_03-2",
+      "segment": "V9_03",
+      "sceneId": "ROOM",
+      "camera": "D",
+      "actor": "D",
+      "looksAt": "L",
+      "axis": "doctor-patient",
+      "fov": 32,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_04-1",
+      "segment": "V9_04",
+      "sceneId": "ROOM",
+      "camera": "D",
+      "actor": "D",
+      "looksAt": "L",
+      "axis": "doctor-patient",
+      "fov": 32,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_04-2",
+      "segment": "V9_04",
+      "sceneId": "ROOM",
+      "camera": "P",
+      "actor": "L",
+      "looksAt": "D",
+      "axis": "doctor-patient",
+      "fov": 34,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_05-1",
+      "segment": "V9_05",
+      "sceneId": "ROOM",
+      "camera": "D",
+      "actor": "D",
+      "looksAt": "L",
+      "axis": "doctor-patient",
+      "fov": 32,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_05-2",
+      "segment": "V9_05",
+      "sceneId": "ROOM",
+      "camera": "C",
+      "actor": "L",
+      "looksAt": "D",
+      "axis": "doctor-patient",
+      "fov": 56,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_06-1",
+      "segment": "V9_06",
+      "sceneId": "ROOM",
+      "camera": "P",
+      "actor": "L",
+      "looksAt": "D",
+      "axis": "doctor-patient",
+      "fov": 34,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_06-2",
+      "segment": "V9_06",
+      "sceneId": "ROOM",
+      "camera": "D",
+      "actor": "D",
+      "looksAt": "L",
+      "axis": "doctor-patient",
+      "fov": 32,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_07-1",
+      "segment": "V9_07",
+      "sceneId": "ROOM",
+      "camera": "C",
+      "actor": "H",
+      "looksAt": "D",
+      "axis": "doctor-patient",
+      "fov": 56,
+      "notes": "诊室反打采用真实机位推导屏幕位置"
+    },
+    {
+      "shot": "V9_07-2",
+      "segment": "V9_07",
       "sceneId": "ROOM",
       "camera": "W",
       "actor": "L",
@@ -292,8 +281,8 @@
       "notes": "夫妻朝向转成互看；身体与座位不变"
     },
     {
-      "shot": "V8_08-1",
-      "segment": "V8_08",
+      "shot": "V9_08-1",
+      "segment": "V9_08",
       "sceneId": "ROOM",
       "camera": "H",
       "actor": "H",
@@ -303,8 +292,8 @@
       "notes": "夫妻朝向转成互看；身体与座位不变"
     },
     {
-      "shot": "V8_08-2",
-      "segment": "V8_08",
+      "shot": "V9_08-2",
+      "segment": "V9_08",
       "sceneId": "ROOM",
       "camera": "D",
       "actor": "D",
@@ -314,8 +303,8 @@
       "notes": "诊室反打采用真实机位推导屏幕位置"
     },
     {
-      "shot": "V8_09-1",
-      "segment": "V8_09",
+      "shot": "V9_09-1",
+      "segment": "V9_09",
       "sceneId": "ROOM",
       "camera": "W",
       "actor": "L",
@@ -325,8 +314,8 @@
       "notes": "夫妻朝向转成互看；身体与座位不变"
     },
     {
-      "shot": "V8_09-2",
-      "segment": "V8_09",
+      "shot": "V9_09-2",
+      "segment": "V9_09",
       "sceneId": "ROOM",
       "camera": "H",
       "actor": "H",
@@ -336,8 +325,8 @@
       "notes": "夫妻朝向转成互看；身体与座位不变"
     },
     {
-      "shot": "V8_10-1",
-      "segment": "V8_10",
+      "shot": "V9_10-1",
+      "segment": "V9_10",
       "sceneId": "ROOM",
       "camera": "T",
       "actor": "H",
@@ -347,8 +336,8 @@
       "notes": "夫妻朝向转成互看；身体与座位不变"
     },
     {
-      "shot": "V8_10-2",
-      "segment": "V8_10",
+      "shot": "V9_10-2",
+      "segment": "V9_10",
       "sceneId": "ROOM",
       "camera": "T",
       "actor": "L",
@@ -358,8 +347,8 @@
       "notes": "夫妻朝向转成互看；身体与座位不变"
     },
     {
-      "shot": "V8_11-1",
-      "segment": "V8_11",
+      "shot": "V9_11-1",
+      "segment": "V9_11",
       "sceneId": "ROOM",
       "camera": "M",
       "actor": "D",
@@ -369,8 +358,8 @@
       "notes": "诊室反打采用真实机位推导屏幕位置"
     },
     {
-      "shot": "V8_11-2",
-      "segment": "V8_11",
+      "shot": "V9_11-2",
+      "segment": "V9_11",
       "sceneId": "ROOM",
       "camera": "D",
       "actor": "D",
@@ -380,8 +369,8 @@
       "notes": "诊室反打采用真实机位推导屏幕位置"
     },
     {
-      "shot": "V8_12-1",
-      "segment": "V8_12",
+      "shot": "V9_12-1",
+      "segment": "V9_12",
       "sceneId": "ROOM",
       "camera": "P",
       "actor": "L",
@@ -391,8 +380,8 @@
       "notes": "诊室反打采用真实机位推导屏幕位置"
     },
     {
-      "shot": "V8_12-2",
-      "segment": "V8_12",
+      "shot": "V9_12-2",
+      "segment": "V9_12",
       "sceneId": "ROOM",
       "camera": "D",
       "actor": "D",
@@ -402,37 +391,48 @@
       "notes": "诊室反打采用真实机位推导屏幕位置"
     },
     {
-      "shot": "V8_13-1",
-      "segment": "V8_13",
+      "shot": "V9_13-1",
+      "segment": "V9_13",
       "sceneId": "ROOM",
       "camera": "M",
-      "actor": "L",
-      "looksAt": "D",
+      "actor": "H",
+      "looksAt": "L",
       "axis": "doctor-patient",
       "fov": 66,
       "notes": "诊室反打采用真实机位推导屏幕位置"
     },
     {
-      "shot": "V8_14-1",
-      "segment": "V8_14",
+      "shot": "V9_14-1",
+      "segment": "V9_14",
+      "sceneId": "HALL",
+      "camera": "K",
+      "actor": "H",
+      "looksAt": "L",
+      "axis": "couple",
+      "fov": 48,
+      "notes": "走廊三段同一侧机位；15先收手、16才牵手；本子始终在她左臂"
+    },
+    {
+      "shot": "V9_15-1",
+      "segment": "V9_15",
       "sceneId": "HALL",
       "camera": "K",
       "actor": "L",
       "looksAt": "H",
       "axis": "couple",
       "fov": 48,
-      "notes": "14先收手、15才牵手；本子始终在她左臂"
+      "notes": "走廊三段同一侧机位；15先收手、16才牵手；本子始终在她左臂"
     },
     {
-      "shot": "V8_15-1",
-      "segment": "V8_15",
+      "shot": "V9_16-1",
+      "segment": "V9_16",
       "sceneId": "HALL",
       "camera": "K2",
       "actor": "L",
       "looksAt": "north",
       "axis": "couple",
       "fov": 48,
-      "notes": "14先收手、15才牵手；本子始终在她左臂"
+      "notes": "走廊三段同一侧机位；15先收手、16才牵手；本子始终在她左臂"
     }
   ],
   "corridorEndOffset": [
