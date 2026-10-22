@@ -4,792 +4,223 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI 视频工作台</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%23c2502b%22/%3E%3C/svg%3E">
 <style>
-:root{
-  --bg:#f5eadd;--card:#fdf5ec;--card2:#f3e3d1;--line:#ead6c0;--line2:#dcc0a3;
-  --ink:#3b2a1f;--muted:#86685a;--quiet:#b09581;--acc:#c0532e;--acc-bg:#f6d9c9;
-  --dlg:#b4441e;--sfx:#2f62b0;
-  --shadow:0 1px 2px rgba(90,50,20,.06),0 8px 22px rgba(90,50,20,.08);
-  --shadow2:0 2px 6px rgba(90,50,20,.08),0 18px 40px rgba(90,50,20,.14);
-  color-scheme:light}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-button{font:inherit;color:inherit}
-svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.app{display:grid;grid-template-columns:236px minmax(0,1fr);height:100vh}
-
-/* 侧栏：暖色 */
-aside{background:linear-gradient(180deg,#a8462a,#8c3520);color:#fbe9dc;overflow-y:auto;padding:22px 14px;display:flex;flex-direction:column}
-.brand{display:flex;align-items:center;gap:10px;padding:0 8px 20px}
-.logo{width:36px;height:36px;border-radius:10px;background:#ffd79a;color:#8c3520;display:grid;place-items:center}
-.logo svg.i{width:20px;height:20px}
-.brand b{display:block;font-size:15.5px;line-height:1.3;color:#fff}
-.brand small{color:#f1c3aa;font-size:12px}
-.navh{color:#eaa98a;font-size:12px;letter-spacing:.06em;margin:20px 10px 6px}
-.nav{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;text-align:left;padding:9px 12px;border-radius:10px;cursor:pointer;color:#fbe1d2;font-size:14.5px}
-.nav:hover{background:rgba(255,255,255,.10)}
-.nav.on{background:#fdf5ec;color:var(--fg,#a8462a);font-weight:600;box-shadow:0 6px 16px rgba(60,20,5,.25)}
-.nav .sw{width:8px;height:8px;border-radius:50%;background:var(--lt);margin-left:auto}
-.side-foot{margin-top:auto;padding:16px 8px 0}
-aside .btn{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fbe1d2}
-aside .btn:hover{background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.35)}
-
-main{overflow-y:auto}
-.wrap{max-width:1240px;margin:0 auto;padding:32px 40px 64px}
-h1{font-size:28px;line-height:1.3;margin:0}
-.lead{color:var(--muted);margin:6px 0 24px}
-h2{font-size:17px;margin:36px 0 14px;display:flex;align-items:center;gap:10px}
-h2::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--fg,var(--acc))}
-.muted{color:var(--muted)}.small{font-size:13px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
-.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:var(--card);padding:7px 14px;border-radius:10px;cursor:pointer;font-size:14px;color:var(--ink)}
-.btn:hover{border-color:var(--acc);color:var(--acc)}
-.btn.on{border-color:var(--acc);color:var(--acc);background:var(--acc-bg)}
-.chip{display:inline-flex;align-items:center;margin:2px 6px 2px 0;padding:2px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card2);cursor:pointer;font-size:13px}
-.chip:hover{border-color:var(--acc);color:var(--acc)}
-.chip.miss{opacity:.5;cursor:default}
-.tw{overflow-x:auto}
-table{border-collapse:collapse;width:100%}
-th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
-th{color:var(--muted);font-weight:600;font-size:13px}
-
-/* 饱和暖色块：用 --fg（主色）和 --lt（亮色） */
-.sat{background:linear-gradient(140deg,var(--lt),var(--fg) 75%);color:#fff;box-shadow:0 14px 30px color-mix(in srgb,var(--fg) 35%,transparent)}
-.glass{background:rgba(255,255,255,.2);color:#fff}
-.nav .todo{margin-left:auto;font-size:11px;color:#f1c3aa;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:0 7px}
-.nav.on .todo{color:var(--fg);border-color:currentColor}
+:root {
+  --bg: #f3f4f7; --card: #ffffff; --ink: #1b2130; --muted: #6a7283; --line: #e3e6ec;
+  --accent: #4357d8; --accent-soft: #eceffd;
+  --doing: #2d63d6; --doing-bg: #e6eeff;
+  --paused: #9a6a00; --paused-bg: #fdf1d6;
+  --done: #1d7a4b; --done-bg: #e0f3e8;
+  --shadow: 0 1px 2px rgba(20, 28, 45, .06), 0 6px 18px rgba(20, 28, 45, .06);
+  --radius: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151c; --card: #1b2029; --ink: #e7eaf0; --muted: #98a1b1; --line: #2a303c;
+    --accent: #8c9bff; --accent-soft: #252b44;
+    --doing: #8fb0ff; --doing-bg: #1f2a44;
+    --paused: #f0c35c; --paused-bg: #3a2f17;
+    --done: #78d3a1; --done-bg: #17342a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25);
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px 64px; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 28px 0 8px; }
+.brand { font-size: 22px; font-weight: 700; letter-spacing: .5px; }
+.day { font-size: 13px; color: var(--muted); background: var(--card); border: 1px solid var(--line);
+  padding: 4px 12px; border-radius: 999px; white-space: nowrap; }
 
 /* 首页 */
-.top h1{font-size:30px}
-.daytag{display:inline-block;margin-bottom:10px;padding:3px 14px;border-radius:999px;background:#d4361f;color:#fff;font-size:13.5px;font-weight:700}
-.routes{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.route{border-radius:22px;padding:20px 24px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
-.route.ours{border:0;background:linear-gradient(140deg,var(--lt),var(--fg) 75%)}
-.route h3{margin:0;font-size:19px;display:flex;align-items:center;gap:10px}
-.route .tag{font-size:12px;padding:1px 10px;border-radius:999px;background:var(--card2);color:var(--muted);font-weight:600}
-.route.ours .tag{background:#fff;color:var(--fg)}
-.route p{margin:6px 0 10px}
-.route .pc{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:14px}
-.route .pc dt{font-weight:700}.route .pc dd{margin:0}
-.route .eg{margin-top:10px;font-size:13px;opacity:.85}
-.route .srcs{margin-top:8px}
-.diag{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px 10px;box-shadow:var(--shadow);overflow-x:auto}
-.diag svg{display:block;width:100%;min-width:860px;height:auto}
-.diag g[data-act]{cursor:pointer}
-.diag g[data-act]:hover rect.box{stroke-width:2.4}
-.diag text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
-.diag .mono{font-family:ui-monospace,Menlo,monospace}
-.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:13px;color:var(--muted)}
-.case{margin-top:22px;border-radius:22px;padding:20px 26px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center}
-.case h3{margin:0;color:#fff;font-size:19px}.case p{margin:4px 0 12px;color:rgba(255,255,255,.88)}
-.case .nums{display:grid;grid-template-columns:repeat(4,auto);gap:10px}
-.case .num{border-radius:14px;padding:8px 14px}.case .num span{display:block;font-size:12px;color:rgba(255,255,255,.8)}.case .num b{font-size:22px}
-.case .btn{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);color:#fff}
+.group { margin-top: 28px; }
+.group h2 { font-size: 15px; font-weight: 600; color: var(--muted); margin: 0 0 12px; display: flex; gap: 8px; align-items: baseline; }
+.group h2 b { font-size: 20px; color: var(--ink); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { display: flex; flex-direction: column; gap: 16px; background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); transition: transform .15s, border-color .15s; }
+.card:hover, .card:focus-visible { transform: translateY(-2px); border-color: var(--accent); outline: none; }
+.card .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.card h3 { margin: 0; font-size: 20px; line-height: 1.3; }
+.faces { display: flex; gap: 8px; flex-wrap: wrap; min-height: 72px; }
+.face { width: 72px; height: 72px; border-radius: 14px; object-fit: cover; background: var(--accent-soft);
+  border: 1px solid var(--line); display: block; }
+.face.none { display: grid; place-items: center; font-size: 22px; font-weight: 700; color: var(--accent); }
+.empty-faces { font-size: 14px; color: var(--muted); align-self: center; }
+.chip { font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.s-进行中 { color: var(--doing); background: var(--doing-bg); }
+.s-暂停 { color: var(--paused); background: var(--paused-bg); }
+.s-已完成 { color: var(--done); background: var(--done-bg); }
+.none-yet { color: var(--muted); font-size: 15px; padding: 8px 0; }
 
-/* 步骤页 */
-.hero{border-radius:26px;padding:26px 30px;display:flex;align-items:center;gap:22px}
-.ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center}
-.hero .ico{width:64px;height:64px;border-radius:20px}.hero .ico svg.i{width:32px;height:32px}
-.hero .step{font-size:13px;color:rgba(255,255,255,.82);font-weight:600}
-.hero h1{color:#fff}.hero p{margin:4px 0 0;color:rgba(255,255,255,.92);font-size:16px}
-.hero .meta{margin-left:auto;display:flex;gap:12px}
-.kpi{border-radius:14px;padding:10px 18px;min-width:120px}
-.kpi span{display:block;font-size:12px;color:rgba(255,255,255,.78)}.kpi b{font-size:16px}
-.who-legend{display:flex;gap:8px;margin:-4px 0 12px;flex-wrap:wrap}
-.who{display:inline-block;min-width:54px;text-align:center;padding:2px 10px;border-radius:999px;font-size:12.5px;font-weight:700;color:#fff;background:var(--w)}
-.how{display:flex;flex-direction:column;gap:10px;counter-reset:h}
-.hrow{display:grid;grid-template-columns:34px 70px minmax(0,1fr);gap:12px;align-items:center;padding:12px 16px;border-radius:16px;background:var(--tint)}
-.hrow::before{counter-increment:h;content:counter(h);width:30px;height:30px;border-radius:50%;background:var(--fg);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
-.hrow.you{background:var(--card);border:2px solid var(--fg);box-shadow:0 8px 20px color-mix(in srgb,var(--fg) 18%,transparent)}
-.hrow .do{font-size:15.5px}
-.tag-tip{display:inline-flex;align-items:center;gap:4px;margin-left:8px;padding:1px 10px;border-radius:8px;background:var(--fg);color:#fff;font-size:13px;font-weight:600;vertical-align:1px}
-.tag-tip svg.i{width:14px;height:14px}
-.src{display:inline-flex;align-items:center;gap:5px;margin:2px 8px 2px 0;font-size:12.5px;color:var(--muted)}
-.src i{font-style:normal;font-size:11.5px;font-weight:700;padding:0 7px;border-radius:6px;color:#fff;background:var(--s)}
-.src a{color:inherit}.src a:hover{color:var(--acc)}
-.trybox{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow)}
-.trybox .hint{color:var(--muted);font-size:13.5px;margin:0 0 12px}
-.alts{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.alt{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--fg);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
-.alt.bad{border-top-color:var(--quiet);background:var(--card2)}
-.alt h3{margin:0;font-size:17px}.alt h3 small{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
-.alt .where{font-size:14px}.alt .where b{color:var(--fg)}
-.alt .badges{display:flex;flex-wrap:wrap;gap:6px}
-.bdg{font-size:12.5px;padding:1px 9px;border-radius:7px;background:var(--card2);border:1px solid var(--line)}
-.bdg.ok{background:#e2efe3;border-color:#bcd8bf;color:#2f6b3e}.bdg.no{background:#f6e3dc;border-color:#e9c3b5;color:#9a3f22}
-.alt .note{font-size:13.5px;color:#9a3f22}
-.alt .nr{font-size:12px;font-weight:700;color:#fff;background:var(--quiet);border-radius:6px;padding:0 8px;margin-left:8px}
-.stepnav{display:flex;justify-content:space-between;margin-top:40px}
+/* 作品页 */
+.back { display: inline-block; margin-top: 8px; font-size: 15px; color: var(--accent); }
+.head { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 0 4px; }
+.head h1 { margin: 0; font-size: 28px; line-height: 1.25; }
+.kind { color: var(--muted); font-size: 14px; }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px; margin-top: 20px; }
+.panel > h2 { margin: 0 0 14px; font-size: 16px; color: var(--muted); font-weight: 600; }
+.cast { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.cast figure { margin: 0; }
+.cast button { all: unset; cursor: zoom-in; display: block; width: 100%; }
+.cast img, .cast .ph { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; display: block;
+  background: var(--accent-soft); border: 1px solid var(--line); }
+.cast .ph { display: grid; place-items: center; font-size: 40px; font-weight: 700; color: var(--accent); }
+.cast figcaption { margin-top: 8px; font-weight: 600; text-align: center; }
+.cast figcaption small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+video { width: 100%; max-height: 72vh; border-radius: 12px; background: #000; display: block; }
 
-/* 动手试 */
-.lg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.lg button{border:0;border-radius:999px;padding:4px 14px;font-size:13.5px;font-weight:600;cursor:pointer;color:#fff;background:var(--c);opacity:.95}
-.lg button.off{opacity:.35}
-.ptext{white-space:pre-wrap;font-size:14.5px;line-height:1.9;background:var(--card2);border-radius:14px;padding:16px 18px;max-height:420px;overflow:auto}
-.ptext mark{color:#fff;background:var(--c);border-radius:5px;padding:1px 4px}
-.ptext[data-only] mark{background:none;color:inherit;padding:0}
-.ptext[data-only="ref"] mark.k-ref,.ptext[data-only="cam"] mark.k-cam,.ptext[data-only="dlg"] mark.k-dlg,.ptext[data-only="sfx"] mark.k-sfx,.ptext[data-only="ban"] mark.k-ban{background:var(--c);color:#fff;padding:1px 4px}
-.segpick{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.pair figure{margin:0;background:var(--tint);border-radius:16px;padding:10px}
-.pair img{width:100%;aspect-ratio:16/9;object-fit:contain;background:var(--card);border-radius:10px;cursor:zoom-in}
-.pair video{width:100%;max-height:360px;background:#1c1f22;border-radius:10px;display:block}
-.pair figcaption{padding:8px 4px 0;font-size:14px}.pair figcaption b{display:block}
-.voices{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-.vc{background:var(--tint);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px}
-.vc img{width:100%;aspect-ratio:16/9;object-fit:contain;background:var(--card);border-radius:10px}
-.vc audio{width:100%;height:36px}
-.calc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:12px;align-items:end;margin-top:16px;padding:16px;border-radius:16px;background:var(--tint)}
-.calc label{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
-.calc select,.calc input{font:inherit;padding:6px 10px;border-radius:10px;border:1px solid var(--line2);background:var(--card);color:var(--ink)}
-.calc .res{font-size:28px;font-weight:800;color:var(--fg);white-space:nowrap}
-.calc .res small{display:block;font-size:12px;font-weight:400;color:var(--muted)}
-.npanel{margin-top:12px;padding:14px 18px;border-radius:16px;background:var(--tint);border-left:5px solid var(--fg)}
-.npanel b{font-size:16px}.npanel p{margin:4px 0}
-.steps3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.steps3 div{background:var(--tint);border-radius:14px;padding:12px 14px}
-.steps3 b{display:block;color:var(--fg)}
+/* 剧本排版 */
+.script { max-width: 760px; margin: 0 auto; }
+.src { font-size: 12px; color: var(--muted); margin: -6px 0 18px; word-break: break-all; }
+.script .h2 { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 1px; margin: 28px 0 10px;
+  padding-top: 14px; border-top: 1px solid var(--line); }
+.script .src + .h2 { border-top: 0; padding-top: 0; margin-top: 0; }
+.script .scene { font-weight: 700; margin: 26px 0 10px; padding: 6px 12px; background: var(--accent-soft);
+  border-radius: 8px; display: inline-block; }
+.script .act { color: var(--muted); margin: 10px 0; white-space: pre-line; }
+.script .say { margin: 14px 0 14px 8%; }
+.script .say .who { font-size: 14px; font-weight: 700; color: var(--accent); }
+.script .say .what { font-size: 17px; white-space: pre-line; }
+.script ul { margin: 8px 0; padding-left: 20px; }
+.script li { margin: 8px 0; }
+.script .note { border-left: 3px solid var(--line); padding-left: 12px; color: var(--muted); margin: 10px 0; }
+.script .line { color: var(--ink); font-weight: 600; }
+.script .line::before { content: "“"; } .script .line::after { content: "”"; }
+.script .sfx { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 0 6px; margin: 0 2px; }
+.tablebox { overflow-x: auto; margin: 12px 0; border: 1px solid var(--line); border-radius: 10px; }
+.tablebox table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; }
+.tablebox th, .tablebox td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.tablebox th { background: var(--accent-soft); font-weight: 600; white-space: nowrap; }
+.tablebox tr:last-child td { border-bottom: 0; }
+.msg { color: var(--muted); }
 
-/* 素材页 */
-.thumb{position:relative;aspect-ratio:9/16;background:#1c1f22;border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow)}
-.thumb video,.thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb .cap{position:absolute;left:0;right:0;bottom:0;padding:18px 10px 8px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#f4f1ea;font-size:12.5px}
-.segrow{display:grid;grid-template-columns:80px minmax(0,1fr);gap:16px;padding:18px 0;border-top:1px solid var(--line)}
-.segrow .sid{font-size:22px;font-weight:700;color:var(--acc)}
-.takes{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
-.char{display:grid;gap:10px;align-content:start}
-.char img.sheet{width:100%;aspect-ratio:16/9;object-fit:contain;background:var(--card2);border-radius:12px;cursor:zoom-in}
-.kv{display:grid;grid-template-columns:96px 1fr;gap:4px 10px;margin:0;font-size:13.5px}
-.kv dt{color:var(--quiet)}.kv dd{margin:0}
-.dlg{color:var(--dlg)}
-.player{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px}
-.stage{background:#1c1f22;border-radius:18px;display:flex;justify-content:center;overflow:hidden}
-.stage video{max-height:calc(100vh - 300px);max-width:100%;display:block}
-select.btn{padding:7px 12px}
-.tl{display:flex;height:42px;margin-top:12px;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;background:var(--card2);border:1px solid var(--line)}
-.tl .blk{display:flex;align-items:center;justify-content:center;font-size:12.5px;color:var(--muted);border-right:1px solid var(--line)}
-.tl .blk:nth-child(even){background:#efdcc6}
-.tl .blk.cur{background:var(--acc-bg);color:var(--acc);font-weight:600}
-.tl .ph{position:absolute;top:0;bottom:0;width:2px;background:var(--acc);pointer-events:none}
-.files{display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px}
-.folder{display:flex;justify-content:space-between;width:100%;border:0;background:none;text-align:left;padding:6px 10px;border-radius:8px;cursor:pointer;color:var(--muted);font-size:13.5px}
-.folder:hover,.folder.on{background:var(--acc-bg);color:var(--acc)}
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
-.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow)}
-.tile:hover{border-color:var(--acc)}
-.tile .media{aspect-ratio:1;background:var(--card2);display:grid;place-items:center;color:var(--quiet);font-size:14px}
-.tile .media img,.tile .media video{width:100%;height:100%;object-fit:contain}
-.tile .nm{padding:8px 10px;font-size:12.5px;word-break:break-all}
-.tile .nm small{display:block;color:var(--quiet)}
-.docs{display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px}
-.doci{display:block;width:100%;border:0;background:none;text-align:left;padding:7px 10px;border-radius:8px;cursor:pointer;color:var(--muted)}
-.doci:hover,.doci.on{background:var(--acc-bg);color:var(--acc)}
-.doci small{display:block;color:var(--quiet);font-size:12px}
-.md pre{background:var(--card2);border-radius:10px;padding:12px;overflow-x:auto;font-size:13px;white-space:pre-wrap}
-.md code{background:var(--card2);padding:1px 5px;border-radius:5px;font-size:13px}
-.md a.p{color:var(--acc);cursor:pointer}
-.md blockquote{margin:8px 0;padding:4px 12px;border-left:3px solid var(--line2);color:var(--muted)}
-.md li.l1{margin-left:18px}.md li.l2{margin-left:36px}
-.modal{position:fixed;inset:0;background:rgba(40,36,30,.55);backdrop-filter:blur(4px);display:grid;place-items:center;z-index:50;padding:20px}
-.modal[hidden]{display:none}
-.mbox{background:var(--card);border-radius:20px;padding:16px;max-width:min(1100px,96vw);max-height:94vh;overflow:auto;box-shadow:var(--shadow2)}
-.mhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.mhead .sp{flex:1}
-.mbox video{max-height:80vh;max-width:100%;display:block;margin:auto;border-radius:12px}
-.mbox img{max-height:82vh;max-width:100%;display:block;margin:auto}
-.mbox pre{white-space:pre-wrap;max-width:900px;font-size:13.5px}
-/* 首页、作品、素材 */
-.ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.idea{background:var(--card);border:1px dashed var(--line2);border-radius:16px;padding:14px 16px}
-.idea b{display:block;font-size:15.5px;margin-bottom:4px}.idea span{font-size:13.5px;color:var(--muted)}
-.kinds{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.kind{border-radius:22px;padding:22px 26px;color:#fff;display:flex;flex-direction:column;gap:10px}
-.kind h3{margin:0;font-size:21px;color:#fff}.kind p{margin:0;color:rgba(255,255,255,.92)}
-.kind dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:4px 0 6px;font-size:14px}.kind dt{font-weight:700;opacity:.85}.kind dd{margin:0}
-.kind .btn{align-self:flex-start;background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:#fff}
-.works{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
-.work{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow)}
-.work:hover{border-color:var(--acc)}
-.work video{width:100%;aspect-ratio:16/9;object-fit:contain;background:#1c1f22;display:block}
-.work .wb{padding:12px 16px}.work .wb b{font-size:16px}.work .wb p{margin:4px 0 0;font-size:13.5px;color:var(--muted)}
-.ktag{display:inline-block;font-size:12px;font-weight:700;color:#fff;border-radius:999px;padding:0 9px;margin-right:6px;background:var(--k)}
-.stk{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
-.stk .s{background:#343c46;border-radius:14px;padding:10px;cursor:zoom-in;display:flex;flex-direction:column;align-items:center;gap:4px}
-.stk img{width:100%;aspect-ratio:1;object-fit:contain}.stk span{color:#dfe5ea;font-size:12px;text-align:center}
-.strip{display:flex;gap:10px;overflow-x:auto;padding:6px 2px}.strip img{width:84px;height:84px;object-fit:contain;background:#343c46;border-radius:12px;padding:6px;cursor:pointer}
-.wstage{background:#1c1f22;border-radius:18px;overflow:hidden}.wstage video{width:100%;display:block;aspect-ratio:16/9}
-.chap{display:flex;height:40px;margin-top:12px;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;background:var(--card2);border:1px solid var(--line)}
-.chap .blk{display:flex;align-items:center;justify-content:center;font-size:12.5px;color:var(--muted);border-right:1px solid var(--line);white-space:nowrap;overflow:hidden}
-.chap .blk:nth-child(even){background:#efdcc6}.chap .blk.cur{background:var(--acc-bg);color:var(--acc);font-weight:600}
-.chap .ph{position:absolute;top:0;bottom:0;width:2px;background:var(--acc);pointer-events:none}
-.subnow{font-size:20px;font-weight:700;min-height:34px;margin-top:8px}
-.lines{counter-reset:l;padding-left:0;list-style:none}.lines li{counter-increment:l;padding:6px 0;border-bottom:1px solid var(--line)}
-.lines li::before{content:counter(l);display:inline-block;width:26px;color:var(--quiet);font-weight:700}
-.tbars{display:grid;gap:8px}.tbar{display:flex;height:30px;border-radius:9px;overflow:hidden;font-size:12px}
-.tbar div{display:flex;align-items:center;justify-content:center;color:#fff;border-right:1px solid rgba(255,255,255,.4);white-space:nowrap;overflow:hidden}
-@media (max-width:1100px){.kinds{grid-template-columns:1fr}.routes,.case,.pair{grid-template-columns:1fr}.calc{grid-template-columns:1fr 1fr}.steps3{grid-template-columns:1fr}}
-@media (max-width:760px){.app{grid-template-columns:1fr;height:auto}.wrap{padding:20px 16px 48px}.grid3,.player,.files,.docs{grid-template-columns:1fr}
-  .case .nums{grid-template-columns:1fr 1fr}.hero{flex-wrap:wrap}.hero .meta{margin-left:0}.hrow{grid-template-columns:30px minmax(0,1fr)}.hrow .who{grid-column:2;justify-self:start}.hrow .do{grid-column:2}}
+/* 看大图 */
+#lightbox { position: fixed; inset: 0; background: rgba(8, 10, 16, .88); display: grid; place-items: center;
+  padding: 16px; cursor: zoom-out; z-index: 10; }
+#lightbox[hidden] { display: none; }
+#lightbox img { max-width: 100%; max-height: 100%; border-radius: 10px; }
+
+@media (max-width: 520px) {
+  .grid { grid-template-columns: 1fr; }
+  .head h1 { font-size: 24px; }
+  .script .say { margin-left: 0; }
+  .panel { padding: 16px; }
+}
 </style>
 </head>
 <body>
-<div class="app">
-  <aside id="side"></aside>
-  <main><div class="wrap" id="view">正在读取项目…</div></main>
+<div class="wrap">
+  <header class="top"><a class="brand" href="#">AI 视频工作台</a><span class="day" id="day" hidden></span></header>
+  <main id="app"><p class="msg">加载中…</p></main>
 </div>
-<div class="modal" id="modal" hidden></div>
+<div id="lightbox" hidden><img alt=""></div>
 <script>
-const S = {home: null, data: null, work: null, cw: {}, cfilm: {}, idx: new Map(), route: 'home', seg: null, film: null, folder: '全部', doc: null, node: 'submit', pseg: null};
-const $ = s => document.querySelector(s);
+const $app = document.getElementById('app');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
-const rurl = p => '/f/' + p.split('/').map(encodeURIComponent).join('/');      // 相对总文件夹
-const furl = p => rurl(S.work + '/' + p);                                          // 相对当前短剧作品
-const sec = s => s == null ? '' : s.toFixed(1) + ' 秒';
-const day = t => { const d = new Date(t * 1000); return `${d.getMonth() + 1}-${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
-const size = b => b > 1e6 ? (b / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB';
-const KIND = {video: '视频', image: '图片', audio: '音频', doc: '文档', text: '文本', other: '其他'};
-const STATUS = {done: '已完成', doing: '进行中', todo: '还没做'};
-const MODEL = {'2.5': 'doubao-seedance-2-5-260628', mini: 'doubao-seedance-2-0-mini-260615', '2.0': 'doubao-seedance-2-0-260128'};
-const texts = new Map();
-async function text(p) { if (!texts.has(p)) texts.set(p, fetch(furl(p)).then(r => r.ok ? r.text() : '')); return texts.get(p); }
+const url = (base, rel) => base + rel.split('/').map(encodeURIComponent).join('/');
+const chip = s => `<span class="chip s-${esc(s)}">${esc(s)}</span>`;
 
-// ---------- 打开文件：视频、图片、文本、文档 ----------
-function open(p) {
-  const f = S.idx.get(p);
-  if (!f) { const dir = p.replace(/\/$/, ''); if (S.data.files.some(x => x.path.startsWith(dir + '/'))) { S.folder = dir; go('files'); } return; }
-  if (f.kind === 'doc') { S.doc = p; return go('docs'); }
-  const head = `<div class="mhead"><b>${esc(f.name)}</b><span class="muted small">${esc(p)}</span><span class="sp"></span><button class="btn" data-act="close">关闭</button></div>`;
-  if (f.kind === 'video') return modal(head + `<video controls autoplay playsinline src="${furl(p)}"></video>`);
-  if (f.kind === 'image') return modal(head + `<img src="${furl(p)}" alt="">`);
-  if (f.kind === 'audio') return modal(head + `<audio controls autoplay src="${furl(p)}"></audio>`);
-  text(p).then(t => modal(head + `<pre>${esc(t)}</pre>`));
+// 剧本里的行内写法：**粗体**、{台词}、<音效>、[链接](地址)、`代码`
+function inline(text) {
+  return esc(text)
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
+    .replace(/\{([^{}]+)\}/g, '<span class="line">$1</span>')
+    .replace(/&lt;([^&]{1,40})&gt;/g, '<span class="sfx">$1</span>');
 }
-function modal(html) { const m = $('#modal'); m.innerHTML = `<div class="mbox">${html}</div>`; m.hidden = false; }
-function closeModal() { const m = $('#modal'); m.hidden = true; m.innerHTML = ''; }
-function chip(p, label) { const ok = S.idx.has(p) || S.data.files.some(f => f.path.startsWith(p.replace(/\/$/, '') + '/')); return `<span class="chip ${ok ? '' : 'miss'}" ${ok ? `data-act="open" data-path="${esc(p)}"` : ''}>${esc(label || p)}</span>`; }
-function vthumb(p, cap) { return `<div class="thumb" data-act="open" data-path="${esc(p)}"><video muted playsinline preload="metadata" src="${furl(p)}#t=0.6"></video>${cap ? `<div class="cap">${cap}</div>` : ''}</div>`; }
 
-// ---------- Markdown（够看文档用） ----------
-function inl(s, base) {
-  return String(s).split(/(`[^`]+`)/g).map(part => {
-    if (/^`[^`]+`$/.test(part)) { const c = part.slice(1, -1), p = resolve(c, base); return p ? `<a class="p" data-act="open" data-path="${esc(p)}">${esc(c)}</a>` : `<code>${esc(c)}</code>`; }
-    return esc(part).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>');
+function face(c, cls) {
+  if (!c.照片) return `<span class="${cls} none" title="${esc(c.名字)}">${esc(c.名字.slice(0, 1))}</span>`;
+  return `<img class="${cls}" src="${url('/t/', c.照片)}" alt="${esc(c.名字)}" title="${esc(c.名字)}"
+    loading="lazy" style="object-position:${esc(c.位置)} 20%">`;
+}
+
+async function getJSON(path) {
+  const r = await fetch(path);
+  const d = await r.json();
+  if (!r.ok) throw new Error(d.错误 || r.statusText);
+  return d;
+}
+
+async function showHome() {
+  const d = await getJSON('/api/home');
+  const day = document.getElementById('day');
+  day.hidden = !d.day;
+  day.textContent = d.day ? `入行第 ${d.day} 天` : '';
+  document.title = 'AI 视频工作台';
+  $app.innerHTML = d.groups.map(g => `
+    <section class="group">
+      <h2><b>${esc(g.类别)}</b>${g.作品.length} 部</h2>
+      ${g.作品.length ? `<div class="grid">${g.作品.map(w => `
+        <a class="card" href="#w=${encodeURIComponent(w.id)}">
+          <div class="faces">${w.角色.length ? w.角色.map(c => face(c, 'face')).join('') : '<span class="empty-faces">还没有角色照片</span>'}</div>
+          <div class="row"><h3>${esc(w.标题)}</h3>${chip(w.状态)}</div>
+        </a>`).join('')}</div>` : '<p class="none-yet">还没有作品</p>'}
+    </section>`).join('');
+}
+
+function renderScript(s) {
+  if (!s) return '<p class="msg">作品.json 里还没写剧本在哪。</p>';
+  if (s.缺失) return `<p class="msg">找不到剧本文件：${esc(s.来源)}</p>`;
+  const body = s.blocks.map(b => {
+    switch (b.t) {
+      case 'h2': return `<div class="h2">${inline(b.text)}</div>`;
+      case 'h': return `<div><span class="scene">${inline(b.text)}</span></div>`;
+      case 'say': return `<div class="say"><div class="who">${esc(b.who)}</div><div class="what">${inline(b.text)}</div></div>`;
+      case 'list': return `<ul>${b.items.map(i => `<li>${inline(i)}</li>`).join('')}</ul>`;
+      case 'note': return `<div class="note">${inline(b.text)}</div>`;
+      case 'table': return `<div class="tablebox"><table><thead><tr>${b.head.map(h => `<th>${inline(h)}</th>`).join('')}</tr></thead>
+        <tbody>${b.rows.map(r => `<tr>${b.head.map((_, i) => `<td>${inline(r[i] ?? '')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+      default: return `<p class="act">${inline(b.text)}</p>`;
+    }
   }).join('');
-}
-function resolve(c, base) {
-  const t = c.trim().replace(/^\.\//, '').replace(/\/$/, '');
-  const dir = base ? base.split('/').slice(0, -1).join('/') : '';
-  for (const p of [t, dir ? dir + '/' + t : null]) { if (!p) continue; if (S.idx.has(p)) return p; if (S.data.files.some(f => f.path.startsWith(p + '/'))) return p + '/'; }
-  return null;
-}
-function md(src, base) {
-  const L = src.replace(/\r/g, '').split('\n'); let h = '', i = 0;
-  const isList = l => /^\s*([-*+]|\d+\.)\s+/.test(l);
-  while (i < L.length) {
-    const l = L[i]; let m;
-    if (/^```/.test(l)) { const b = []; i++; while (i < L.length && !/^```/.test(L[i])) b.push(L[i++]); i++; h += `<pre>${esc(b.join('\n'))}</pre>`; continue; }
-    if (/^\s*\|.*\|\s*$/.test(l)) {
-      const rows = []; while (i < L.length && /^\s*\|.*\|\s*$/.test(L[i])) rows.push(L[i++].trim().slice(1, -1).split('|').map(c => c.trim()));
-      const body = rows.slice(rows[1] && rows[1].every(c => /^:?-{3,}:?$/.test(c) || !c) ? 2 : 1);
-      h += `<div class="tw"><table><tr>${rows[0].map(c => `<th>${inl(c, base)}</th>`).join('')}</tr>${body.map(r => `<tr>${r.map(c => `<td>${inl(c, base)}</td>`).join('')}</tr>`).join('')}</table></div>`; continue;
-    }
-    if ((m = l.match(/^(#{1,6})\s+(.*)$/))) { h += `<h${m[1].length}>${inl(m[2], base)}</h${m[1].length}>`; i++; continue; }
-    if (/^\s*(-{3,}|\*{3,})\s*$/.test(l)) { h += '<hr>'; i++; continue; }
-    if (/^\s*>/.test(l)) { const b = []; while (i < L.length && /^\s*>/.test(L[i])) b.push(L[i++].replace(/^\s*>\s?/, '')); h += `<blockquote>${inl(b.join(' '), base)}</blockquote>`; continue; }
-    if (isList(l)) {
-      const b = [];
-      while (i < L.length && (isList(L[i]) || (/^\s{2,}\S/.test(L[i]) && b.length))) {
-        const x = L[i].match(/^(\s*)([-*+]|\d+\.)\s+(.*)$/);
-        if (x) { const lv = Math.min(2, Math.floor(x[1].length / 2)); b.push(`<li class="l${lv}">${/\d/.test(x[2]) ? x[2] + ' ' : ''}${inl(x[3], base)}</li>`); }
-        else b[b.length - 1] = b[b.length - 1].replace(/<\/li>$/, ' ' + inl(L[i].trim(), base) + '</li>');
-        i++;
-      }
-      h += `<ul>${b.join('')}</ul>`; continue;
-    }
-    if (!l.trim()) { i++; continue; }
-    const b = []; while (i < L.length && L[i].trim() && !/^(#{1,6}\s|```|\s*\||\s*>)/.test(L[i]) && !isList(L[i])) b.push(inl(L[i++], base));
-    h += `<p>${b.join('<br>')}</p>`;
-  }
-  return h;
-}
-async function mdInto(sel, p) { const el = $(sel); if (!el) return; const t = await text(p); el.innerHTML = t ? md(t, p) : '<p class="muted">读不到这个文件</p>'; }
-
-// ---------- 图标 ----------
-const ICON = {
-  home: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
-  text: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
-  role: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
-  voice: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
-  video: '<rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3z"/>',
-  music: '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
-  edit: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12"/>',
-  clips: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/>',
-  film: '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/>',
-  folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
-  refresh: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
-  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
-  back: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
-  bulb: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>',
-  code: '<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>',
-  image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
-  smile: '<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4 4 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/>',
-};
-const ic = n => `<svg class="i" viewBox="0 0 24 24">${ICON[n]}</svg>`;
-
-// ---------- 流程数据（flows/<类别>.json）：FLOW 是短剧，CFLOW 是代码动画 ----------
-let FLOW = null, CFLOW = null;
-const FLOWS = {};
-const steps = () => FLOW.steps;
-const cv = t => `--fg:${t.fg};--lt:${t.lt};--tint:${t.tint}`;
-const WHO = {'你': '#d4361f', 'Claude': '#c9820f', '模型': '#8c2f4e', '脚本': '#7a5a48'};
-const SRC = {'实测': '#2f7d4f', '官方': '#2f62b0', '二手': '#b07a1f', '推断': '#8a6a58', '待核实': '#9a9a9a'};
-function src(s) {
-  const title = s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noreferrer">${esc(s.title)}</a>`
-    : s.file && S.idx.has(s.file) ? `<a style="cursor:pointer;text-decoration:underline" data-act="open" data-path="${esc(s.file)}">${esc(s.title)}</a>` : esc(s.title);
-  return `<span class="src" style="--s:${SRC[s.type] || '#999'}"><i>${esc(s.type)}</i>${title}${s.date ? ` · ${esc(s.date)}` : ''}</span>`;
-}
-const srcLegend = (flow = FLOW) => `<div class="legend">每条说法都标了出处：${Object.entries(flow.srcTypes).map(([k, v]) => `<span class="src" style="--s:${SRC[k]}"><i>${k}</i>${esc(v)}</span>`).join('')}</div>`;
-
-// 入行第几天：按本机今天的日期现算，每过一天自动 +1
-function dayN() {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec((S.home && S.home.started) || ''); if (!m) return null;
-  const now = new Date(), a = Date.UTC(+m[1], m[2] - 1, +m[3]), b = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-  return Math.floor((b - a) / 864e5) + 1;
-}
-function side() {
-  const r = S.route, nav = (route, icon, label, t, extra) => `<button class="nav ${r === route ? 'on' : ''}" data-act="go" data-route="${route}" ${t ? `style="${cv(t)}"` : ''}>${ic(icon)}${label}${extra || ''}</button>`;
-  const codeWorks = S.home.works.filter(w => w['类别'] === '代码动画');
-  $('#side').innerHTML = `<div class="brand"><div class="logo">${ic('video')}</div><div><b>AI 视频工作台</b><small>${dayN() ? `入行第 ${dayN()} 天` : '两类做法'}</small></div></div>
-    ${nav('home', 'home', '首页')}
-    ${FLOW && S.data ? `<div class="navh">做法一 · ${esc(FLOW.card.name)}</div>${nav('drama', 'film', '全流程')}
-      ${steps().map((t, i) => nav('step:' + t.key, t.icon, `${i + 1}. ${t.name}`, t, t.done ? '' : '<span class="todo">没做</span>')).join('')}
-      <div class="navh">案例：${esc(S.data.project)}</div>${nav('characters', 'role', '角色')}${nav('clips', 'clips', '片段')}${nav('films', 'film', '成片')}${nav('files', 'folder', '全部文件')}` : ''}
-    ${CFLOW ? `<div class="navh">做法二 · ${esc(CFLOW.card.name)}</div>${nav('code', 'code', '全流程')}
-      ${CFLOW.steps.map((t, i) => nav('cstep:' + t.key, t.icon, `${i + 1}. ${t.name}`, t, t.done ? '' : '<span class="todo">没做</span>')).join('')}
-      ${codeWorks.length ? `<div class="navh">作品</div>${codeWorks.map(w => nav('work:' + w.path, 'film', esc(w['标题']))).join('')}` : ''}` : ''}
-    ${S.home.assets.length ? `<div class="navh">共用</div>${S.home.assets.map(a => nav('assets:' + a.path, 'smile', esc(a.name))).join('')}` : ''}
-    <div class="side-foot"><button class="btn" data-act="refresh">${ic('refresh')}刷新</button></div>`;
+  return `<div class="src">${esc(s.来源)}</div>${body || '<p class="msg">剧本是空的。</p>'}`;
 }
 
-// ---------- 首页：两类做法、作品、素材 ----------
-const KCOL = {'短剧': '#c2502b', '代码动画': '#3d6fe0'};
-function workCard(w) {
-  const route = w['类别'] === '短剧' ? 'films' : 'work:' + w.path, f = w['成片'][0];
-  return `<div class="work" data-act="go" data-route="${esc(route)}">${f ? `<video muted playsinline preload="metadata" src="${rurl(w.path + '/' + f)}#t=2"></video>` : ''}
-    <div class="wb"><span class="ktag" style="--k:${KCOL[w['类别']] || '#888'}">${esc(w['类别'])}${w['风格'] ? ' · ' + esc(w['风格']) : ''}</span><b>${esc(w['标题'])}</b>
-    <p>${esc(w['状态'] || '')}${w['日期'] ? ' · ' + esc(w['日期']) : ''}</p><p>${esc(w['简介'] || '')}</p></div></div>`;
-}
-function homePage() {
-  const card = (f, route) => f ? `<div class="kind sat" style="--fg:${f.card.fg};--lt:${f.card.lt}"><h3>${esc(f.card.name)}</h3><p>${esc(f.card.say)}</p>
-    <dl><dt>成本</dt><dd>${esc(f.card.cost)}</dd><dt>耗时</dt><dd>${esc(f.card.time)}</dd><dt>用到</dt><dd>${esc(f.card.models)}</dd><dt>适合</dt><dd>${esc(f.card.fit)}</dd><dt>Skill</dt><dd>${esc(f.card.skill)}</dd></dl>
-    <button class="btn" data-act="go" data-route="${route}">看流程${ic('arrow')}</button></div>` : '';
-  const lib = S.home.assets[0], picks = lib ? lib.groups.flatMap(g => g.items).slice(0, 14) : [];
-  return `<div class="top">${dayN() ? `<span class="pill daytag">入行第 ${dayN()} 天 · 从 ${esc(S.home.started)} 算起</span>` : ''}<h1>AI 视频怎么做</h1>
-    <p class="lead">一个系列 3～5 分钟。目前两类做法：让 Opus 当导演指挥视频模型，或者让 Opus 直接写代码把画面画出来。</p></div>
-  <div class="kinds">${card(FLOW, 'drama')}${card(CFLOW, 'code')}</div>
-  <h2>作品</h2><div class="works">${S.home.works.map(workCard).join('') || '<p class="muted">总文件夹里还没有 作品.json。</p>'}</div>
-  ${lib ? `<h2>素材库：${esc(lib.name)}</h2><p class="muted small">做片时插进画面用，透明底。</p><div class="strip">${picks.map(p => `<img src="${rurl(p)}" alt="" loading="lazy" data-act="ropen" data-path="${esc(p)}">`).join('')}</div>
-    <p><button class="btn" data-act="go" data-route="assets:${esc(lib.path)}">${ic('smile')}全部素材</button></p>` : ''}`;
-}
-// ---------- 首页：链路图 ----------
-function flowSvg() {
-  const W = 156, G = 34, X0 = 30, Y = 70, H = 120, xs = steps().map((_, i) => X0 + i * (W + G)), end = xs[5] + W;
-  const ink = '#3b2a1f', muted = '#86685a', rule = '#dcc0a3', acc = '#d4361f';
-  const one = xs[3] + W;   // 一站式平台确定包到视频生成
-  let s = `<svg viewBox="0 0 ${end + 30} 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI 短剧制作链路">
-    <defs><pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="11" cy="11" r="0.8" fill="rgba(59,42,31,.12)"/></pattern>
-      <marker id="ar" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="${muted}"/></marker></defs>
-    <rect width="100%" height="100%" fill="url(#dots)"/>
-    <text x="${X0}" y="26" class="mono" font-size="11" letter-spacing="1.5" fill="${muted}">一站式平台（小云雀、可灵、Museshort、LibTV）</text>
-    <path d="M${X0} 44 V36 H${one} V44" fill="none" stroke="${muted}" stroke-width="1.2"/>
-    <path d="M${one + G / 2} 36 H${end} V44" fill="none" stroke="${muted}" stroke-width="1.2" stroke-dasharray="4 4"/>
-    <text x="${(one + G / 2 + end) / 2}" y="30" text-anchor="middle" font-size="11" fill="${muted}">配乐、剪辑：各家不同（待核实）</text>`;
-  steps().forEach((t, i) => {
-    const x = xs[i], focal = t.core;
-    if (i < 5) s += `<line x1="${x + W + 2}" y1="${Y + H / 2}" x2="${x + W + G - 4}" y2="${Y + H / 2}" stroke="${muted}" stroke-width="1.2" marker-end="url(#ar)"/>`;
-    s += `<g data-act="go" data-route="step:${t.key}">
-      <rect class="box" x="${x}" y="${Y}" width="${W}" height="${H}" rx="12" fill="${focal ? 'rgba(212,54,31,.07)' : '#fdf5ec'}" stroke="${focal ? acc : rule}" stroke-width="${focal ? 2 : 1.2}"/>
-      <rect x="${x}" y="${Y}" width="${W}" height="6" rx="3" fill="${t.fg}"/>
-      <text x="${x + 14}" y="${Y + 30}" class="mono" font-size="11" letter-spacing="1.5" fill="${t.fg}" font-weight="600">0${i + 1}${focal ? ' · 核心' : ''}</text>
-      <text x="${x + 14}" y="${Y + 56}" font-size="19" font-weight="700" fill="${ink}">${esc(t.name)}</text>
-      <text x="${x + 14}" y="${Y + 80}" font-size="12.5" fill="${muted}">产出：${esc(t.short)}</text>
-      <text x="${x + 14}" y="${Y + 104}" class="mono" font-size="11" fill="${t.done ? ink : muted}">${esc(t.tool)}</text></g>`;
-  });
-  s += `<text x="${X0}" y="226" class="mono" font-size="11" letter-spacing="1.5" fill="${acc}">自己拼接口 · 第 1 集</text>
-    <line x1="${xs[0] + W / 2}" y1="252" x2="${xs[5] + W / 2}" y2="252" stroke="${acc}" stroke-width="1.6"/>`;
-  steps().forEach((t, i) => {
-    const cx = xs[i] + W / 2;
-    s += t.done ? `<circle cx="${cx}" cy="252" r="7" fill="${acc}"/><text x="${cx}" y="280" text-anchor="middle" font-size="12" fill="${ink}">做了</text>`
-      : `<circle cx="${cx}" cy="252" r="7" fill="#fdf5ec" stroke="${acc}" stroke-width="1.6"/><text x="${cx}" y="280" text-anchor="middle" font-size="12" fill="${muted}">还没做</text>`;
-  });
-  return s + '</svg>';
-}
-function overview() {
-  const d = S.data, film = d.films.find(f => f.group === '成片'), v = steps().find(t => t.core);
-  const calls = d.segments.flatMap(s => s.takes).filter(t => t.group !== '实验').length;
-  const total = d.costs.segments + d.characters.filter(c => c.main).length * 0.3;
-  const route = r => `<div class="route ${r.ours ? 'ours sat' : ''}" ${r.ours ? `style="${cv(v)}"` : ''}>
-    <h3>${esc(r.name)}<span class="tag">${r.ours ? '我们走这条' : '另一条路'}</span></h3><p>${esc(r.say)}</p>
-    <dl class="pc"><dt>好处</dt><dd>${esc(r.good)}</dd><dt>代价</dt><dd>${esc(r.bad)}</dd></dl>
-    <div class="eg">${esc(r.eg)}</div>${r.src && !r.ours ? `<div class="srcs">${r.src.map(src).join('')}</div>` : ''}</div>`;
-  return `<div class="top"><h1>做法一：${esc(FLOW.card.name)}</h1><p class="lead">从一句想法到一集成片，一共 6 步。点任意一步，看这一步怎么做、能怎么换。</p></div>
-  <div class="routes">${FLOW.routes.map(route).join('')}</div>
-  <h2>整条链路</h2><div class="diag">${flowSvg()}</div>${srcLegend()}
-  <div class="case sat" style="${cv(steps()[1])}"><div><h3>案例：${esc(d.project)}</h3><p>用这条流程做出来的第 1 集。素材都在左边“案例”里。</p>
-    <div class="nums"><div class="num glass"><span>成片</span><b>${film ? Math.round(film.duration) : '—'} 秒</b></div><div class="num glass"><span>切成</span><b>${d.segments.length} 段</b></div>
-    <div class="num glass"><span>拍视频</span><b>${calls} 次</b></div><div class="num glass"><span>总花费</span><b>约 ¥${Math.round(total)}</b></div></div></div>
-    <div><button class="btn" data-act="go" data-route="films">${ic('film')}看成片</button></div></div>${ideasBox(FLOW)}`;
-}
-const ideasBox = f => f.ideas ? `<h2>还可以试试</h2><p class="muted small">想法，不是结论；挑一个就能开一支新片。</p><div class="ideas">${f.ideas.map(x => `<div class="idea"><b>${esc(x.title)}</b><span>${esc(x.say)}</span></div>`).join('')}</div>` : '';
-
-// ---------- 做法二：纯 Opus 写代码 ----------
-const mainCode = () => S.cw[(S.home.works.find(w => w['类别'] === '代码动画') || {}).path];
-function chainSvg(flow, label) {
-  const n = flow.steps.length, W = 136, G = 24, X0 = 24, Y = 40, H = 112, end = X0 + n * W + (n - 1) * G;
-  const ink = '#3b2a1f', muted = '#86685a', rule = '#dcc0a3', acc = '#ff5a36';
-  let s = `<svg viewBox="0 0 ${end + 24} 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(flow.card.name)}流程">
-    <defs><marker id="ar3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="${muted}"/></marker></defs>
-    <text x="${X0}" y="24" class="mono" font-size="11" letter-spacing="1.5" fill="${muted}">全程不调视频模型 · 只有旁白调一次豆包语音</text>`;
-  flow.steps.forEach((t, i) => {
-    const x = X0 + i * (W + G);
-    if (i < n - 1) s += `<line x1="${x + W + 2}" y1="${Y + H / 2}" x2="${x + W + G - 4}" y2="${Y + H / 2}" stroke="${muted}" stroke-width="1.2" marker-end="url(#ar3)"/>`;
-    s += `<g data-act="go" data-route="cstep:${t.key}"><rect class="box" x="${x}" y="${Y}" width="${W}" height="${H}" rx="12" fill="${t.core ? 'rgba(255,90,54,.08)' : '#fdf5ec'}" stroke="${t.core ? acc : rule}" stroke-width="${t.core ? 2 : 1.2}"/>
-      <rect x="${x}" y="${Y}" width="${W}" height="6" rx="3" fill="${t.fg}"/>
-      <text x="${x + 12}" y="${Y + 28}" class="mono" font-size="11" fill="${t.fg}" font-weight="600">0${i + 1}${t.core ? ' · 核心' : ''}</text>
-      <text x="${x + 12}" y="${Y + 54}" font-size="17" font-weight="700" fill="${ink}">${esc(t.name)}</text>
-      <text x="${x + 12}" y="${Y + 76}" font-size="12" fill="${muted}">产出：${esc(t.short)}</text>
-      <text x="${x + 12}" y="${Y + 98}" font-size="11.5" fill="${muted}">${esc(t.cost)}</text></g>`;
-  });
-  s += `<text x="${X0}" y="186" class="mono" font-size="11" letter-spacing="1.5" fill="${acc}">${esc(label)}</text><line x1="${X0 + W / 2}" y1="204" x2="${end - W / 2}" y2="204" stroke="${acc}" stroke-width="1.6"/>`;
-  flow.steps.forEach((t, i) => { const cx = X0 + i * (W + G) + W / 2; s += `<circle cx="${cx}" cy="204" r="7" fill="${t.done ? acc : '#fdf5ec'}" stroke="${acc}" stroke-width="1.6"/>`; });
-  return s + '</svg>';
-}
-function codePage() {
-  const works = S.home.works.filter(w => w['类别'] === '代码动画');
-  return `<div class="top"><h1>做法二：${esc(CFLOW.card.name)}</h1><p class="lead">${esc(CFLOW.card.say)}点任意一步，看这一步怎么做、能怎么换。</p></div>
-  <h2>整条链路</h2><div class="diag">${chainSvg(CFLOW, works[0] ? '作品：' + works[0]['标题'] : '还没有作品')}</div>${srcLegend(CFLOW)}
-  ${works.length ? `<h2>作品</h2><div class="works">${works.map(workCard).join('')}</div>` : ''}${ideasBox(CFLOW)}`;
-}
-const CTRY = {
-  script: () => { const c = mainCode(); if (!c || !c.narration) return '<p class="muted">还没有旁白稿。</p>'; setTimeout(async () => { const t = await (await fetch(rurl(c.narration))).text(); const el = $('#lines'); if (el) el.innerHTML = t.trim().split('\n').map(l => `<li>${esc(l)}</li>`).join(''); });
-    return `<p class="hint">《${esc(c.info['标题'])}》的旁白稿，一行一句，你确认过才合成。</p><ol class="lines" id="lines">读取中…</ol>`; },
-  cues: () => { const c = mainCode(); if (!c || !c.chapters.length) return '<p class="muted">还没有节拍表。</p>';
-    const bar = (key, total) => { const pts = [0, ...c.chapters.map(x => x[key]), total]; return `<div class="tbar">${pts.slice(0, -1).map((a, i) => `<div style="flex:${pts[i + 1] - a};background:${i ? CFLOW.steps[1].fg : '#9a8a7c'};opacity:${0.55 + (i % 2) * 0.3}">${i ? esc(c.chapters[i - 1].name) : '钩子'}</div>`).join('')}</div>`; };
-    return `<p class="hint">同一份节拍：上面是没配音时（${c.duration0} 秒），下面是按旁白重排后（${c.duration} 秒）。装不下的章拉长，其余不动；最后一块是总览、高潮和结尾。</p><div class="tbars">${bar('t0', c.duration0)}${bar('t', c.duration)}</div>`; },
-  visual: () => { const c = mainCode(), f = c && c.info['成片'].find(x => /v1/.test(x)); return f ? `<p class="hint">没有一帧是模型生成的：每一帧都是网页按时间画出来的。这是无配音的 v1。</p><div class="wstage"><video controls preload="metadata" playsinline src="${rurl(f)}#t=2"></video></div>` : ''; },
-  music: () => { const c = mainCode(); return c && c.audio ? `<p class="hint">最终音轨：代码合成的配乐和音效，加上旁白，说话时配乐自动让路。</p><audio controls preload="none" style="width:100%" src="${rurl(c.audio)}"></audio>` : '<p class="muted">还没有音轨。</p>'; },
-  voice: () => { const c = mainCode(); return c && c.samples.length ? `<p class="hint">选中的音色试音。字幕按豆包返回的逐字时间戳对齐，共 ${c.subs.length} 条。</p>${c.samples.map(a => `<audio controls preload="none" style="width:100%" src="${rurl(a)}"></audio>`).join('')}` : ''; },
-  render: () => { const c = mainCode(), fs = c ? c.info['成片'] : []; return fs.length > 1 ? `<p class="hint">左边 v1 无配音，右边 v2 加旁白和字幕。</p><div class="pair">${fs.slice(0, 2).reverse().map(f => `<figure><video controls preload="metadata" playsinline src="${rurl(f)}#t=2"></video><figcaption>${esc(f.split('/').pop())}</figcaption></figure>`).join('')}</div>` : ''; },
-  publish: () => { const c = mainCode(), lib = S.home.assets[0]; return `${c && c.info['封面'].length ? `<p class="hint">封面按片子的配色画，不用平台推荐的模糊帧。</p><div class="pair">${c.info['封面'].map(f => `<figure><img src="${rurl(f)}" data-act="ropen" data-path="${esc(f)}" alt=""></figure>`).join('')}</div>` : ''}
-    ${lib ? `<p class="hint" style="margin-top:14px">账号角色贴纸，插进以后的片子：</p><div class="strip">${lib.groups.flatMap(g => g.items).slice(0, 12).map(p => `<img src="${rurl(p)}" alt="" loading="lazy" data-act="ropen" data-path="${esc(p)}">`).join('')}</div>` : ''}`; },
-};
-function workPage(path) {
-  const c = S.cw[path]; if (!c) return '<p class="muted">读不到这个作品。</p>';
-  const fs = c.info['成片']; S.cfilm[path] = S.cfilm[path] || fs[0];
-  const nums = Object.entries(c.info['用量'] || {}).slice(0, 3);
-  return `<h1>${esc(c.info['标题'])}</h1><p class="lead">${esc(c.info['简介'] || '')}</p>
-  ${fs.length > 1 ? `<p><select id="cfilmSel" class="btn">${fs.map(f => `<option value="${esc(f)}" ${f === S.cfilm[path] ? 'selected' : ''}>${esc(f.split('/').pop())}</option>`).join('')}</select></p>` : ''}
-  <div class="wstage"><video id="cv" controls playsinline src="${rurl(S.cfilm[path])}"></video></div>
-  <div class="chap" id="chap"></div><div class="subnow" id="subnow"></div>
-  <div class="grid3" style="margin-top:18px">${nums.map(([k, v]) => `<div class="card"><span class="muted small">${esc(k)}</span><div>${esc(v)}</div></div>`).join('')}</div>
-  <p style="margin-top:18px"><button class="btn" data-act="go" data-route="code">${ic('code')}看它是怎么做的</button></p>`;
-}
-function bindWork(path) {
-  const c = S.cw[path], v = $('#cv'); if (!c || !v) return;
-  const sel = $('#cfilmSel'); if (sel) sel.addEventListener('change', e => { S.cfilm[path] = e.target.value; render(); });
-  v.addEventListener('loadedmetadata', () => {
-    const narrated = c.duration && Math.abs(v.duration - c.duration) < Math.abs(v.duration - (c.duration0 || 0)), key = narrated ? 't' : 't0';
-    const pts = [0, ...c.chapters.map(x => x[key]), v.duration], names = ['钩子', ...c.chapters.map(x => x.name)];
-    $('#chap').innerHTML = pts.slice(0, -1).map((a, i) => `<div class="blk" data-k="${i}" style="flex:${pts[i + 1] - a}">${esc(names[i] || '')}</div>`).join('') + '<div class="ph" id="cph"></div>';
-    $('#chap').onclick = e => { const b = $('#chap').getBoundingClientRect(); v.currentTime = (e.clientX - b.left) / b.width * v.duration; };
-    const upd = () => {
-      $('#cph').style.left = (v.currentTime / v.duration * 100) + '%';
-      const k = pts.findIndex((a, i) => v.currentTime >= a && v.currentTime < pts[i + 1]);
-      document.querySelectorAll('#chap .blk').forEach((b, j) => b.classList.toggle('cur', j === k));
-      const sb = narrated ? c.subs.find(x => v.currentTime >= x.t[0] && v.currentTime <= x.t[1] + .05) : null;
-      $('#subnow').textContent = sb ? sb.text : '';
-    };
-    v.addEventListener('timeupdate', upd); v.addEventListener('seeked', upd);
-  });
-}
-function assetsPage(path) {
-  const lib = S.home.assets.find(a => a.path === path) || S.home.assets[0]; if (!lib) return '<p class="muted">没有素材库。</p>';
-  return `<h1>${esc(lib.name)}</h1><p class="lead">透明底贴纸，做片时插进画面。点开看大图。</p>
-  ${lib.groups.map(g => `<h2>${esc(g.name)}（${g.items.length}）</h2><div class="stk">${g.items.map(p => `<div class="s" data-act="ropen" data-path="${esc(p)}"><img src="${rurl(p)}" alt="" loading="lazy"><span>${esc(p.split('/').pop().replace(/\.png$/, ''))}</span></div>`).join('')}</div>`).join('')}`;
-}
-function ropen(p) {
-  const head = `<div class="mhead"><b>${esc(p.split('/').pop())}</b><span class="sp"></span><button class="btn" data-act="close">关闭</button></div>`;
-  modal(head + (/\.(mp4|mov|webm)$/i.test(p) ? `<video controls autoplay playsinline src="${rurl(p)}"></video>` : `<img src="${rurl(p)}" alt="" style="background:#343c46;border-radius:12px">`));
+async function showWork(id) {
+  const w = await getJSON('/api/work?id=' + encodeURIComponent(id));
+  document.title = `${w.标题} · AI 视频工作台`;
+  $app.innerHTML = `
+    <a class="back" href="#">← 全部作品</a>
+    <div class="head"><h1>${esc(w.标题)}</h1>${chip(w.状态)}<span class="kind">${esc(w.类别)}</span></div>
+    <section class="panel"><h2>角色</h2>
+      ${w.角色.length ? `<div class="cast">${w.角色.map(c => `<figure>
+        ${c.照片 ? `<button data-full="${esc(url('/f/', c.照片))}" aria-label="看 ${esc(c.名字)} 的大图">${face(c, '')}</button>` : face(c, 'ph')}
+        <figcaption>${esc(c.名字)}${c.照片 ? '' : '<small>没有照片</small>'}</figcaption></figure>`).join('')}</div>`
+        : '<p class="msg">还没有角色照片。</p>'}
+    </section>
+    ${w.成片 ? `<section class="panel"><h2>成片</h2><video controls preload="metadata" src="${esc(url('/f/', w.成片))}"></video></section>` : ''}
+    <section class="panel"><h2>剧本</h2><div class="script">${renderScript(w.剧本)}</div></section>`;
 }
 
-// ---------- 步骤页 ----------
-function step(key, flow = FLOW, pre = 'step', tries = TRY) {
-  const all = flow.steps, t = all.find(x => x.key === key) || all[0], i = all.indexOf(t), prev = all[i - 1], next = all[i + 1];
-  const row = h => `<div class="hrow ${h.who === '你' ? 'you' : ''}"><span class="who" style="--w:${WHO[h.who]}">${h.who}</span>
-    <div class="do">${esc(h.do)}${h.tip ? `<span class="tag-tip">${ic('bulb')}${esc(h.tip)}</span>` : ''}${h.src ? `<div>${src(h.src)}</div>` : ''}</div></div>`;
-  const alt = a => `<div class="alt ${a.bad ? 'bad' : ''}"><h3>${esc(a.name)}<small>${esc(a.who)}</small>${a.bad ? '<span class="nr">不推荐</span>' : ''}</h3>
-    <div>${esc(a.what)}</div><div class="where"><b>接在哪：</b>${esc(a.where)}</div>
-    <div class="badges"><span class="bdg">${esc(a.price)}</span><span class="bdg ${a.cn ? 'ok' : 'no'}">${a.cn ? '国内直接用' : '境外服务'}</span><span class="bdg ${a.api ? 'ok' : 'no'}">${a.api ? '有接口，Claude 能调' : '只能网页手动'}</span></div>
-    ${a.note ? `<div class="note">${esc(a.note)}</div>` : ''}<div>${a.src.map(src).join('')}</div></div>`;
-  return `<div style="${cv(t)}"><div class="hero sat"><div class="ico glass">${ic(t.icon)}</div>
-    <div><div class="step">${esc(flow.card.name)} · 第 ${i + 1} 步${t.done ? '' : ' · 还没做'}</div><h1>${esc(t.name)}</h1><p>做出来：${esc(t.out)}</p></div>
-    <div class="meta"><div class="kpi glass"><span>我们用</span><b>${esc(t.tool)}</b></div><div class="kpi glass"><span>花费</span><b>${esc(t.cost)}</b></div></div></div>
-  <h2>怎么做</h2><div class="who-legend">${Object.entries(WHO).map(([k, c]) => `<span class="who" style="--w:${c}">${k}</span>`).join('')}<span class="muted small">白底的是你要做的</span></div>
-  <div class="how">${t.how.map(row).join('')}</div>
-  <h2>动手试</h2><div class="trybox" id="try">${(tries[t.try] || (() => ''))()}</div>
-  <h2>还能怎么做</h2><div class="alts">${t.alts.map(alt).join('')}</div>${srcLegend(flow)}
-  <div class="stepnav">${prev ? `<button class="btn" data-act="go" data-route="${pre}:${prev.key}">${ic('back')}${prev.name}</button>` : '<span></span>'}${next ? `<button class="btn" data-act="go" data-route="${pre}:${next.key}">${next.name}${ic('arrow')}</button>` : ''}</div></div>`;
-}
-
-// ---------- 动手试 ----------
-const KINDS = [['ref', '参考素材', '#c9820f'], ['cam', '镜头', '#c2502b'], ['dlg', '台词', '#d4361f'], ['sfx', '音效', '#2f62b0'], ['ban', '限制', '#7a5a48']];
-function markPrompt(t) {
-  const c = Object.fromEntries(KINDS.map(([k, , col]) => [k, col]));
-  const m = (k, s) => `<mark class="k-${k}" style="--c:${c[k]}">${s}</mark>`;
-  return esc(t).replace(/(@(?:图片|音频|视频)\d+)|(\{[^}]*\})|(&lt;[^&]*?&gt;)|(\[[^\]]*\d+[^\]]*秒[^\]]*\]|镜头\s*\d+)|((?:不采用|不出现|一律不要|不要|无字幕|无文字叠加|没有背景音乐)[^，。；\n]{0,16})/g,
-    (all, a, b, d, e, f) => a ? m('ref', a) : b ? m('dlg', b) : d ? m('sfx', d) : e ? m('cam', e) : m('ban', f));
-}
-const promptPath = id => `3_提示词/${id}.txt`;
-const TRY = {
-  prompt: () => {
-    const ids = S.data.segments.map(s => s.id).filter(id => S.idx.has(promptPath(id)));
-    if (!ids.length) return '<p class="muted">这个项目还没有提示词文件。</p>';
-    if (!ids.includes(S.pseg)) S.pseg = ids[0];
-    setTimeout(loadPrompt);
-    return `<p class="hint">第 1 集的真实提示词。点颜色只看那一类，再点一次恢复。</p>
-      <div class="segpick">${ids.map(id => `<button class="btn ${id === S.pseg ? 'on' : ''}" data-act="pseg" data-id="${id}">${id}</button>`).join('')}</div>
-      <div class="lg">${KINDS.map(([k, n, c]) => `<button style="--c:${c}" data-act="only" data-k="${k}">${n}</button>`).join('')}</div>
-      <div class="ptext" id="ptext">读取中…</div>`;
-  },
-  faces: () => {
-    const neu = S.data.files.find(f => /三视图_中性\.png$/.test(f.path));
-    const c = neu && S.data.characters.find(x => x.main && neu.name.includes(x.name));
-    const pair = c ? `<p class="hint">同一个人的两版三视图。原版提示词写了性格，脸上带着冷；中性版只写长相。</p>
-      <div class="pair"><figure><img src="${furl(c.main.path)}" data-act="open" data-path="${esc(c.main.path)}" alt=""><figcaption><b>原版</b>提示词写了“眼神冷静坚定”</figcaption></figure>
-      <figure><img src="${furl(neu.path)}" data-act="open" data-path="${esc(neu.path)}" alt=""><figcaption><b>中性版</b>只写长相和服装</figcaption></figure></div>
-      <p>${src({type: '实测', title: '结论：凶主要来自视频提示词的写法；已开拍的项目换中性三视图，脸会变', file: S.data.experiments[0] && S.data.experiments[0].record})}</p>` : '';
-    return pair + `<p class="hint" style="margin-top:14px">第 1 集的全部三视图：</p><div class="voices">${S.data.characters.filter(x => x.main).map(x =>
-      `<div class="vc"><img src="${furl(x.main.path)}" data-act="open" data-path="${esc(x.main.path)}" loading="lazy" alt=""><b>${esc(x.name)}</b></div>`).join('')}</div>`;
-  },
-  voices: () => `<p class="hint">每个角色一段音色参考。挂上它，Seedance 生成的台词就是这个声音，口型也是它自己对的。</p>
-    <div class="voices">${S.data.characters.filter(c => c.voices.length).map(c => `<div class="vc">${c.main ? `<img src="${furl(c.main.path)}" loading="lazy" alt="">` : ''}<b>${esc(c.name)}</b>
-      ${c.voices.map(v => `<audio controls preload="none" src="${furl(v.path)}"></audio>`).join('')}</div>`).join('') || '<p class="muted">还没有音色参考。</p>'}</div>
-    <p class="hint" style="margin-top:14px">提示词里这样写：<code>@音频1 只提供苏念的音色，不采用它的语气、节奏和台词内容。</code></p>`,
-  video: () => {
-    const seg = S.data.segments.find(s => s.takes.some(t => t.group === '实验'));
-    const base = seg && (seg.takes.find(t => t.in_use) || seg.takes.find(t => t.group !== '实验'));
-    const exp = seg && seg.takes.find(t => t.group === '实验');
-    const film = S.data.films.find(f => f.group === '成片');
-    return `<p class="hint">一次调用的全过程。点格子看说明。</p><div class="diag">${callSvg()}</div><div class="npanel" id="npanel">${nodeInfo(S.node || 'submit')}</div>
-      <div class="calc" id="calc"><label>模型<select id="cm">${Object.keys(PRICE).map(k => `<option ${k === 'Seedance 2.5' ? 'selected' : ''}>${k}</option>`).join('')}</select></label>
-        <label>分辨率<select id="cr"><option>480p</option><option selected>720p</option><option>1080p</option></select></label>
-        <label>成片秒数<input id="cs" type="number" min="5" max="600" value="${film ? Math.round(film.duration) : 60}"></label>
-        <label>平均每段抽几次<input id="ck" type="number" min="1" max="3" step="0.1" value="1.1"></label>
-        <div class="res" id="cres"></div></div>
-      <p>${src({type: '官方', title: '火山方舟每秒价格（Skill 文档 2026-10 核对）'})}${S.data.costs.segments ? src({type: '实测', title: `第 1 集视频实际花了 ¥${S.data.costs.segments.toFixed(2)}`}) : ''}</p>
-      ${base && exp ? `<p class="hint" style="margin-top:16px">同一段 ${seg.id}，只改了提示词写法：</p><div class="pair">
-        <figure><video controls preload="metadata" playsinline src="${furl(base.path)}#t=0.5"></video><figcaption><b>原版</b>写“大声、果断地喊”</figcaption></figure>
-        <figure><video controls preload="metadata" playsinline src="${furl(exp.path)}#t=0.5"></video><figcaption><b>新写法</b>写看谁、要做什么、情绪怎么变</figcaption></figure></div>` : ''}`;
-  },
-  music: () => {
-    const film = S.data.films.find(f => f.group === '成片');
-    return `<p class="hint">第 1 集还没配乐。可以这样试，先不花钱：</p>
-      <div class="steps3"><div><b>1. 找曲子</b>免费曲库挑一首，或者用 Suno 生成一段 ${film ? Math.round(film.duration) : 60} 秒的</div>
-      <div><b>2. 定位置</b>Claude 按剪辑表定：哪段起、哪段收、钩子处推高</div><div><b>3. 混进去</b>ffmpeg 混音，有台词的地方自动压低</div></div>
-      ${film ? `<p class="hint" style="margin-top:14px">现在的成片（没有配乐）：</p><div class="pair"><figure><video controls preload="metadata" playsinline src="${furl(film.path)}#t=0.5"></video></figure>
-        <figure style="display:grid;place-items:center;text-align:center"><div><b style="font-size:18px">配上音乐后放这里对比</b><p class="muted">说一声“试配乐”，Claude 就开始做</p></div></figure></div>` : ''}`;
-  },
-  film: () => {
-    const f = S.data.films.find(x => x.group === '成片') || S.data.films[0];
-    if (!f) return '<p class="muted">还没有成片。</p>';
-    S.film = f.path; const tl = f.timeline || [];
-    return `<p class="hint">成片是按剪辑表拼出来的。点时间条跳到对应的段，右边显示这段用的哪条片段。${S.data.main_edl ? ' 剪辑表：' + chip(S.data.main_edl) : ''}</p>
-      <div class="player"><div><div class="stage"><video id="pv" controls playsinline src="${furl(f.path)}"></video></div>
-      ${tl.length ? `<div class="tl" id="tl">${tl.map((r, k) => `<div class="blk" data-k="${k}" style="flex:${r['止'] - r['起']}">${esc(r['段'])}</div>`).join('')}<div class="ph" id="ph"></div></div>` : ''}</div>
-      <div class="card" id="cur"><span class="muted">播放时这里显示当前是哪一段。</span></div></div>`;
-  },
-};
-async function loadPrompt() {
-  const el = $('#ptext'); if (!el) return;
-  const t = await text(promptPath(S.pseg)); el.innerHTML = t ? markPrompt(t) : '读不到这个文件';
-}
-
-// 拍视频：一次调用的流程图
-const PRICE = {'Seedance 2.5': {'480p': 0.67, '720p': 1.51, '1080p': 3.74}, 'Seedance 2.0': {'480p': 0.46, '720p': 0.99, '1080p': 2.48},
-  '2.0 Fast': {'480p': 0.37, '720p': 0.80}, '2.0 Mini': {'480p': 0.23, '720p': 0.50}};
-const NODES = {
-  prompt: ['提示词', '一段的说明书：每份参考素材管什么、分几个镜头、台词写进 { }、音效写进 < >、不要出现什么。', '实测'],
-  image: ['三视图 @图片', '按顺序对应 @图片1、@图片2…，2.5 最多 30 张。必须是 Seedream 原图，裁过、压过的写实人像会被当成真人拒掉。', '实测'],
-  audio: ['音色 @音频', 'wav 或 mp3，每段 2～30 秒，加起来不超过 30 秒。2.5 可以只传音频。', '官方'],
-  frame: ['首尾帧（可选）', '指定第一帧或最后一帧。有人物的镜头别用：写实人像会被审核拦下。', '实测'],
-  submit: ['提交任务（开始花钱）', '参数：模型、时长（2.5 单段最长 30 秒）、分辨率、画幅、seed、generate_audio（打开就自带声音）。按 token 计费，只有生成成功的才收钱；被拒的不收。', '官方'],
-  wait: ['排队生成', '个人账户同时最多 3 个任务，脚本自动查状态。提交中断时先查任务建没建成，别盲目重交，否则会重复扣费。', '官方'],
-  download: ['下载 mp4', '成功后从 video_url 下载。链接只保存 24 小时，过期就没了。', '官方'],
-  review: ['审片', 'review.py 出检查图、切镜点、画面文字、有声区间；Claude 逐句看表演；你听台词、说现象。', '实测'],
-  next: ['进剪辑', '过关的片段写进剪辑表，交给 ffmpeg。', '实测'],
-};
-const nodeInfo = k => { const [n, d, ty] = NODES[k]; return `<b>${n}</b><p>${d}</p>${src({type: ty, title: ty === '官方' ? '火山方舟接口文档（Skill 摘录）' : 'Skill 文档 / 第 1 集记录'})}`; };
-function callSvg() {
-  const ink = '#3b2a1f', muted = '#86685a', rule = '#dcc0a3', acc = '#d4361f', fg = '#d4361f';
-  const box = (k, x, y, w, h, title, sub, o = {}) => `<g data-act="node" data-n="${k}"><rect class="box" x="${x}" y="${y}" width="${w}" height="${h}" rx="10"
-      fill="${o.focal ? 'rgba(212,54,31,.08)' : '#fdf5ec'}" stroke="${o.focal ? acc : rule}" stroke-width="${o.focal ? 2 : 1.2}" ${o.dash ? 'stroke-dasharray="5 4"' : ''}/>
-    <text x="${x + w / 2}" y="${y + (sub ? h / 2 - 2 : h / 2 + 5)}" text-anchor="middle" font-size="14" font-weight="700" fill="${o.focal ? acc : ink}">${title}</text>
-    ${sub ? `<text x="${x + w / 2}" y="${y + h / 2 + 16}" text-anchor="middle" font-size="11" class="mono" fill="${muted}">${sub}</text>` : ''}</g>`;
-  const line = (x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${muted}" stroke-width="1.2" marker-end="url(#ar2)"/>`;
-  const ins = [['prompt', '提示词', 40], ['image', '三视图 @图片', 92], ['audio', '音色 @音频', 144], ['frame', '首尾帧（可选）', 196]];
-  let s = `<svg viewBox="0 0 1180 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="调用一次视频模型的流程">
-    <defs><pattern id="dots2" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="11" cy="11" r="0.8" fill="rgba(59,42,31,.12)"/></pattern>
-      <marker id="ar2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="${muted}"/></marker></defs>
-    <rect width="100%" height="100%" fill="url(#dots2)"/>
-    <text x="20" y="24" class="mono" font-size="11" letter-spacing="1.5" fill="${muted}">输入</text>
-    <text x="250" y="24" class="mono" font-size="11" letter-spacing="1.5" fill="${acc}">花钱的一步</text>`;
-  ins.forEach(([k, , y]) => { s += `<path d="M180 ${y + 18} H200 Q210 ${y + 18} 210 ${y + 18 + (150 - y - 18) / 2} V${150 - 8} Q210 150 220 150 H243" fill="none" stroke="${muted}" stroke-width="1.2" ${k === 'frame' ? 'stroke-dasharray="4 4"' : ''}/>`; });
-  s += `<line x1="236" y1="150" x2="244" y2="150" stroke="${muted}" stroke-width="1.2" marker-end="url(#ar2)"/>`;
-  ins.forEach(([k, n, y]) => { s += box(k, 20, y, 160, 36, n, '', {dash: k === 'frame'}); });
-  s += line(420, 150, 458, 150) + line(610, 150, 648, 150) + line(800, 150, 838, 150) + line(990, 150, 1038, 150);
-  s += `<text x="1014" y="140" text-anchor="middle" font-size="12" fill="${ink}">过关</text>`;
-  s += `<path d="M915 192 V250 Q915 258 907 258 H343 Q335 258 335 250 V198" fill="none" stroke="${muted}" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#ar2)"/>
-    <text x="625" y="284" text-anchor="middle" font-size="12.5" fill="${ink}">不过关：改提示词，只重抽这一段</text>`;
-  s += box('submit', 250, 105, 170, 90, '提交任务', '模型·时长·分辨率·seed', {focal: true});
-  s += box('wait', 460, 112, 150, 76, '排队生成', '最多同时 3 个');
-  s += box('download', 650, 112, 150, 76, '下载 mp4', '24 小时内');
-  s += box('review', 840, 108, 150, 84, '审片', '脚本 + Claude + 你');
-  s += box('next', 1040, 124, 120, 52, '进剪辑', '');
-  return s + '</svg>';
-}
-function bindTry() {
-  const calc = $('#calc');
-  if (calc) {
-    const upd = () => {
-      const m = $('#cm').value, r = $('#cr'), p = PRICE[m];
-      [...r.options].forEach(o => { o.disabled = !(o.value in p); }); if (!(r.value in p)) r.value = '720p';
-      const secs = +$('#cs').value || 0, k = +$('#ck').value || 1;
-      $('#cres').innerHTML = `约 ¥${(secs * k * p[r.value]).toFixed(0)}<small>${secs} 秒 × ${k} 次 × ¥${p[r.value]}/秒</small>`;
-    };
-    calc.addEventListener('input', upd); upd();
-  }
-  if ($('#pv')) bindFilm();
-}
-
-// ---------- 资产 ----------
-function characters() {
-  return `<h1>角色</h1><p class="lead">定妆照和声音，拍每段视频时都会带上。</p>
-  <div class="grid3">${S.data.characters.map(c => `<div class="card char">
-    ${c.main ? `<img class="sheet" src="${furl(c.main.path)}" data-act="open" data-path="${esc(c.main.path)}" loading="lazy" alt="">` : '<p class="muted">没有三视图</p>'}
-    <b style="font-size:16px">${esc(c.name)}</b>
-    ${c.segments.length ? `<span class="muted small">出场：${c.segments.join(' ')}</span>` : ''}
-    ${c.voices.map(v => `<audio controls preload="none" src="${furl(v.path)}" style="width:100%"></audio>`).join('')}
-    <dl class="kv">${Object.entries(c.info).filter(([k]) => !/参考/.test(k)).map(([k, v]) => `<dt>${esc(k.replace(/（.*）/, ''))}</dt><dd>${inl(v)}</dd>`).join('')}</dl>
-    <div>${c.prompts.map(p => chip(p, '三视图提示词')).join('')}</div>
-    ${c.variants.filter(v => !c.main || v.path !== c.main.path).length ? `<div><span class="muted small">其他版本</span><div class="tiles" style="margin-top:6px">${c.variants.filter(v => !c.main || v.path !== c.main.path).map(v => `<div class="tile" data-act="open" data-path="${esc(v.path)}"><div class="media"><img src="${furl(v.path)}" loading="lazy" alt=""></div><div class="nm">${esc(v.group)}<small>${esc(v.name)}</small></div></div>`).join('')}</div></div>` : ''}
-  </div>`).join('')}</div>`;
-}
-function clips() {
-  return `<h1>生成片段</h1><p class="lead">每段拍出来的视频，标"在用"的进了成片。</p>
-  ${S.data.segments.map(s => `<div class="segrow"><div><div class="sid">${s.id}</div><span class="muted small">${esc(s.fields['时长'] || '')}</span></div>
-    <div><div class="takes">${s.takes.map(t => vthumb(t.path, `${esc(t.label)}<br>${t.in_use ? '在用' : esc(t.group)}${t.cost ? ' · ¥' + t.cost.toFixed(2) : ''}`)).join('') || '<span class="muted">还没生成</span>'}</div></div></div>`).join('')}`;
-}
-function films() {
-  const fs = S.data.films; if (!fs.length) return '<h1>成片和看片</h1><p class="muted">还没有成片。</p>';
-  const f = fs.find(x => x.path === S.film) || fs[0]; S.film = f.path;
-  const tl = f.timeline || [], total = tl.length ? tl[tl.length - 1]['止'] : (f.duration || 1);
-  const groups = ['成片', '预览', '历史版本'].map(g => [g, fs.filter(x => x.group === g)]).filter(([, l]) => l.length);
-  return `<h1>成片</h1><p class="lead">点下面的时间条，跳到对应的段。</p>
-  <p><select id="filmSel" class="btn">${groups.map(([g, l]) => `<optgroup label="${g}">${l.map(x => `<option value="${esc(x.path)}" ${x.path === f.path ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</optgroup>`).join('')}</select></p>
-  <div class="player"><div><div class="stage"><video id="pv" controls playsinline src="${furl(f.path)}"></video></div>
-    ${tl.length ? `<div class="tl" id="tl">${tl.map((r, k) => `<div class="blk" data-k="${k}" style="flex:${r['止'] - r['起']}">${esc(r['段'])}</div>`).join('')}<div class="ph" id="ph"></div></div>` : ''}</div>
-    <div class="card" id="cur"><span class="muted">播放时这里显示当前是哪一段、用的哪条片段、台词。</span></div></div>`;
-}
-function bindFilm() {
-  const v = $('#pv'), f = S.data.films.find(x => x.path === S.film); if (!v || !f) return;
-  const tl = f.timeline || [], total = tl.length ? tl[tl.length - 1]['止'] : 0; let last = -1;
-  const upd = () => {
-    if (!tl.length) return; $('#ph').style.left = (v.currentTime / total * 100) + '%';
-    const k = tl.findIndex(r => v.currentTime >= r['起'] && v.currentTime < r['止']); if (k === last) return; last = k;
-    document.querySelectorAll('.blk').forEach((b, j) => b.classList.toggle('cur', j === k));
-    const r = tl[k]; if (!r) return; const s = S.data.segments.find(x => x.id === r['段']);
-    $('#cur').innerHTML = `<b style="font-size:18px">${esc(r['段'])}</b> <span class="muted small">${r['起'].toFixed(1)}–${r['止'].toFixed(1)} 秒</span>
-      <p>${r['文件'] ? chip(r['文件']) : ''}</p>${s ? `<p>${inl(s.fields['内容'] || '')}</p><p class="dlg">${inl(s.fields['台词'] || s.dialogue.join('／'))}</p>` : ''}${r['备注'] ? `<p class="muted small">${inl(r['备注'])}</p>` : ''}`;
-  };
-  v.addEventListener('timeupdate', upd); v.addEventListener('seeked', upd);
-  const bar = $('#tl'); if (bar) bar.addEventListener('click', e => { const b = bar.getBoundingClientRect(); v.currentTime = (e.clientX - b.left) / b.width * total; });
-  const sel = $('#filmSel'); if (sel) sel.addEventListener('change', e => { S.film = e.target.value; render(); });
-}
-function tile(f) {
-  const m = f.kind === 'image' ? `<img src="${furl(f.path)}" loading="lazy" alt="">` : f.kind === 'video' ? `<video muted preload="metadata" src="${furl(f.path)}#t=0.6"></video>` : `<span>${KIND[f.kind] || '其他'}</span>`;
-  return `<div class="tile" data-act="open" data-path="${esc(f.path)}"><div class="media">${m}</div><div class="nm">${esc(f.name)}<small>${size(f.size)} · ${day(f.mtime)}</small></div></div>`;
-}
-function files() {
-  const all = S.data.files, areas = [...new Set(all.map(f => f.area))].sort((a, b) => (a.startsWith('归档') - b.startsWith('归档')) || a.localeCompare(b, 'zh'));
-  const sel = S.folder, list = all.filter(f => sel === '全部' || f.area === sel || f.path.startsWith(sel + '/'));
-  return `<h1>全部文件</h1><p class="lead">项目文件夹里的所有东西。点开就能看。</p><div class="files"><div class="card">
-    <button class="folder ${sel === '全部' ? 'on' : ''}" data-act="folder" data-f="全部"><span>全部</span><span>${all.length}</span></button>
-    ${areas.map(a => `<button class="folder ${sel === a ? 'on' : ''}" data-act="folder" data-f="${esc(a)}"><span>${esc(a)}</span><span>${all.filter(f => f.area === a).length}</span></button>`).join('')}
-    ${areas.includes(sel) || sel === '全部' ? '' : `<button class="folder on"><span>${esc(sel)}</span><span>${list.length}</span></button>`}</div>
-    <div><div class="tiles">${list.slice(0, 300).map(tile).join('')}</div>${list.length > 300 ? `<p class="muted">只显示前 300 个</p>` : ''}</div></div>`;
-}
-function docs() {
-  const ds = S.data.docs, live = ds.filter(x => !x.area.startsWith('归档')), old = ds.filter(x => x.area.startsWith('归档'));
-  if (!S.doc) S.doc = S.data.handoff || (live[0] || {}).path;
-  const item = x => `<button class="doci ${x.path === S.doc ? 'on' : ''}" data-act="doc" data-path="${esc(x.path)}">${esc(x.title)}<small>${esc(x.path)}</small></button>`;
-  return `<h1>文档</h1><div class="docs"><div class="card">${live.map(item).join('')}${old.length ? `<details><summary class="muted small" style="margin-top:10px;cursor:pointer">归档里的文档（${old.length}）</summary>${old.map(item).join('')}</details>` : ''}</div>
-    <div class="card md" id="docbox">${S.doc ? '读取中…' : '没有文档'}</div></div>`;
-}
-
-// ---------- 路由和事件 ----------
-function go(route) { location.hash = route; }
-function render() {
-  if (!S.data) return;
-  const r = S.route; side();
-  const i = r.indexOf(':'), kind = i < 0 ? r : r.slice(0, i), key = i < 0 ? '' : r.slice(i + 1);
-  const drama = {drama: overview, step: () => step(key), characters, clips, films, files, docs};
-  const view = kind in drama && S.data ? drama[kind]()
-    : kind === 'code' && CFLOW ? codePage() : kind === 'cstep' && CFLOW ? step(key, CFLOW, 'cstep', CTRY)
-    : kind === 'work' ? workPage(key) : kind === 'assets' ? assetsPage(key) : homePage();
-  $('#view').innerHTML = view;
-  if (kind === 'docs' && S.doc) mdInto('#docbox', S.doc);
-  if (kind === 'films') bindFilm();
-  if (kind === 'step') bindTry();
-  if (kind === 'work') bindWork(key);
-  document.querySelector('main').scrollTop = 0;
-}
-const getJson = u => fetch(u).then(r => r.ok ? r.json() : null);
-async function load() {
+async function router() {
+  const m = location.hash.match(/^#w=(.+)$/);
   try {
-    S.home = await getJson('/api/home');
-    for (const k of S.home.kinds) FLOWS[k] = await getJson('/api/flow?kind=' + encodeURIComponent(k));
-    FLOW = FLOWS['短剧'] || null; CFLOW = FLOWS['代码动画'] || null;
-    const dw = S.home.works.find(w => w['类别'] === '短剧');
-    S.work = dw ? dw.path : null; S.data = dw ? await getJson('/api/project?work=' + encodeURIComponent(dw.path)) : null;
-    for (const w of S.home.works.filter(w => w['类别'] === '代码动画')) S.cw[w.path] = await getJson('/api/codework?work=' + encodeURIComponent(w.path));
-  } catch (e) { $('#view').innerHTML = '<p>读取失败，确认后台脚本还在运行，然后刷新页面。</p>'; return; }
-  S.idx = new Map(S.data ? S.data.files.map(f => [f.path, f]) : []); texts.clear();
-  if (S.data && !S.seg && S.data.segments.length) S.seg = S.data.segments[0].id;
-  render();
+    if (m) await showWork(decodeURIComponent(m[1])); else await showHome();
+  } catch (e) {
+    $app.innerHTML = `<a class="back" href="#">← 全部作品</a><p class="msg">打不开：${esc(e.message)}</p>`;
+  }
+  window.scrollTo(0, 0);
 }
-window.addEventListener('hashchange', () => { S.route = decodeURIComponent(location.hash.slice(1)) || 'home'; render(); });
+
+const box = document.getElementById('lightbox');
 document.addEventListener('click', e => {
-  const el = e.target.closest('[data-act]'); if (!el) { if (e.target.id === 'modal') closeModal(); return; }
-  const a = el.dataset.act;
-  if (a === 'go') go(el.dataset.route);
-  else if (a === 'open') open(el.dataset.path);
-  else if (a === 'ropen') ropen(el.dataset.path);
-  else if (a === 'close') closeModal();
-  else if (a === 'seg') { S.seg = el.dataset.id; render(); }
-  else if (a === 'folder') { S.folder = el.dataset.f; render(); }
-  else if (a === 'doc') { S.doc = el.dataset.path; render(); }
-  else if (a === 'refresh') load();
-  else if (a === 'node') { S.node = el.dataset.n; $('#npanel').innerHTML = nodeInfo(S.node); }
-  else if (a === 'pseg') { S.pseg = el.dataset.id; document.querySelectorAll('[data-act=pseg]').forEach(b => b.classList.toggle('on', b === el)); loadPrompt(); }
-  else if (a === 'only') { const p = $('#ptext'), k = el.dataset.k, on = p.dataset.only === k; if (on) delete p.dataset.only; else p.dataset.only = k;
-    document.querySelectorAll('[data-act=only]').forEach(b => b.classList.toggle('off', !on && b !== el));
-    const m = !on && p.querySelector('mark.k-' + k); if (m) p.scrollTop = m.offsetTop - p.offsetTop - 40; }
+  const b = e.target.closest('[data-full]');
+  if (b) { box.querySelector('img').src = b.dataset.full; box.hidden = false; }
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-S.route = decodeURIComponent(location.hash.slice(1)) || 'home';
-load();
+box.addEventListener('click', () => { box.hidden = true; box.querySelector('img').src = ''; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) box.click(); });
+window.addEventListener('hashchange', router);
+router();
 </script>
 </body>
 </html>
