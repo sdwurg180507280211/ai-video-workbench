@@ -30,6 +30,12 @@ python3 studio.py --root <总文件夹> --port 8765
 
 只用 Python 标准库（3.9 起）。在 Mac 上会用系统自带的 `sips` 给角色照片缩小图，其他系统直接给原图。网页不写任何文件。
 
+Mac 上装成了登录后自动启动（launchd）：配置在 `~/Library/LaunchAgents/com.edy.ai-video-workbench.plist`，日志在 `~/Library/Logs/ai-video-workbench.log`。改了 `studio.py` 后重启：
+
+```bash
+launchctl kickstart -k gui/$(id -u)/com.edy.ai-video-workbench
+```
+
 ## 作品.json
 
 每个作品文件夹放一个 `作品.json`，工作台只认这个文件（`归档/`、`node_modules/` 下的不扫）：
