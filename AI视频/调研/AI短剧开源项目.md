@@ -4,6 +4,8 @@
 >
 > 目标：找到适合制作 30–60 秒 AI 短剧、漫剧、科普剧情片的工具，并保留后续扩展为自动生产流程的路径。所有能力描述主要来自官方仓库、README 和许可文件，**不代表已经安装、跑通或对成片质量做过实测**。
 
+> **2026-10-23 增补**：新增第10节（《一号难求》的编剧方法与开源配乐，先搜GitHub再搜X）。
+>
 > **2026-10-21 增补**：新增2个GitHub项目、2条X链接，见第9节。原43项热度表仍为10月18日快照，未在此次整体刷新。
 
 ## 1. 先看结论：从哪里开始
@@ -370,6 +372,39 @@ Open-Generative-AI 的云端快速开始需要 MuAPI Key；本地图像路线涉
 **2026-10-22空间补齐**：已实际运行novel-staging脚本，交付两处俯视图、可拖动HTML、28镜机位核对，并同步原提示词；原图不可见区域标明未确认，旧预览的07左右/木门背景不作空间依据。
 
 第八版文本、分镜与逐段提示词已经准备，DeepSeek复核与处理记录沿原项目留存。新片仍待构图预览、报价确认、试跑与实际听审；本次没有生成新视频，不能据此断言这些方法已提高成片质量。
+
+
+## 10. 《一号难求》用到的工具（2026-10-23）
+
+本次为新系列《一号难求》找人物写法和配乐方案，先搜 GitHub，再搜 X。Stars 取 2026-10-23 的 GitHub API，与上面旧表不是同一天，不放在一起排名。除特别注明外，下面的项目都只读了说明文档，**没有安装或实测**。
+
+**X 的情况**：本次的搜索工具抓不到 x.com 上的帖子，三次带 `site:x.com` 的搜索都没有返回推文。所以本节没有 X 来源；要看 X 上的讨论，需要人工搜索后把链接贴回来。
+
+### 10.1 编剧与人物
+
+| 项目 | Stars | 许可 | 本次借了什么 |
+|---|---:|---|---|
+| [zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills) | 3,238 | MIT | 题材卡（职场喜剧、生活流、身份错位）：结果要由第三方当场核对，地位变化发生在结果之后，不让同事先夸"天才"，对手写成"程序上正确"的人。人物写成"行动模型"：信念、惯用策略、代价、盲区、想要而没得到的东西。另外借了双轨节奏的思路。题材卡末尾自己写明"不来自抽样统计、平台热度"，属于经验归纳 |
+| [lixiaoxiao9888-create/short-drama-factory](https://github.com/lixiaoxiao9888-create/short-drama-factory) | 435 | 未核对 | 题材图谱，自称依据 2026 年抖音、红果的数据：医疗和专业题材的钩子是"不信 + 能力反差，每集一个专业名场面" |
+| [eternityspring/shuohao-skills](https://github.com/eternityspring/shuohao-skills) | 4,979 | 未核对 | 只看了角色卡相关文档，暂未采用 |
+
+同一轮还看到 [hongguo-shortdrama-screenwriting-course](https://github.com/kunhai-88/hongguo-shortdrama-screenwriting-course)、[screenwriter-skill](https://github.com/Vi7QY/screenwriter-skill)、[qianqianwriting](https://github.com/catyiqian/qianqianwriting)、[400-duanju-shuangdian](https://github.com/icooldp/400-duanju-shuangdian)，都没有细读。
+
+取舍：只借写法，不装整套 Skill，以免和本机的 seedance-short-drama 流程重复、打架。"每集的病例照出主角当下的处境"借自日剧医疗剧，不是来自这些仓库。
+
+### 10.2 配乐
+
+| 项目 | Stars | 许可 | 结论 |
+|---|---:|---|---|
+| [ace-step/ACE-Step-1.5](https://github.com/ace-step/ACE-Step-1.5) | 13,930 | 代码 MIT；Hugging Face 上的权重也是 MIT，模型说明写明生成的音乐可以商用 | **选用**。能控制时长、速度、调性和拍号，最长 10 分钟，有接口服务。安装配置里 macOS 只支持苹果芯片，本机 Intel 芯片的 Mac 装不上（PyTorch 不再出 Intel Mac 的包）。改在 Windows 上用 CPU 跑仅推理，官方说"速度会显著变慢"。模型从魔搭（modelscope）下载，国内直连就很快 |
+| Stable Audio Open | — | Stability 社区协议，年收入 100 万美元以下可以免费商用 | 备选，用于短的转场音效和动机，最长约 47 秒 |
+| [multimodal-art-projection/YuE](https://github.com/multimodal-art-projection/YuE) | 12,580 | Apache-2.0 | 偏带歌词的完整歌曲，本剧只要纯音乐，不用 |
+| [HeartMuLa/heartlib](https://github.com/HeartMuLa/heartlib) | 3,765 | Apache-2.0（含权重） | 偏带歌词的歌曲，不用 |
+| [facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)（MusicGen） | 23,750 | 代码 MIT；模型权重是非商用的 CC-BY-NC | 不用于发布作品 |
+
+对照的商业方案 Suno：免费版不能商用；Pro 每月 $10，可下载 20 首。2026-09-03 起，只有在付费期内用下载额度下载的歌才能商用；下载过的歌，退订后仍可商用。Suno 没有官方开发者接口，也不保证每首歌都受版权保护。ACE-Step 能本地跑通的话，就不需要 Suno。
+
+配乐的具体做法（主题音乐和角色动机）见[《一号难求》人物与设定](../短剧/一号难求/人物与设定.md)。
 
 ---
 
