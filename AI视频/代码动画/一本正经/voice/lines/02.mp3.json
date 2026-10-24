@@ -1,0 +1,395 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf9-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/oEfzUKjN3CAF9fIIAAjA9ANZLIlgsqEXD0t5EG?x-expires=1792849780&x-signature=JYXQvgTOd2Pe%2BAocVqLMFZQ96tY%3D",
+  "req_text_length": 67,
+  "sentences": [
+   {
+    "endTime": 5.885,
+    "startTime": 0.225,
+    "text": "书里写过很多遍的事，比如小猫爱吃鱼，它接得又顺又准。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.445,
+      "startTime": 0.225,
+      "word": "书"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.665,
+      "startTime": 0.445,
+      "word": "里"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.885,
+      "startTime": 0.665,
+      "word": "写"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.035,
+      "startTime": 0.885,
+      "word": "过"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.265,
+      "startTime": 1.035,
+      "word": "很"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.435,
+      "startTime": 1.265,
+      "word": "多"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.615,
+      "startTime": 1.435,
+      "word": "遍"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.725,
+      "startTime": 1.615,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.095,
+      "startTime": 1.725,
+      "word": "事，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.515,
+      "startTime": 2.375,
+      "word": "比"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.805,
+      "startTime": 2.515,
+      "word": "如"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.095,
+      "startTime": 2.835,
+      "word": "小"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.295,
+      "startTime": 3.095,
+      "word": "猫"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.425,
+      "startTime": 3.295,
+      "word": "爱"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.645,
+      "startTime": 3.425,
+      "word": "吃"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.915,
+      "startTime": 3.645,
+      "word": "鱼，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.355,
+      "startTime": 4.165,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.625,
+      "startTime": 4.355,
+      "word": "接"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.855,
+      "startTime": 4.625,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.115,
+      "startTime": 4.915,
+      "word": "又"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.425,
+      "startTime": 5.115,
+      "word": "顺"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.635,
+      "startTime": 5.425,
+      "word": "又"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.885,
+      "startTime": 5.635,
+      "word": "准。"
+     }
+    ]
+   },
+   {
+    "endTime": 9.635,
+    "startTime": 6.485,
+    "text": "可小团子的生日，书里几乎没写过。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 6.625,
+      "startTime": 6.485,
+      "word": "可"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.845,
+      "startTime": 6.625,
+      "word": "小"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.105,
+      "startTime": 6.845,
+      "word": "团"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.255,
+      "startTime": 7.105,
+      "word": "子"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.355,
+      "startTime": 7.255,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.595,
+      "startTime": 7.355,
+      "word": "生"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.895,
+      "startTime": 7.595,
+      "word": "日，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.235,
+      "startTime": 7.975,
+      "word": "书"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.425,
+      "startTime": 8.235,
+      "word": "里"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.605,
+      "startTime": 8.425,
+      "word": "几"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.755,
+      "startTime": 8.605,
+      "word": "乎"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.945,
+      "startTime": 8.755,
+      "word": "没"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.255,
+      "startTime": 8.945,
+      "word": "写"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.635,
+      "startTime": 9.255,
+      "word": "过。"
+     }
+    ]
+   },
+   {
+    "endTime": 15.572,
+    "startTime": 9.855,
+    "text": "它不知道该接哪天，只能挑一个像模像样的日期接上去。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 10.005,
+      "startTime": 9.855,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.135,
+      "startTime": 10.005,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.285,
+      "startTime": 10.135,
+      "word": "知"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.535,
+      "startTime": 10.285,
+      "word": "道"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.695,
+      "startTime": 10.535,
+      "word": "该"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.905,
+      "startTime": 10.695,
+      "word": "接"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.125,
+      "startTime": 10.905,
+      "word": "哪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.525,
+      "startTime": 11.125,
+      "word": "天，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.875,
+      "startTime": 11.725,
+      "word": "只"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.035,
+      "startTime": 11.875,
+      "word": "能"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.205,
+      "startTime": 12.035,
+      "word": "挑"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.395,
+      "startTime": 12.205,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.615,
+      "startTime": 12.395,
+      "word": "个"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.865,
+      "startTime": 12.615,
+      "word": "像"
+     },
+     {
+      "confidence": 0,
+      "endTime": 13.075,
+      "startTime": 12.865,
+      "word": "模"
+     },
+     {
+      "confidence": 0,
+      "endTime": 13.355,
+      "startTime": 13.075,
+      "word": "像"
+     },
+     {
+      "confidence": 0,
+      "endTime": 13.525,
+      "startTime": 13.355,
+      "word": "样"
+     },
+     {
+      "confidence": 0,
+      "endTime": 13.665,
+      "startTime": 13.525,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 13.795,
+      "startTime": 13.665,
+      "word": "日"
+     },
+     {
+      "confidence": 0,
+      "endTime": 14.135,
+      "startTime": 13.795,
+      "word": "期"
+     },
+     {
+      "confidence": 0,
+      "endTime": 14.355,
+      "startTime": 14.165,
+      "word": "接"
+     },
+     {
+      "confidence": 0,
+      "endTime": 14.585,
+      "startTime": 14.355,
+      "word": "上"
+     },
+     {
+      "confidence": 0,
+      "endTime": 14.945,
+      "startTime": 14.585,
+      "word": "去。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 67,
+  "task_id": "1f2b0dae-03bf-44a9-972b-644f1f969452",
+  "task_status": 2,
+  "url_expire_time": 1792849780
+ },
+ "message": "ok"
+}

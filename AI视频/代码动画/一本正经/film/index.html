@@ -1,0 +1,1000 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>AI 为什么会一本正经地胡说八道</title>
+<style>
+  @font-face { font-family: NS; src: url(/assets/fonts/NotoSansSC-VF.ttf); font-weight: 100 900; }
+  @font-face { font-family: IN; src: url(/assets/fonts/Inter-VF.ttf); font-weight: 100 900; }
+  @font-face { font-family: JB; src: url(/assets/fonts/JetBrainsMono-VF.ttf); font-weight: 100 800; }
+  html, body { margin: 0; background: #E9EEF2; overflow: hidden; }
+  svg { display: block; }
+  text { font-family: IN, NS; font-kerning: normal; }
+  .mono { font-family: JB, NS; }
+</style>
+</head>
+<body>
+<svg id="s" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <pattern id="dots" width="60" height="60" patternUnits="userSpaceOnUse">
+      <circle cx="30" cy="30" r="2.6" fill="#C8D2DB"/>
+    </pattern>
+    <!-- 贴纸：粗白描边 + 柔和投影 -->
+    <filter id="stk" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="9" result="d"/>
+      <feFlood flood-color="#ffffff"/><feComposite in2="d" operator="in" result="w"/>
+      <feGaussianBlur in="d" stdDeviation="9" result="b"/><feOffset in="b" dy="9" result="bo"/>
+      <feFlood flood-color="#1d2b38" flood-opacity="0.20"/><feComposite in2="bo" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/><feOffset dy="10" result="o"/>
+      <feFlood flood-color="#1d2b38" flood-opacity="0.16"/><feComposite in2="o" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="vig" cx="50%" cy="50%" r="75%">
+      <stop offset="60%" stop-color="#1d2b38" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1d2b38" stop-opacity="0.13"/>
+    </radialGradient>
+  </defs>
+  <g id="cam"><g id="world"></g></g>
+  <g id="hud"></g>
+  <rect width="1920" height="1080" fill="url(#vig)" pointer-events="none"/>
+</svg>
+<script>
+'use strict';
+const NS = 'http://www.w3.org/2000/svg';
+const SLATE = '#263646', MID = '#5E6E7E', PALE = '#D6DFE7', LINE = '#B7C3CE', BG = '#E9EEF2';
+const ACC = '#FF5A36', BLUE = '#3D6FE0', WHITE = '#FFFFFF', SOFT = '#F4F7FA', GREY = '#9FB0C0', GREY2 = '#C3CFDA';
+const GREEN = '#22A06B', ACC_L = '#FFE3DA', BLUE_L = '#E3ECFB';
+
+// ---------- 工具 ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, x) => a + (b - a) * x;
+const ease = {
+  outCubic: x => 1 - (1 - x) ** 3,
+  inCubic: x => x ** 3,
+  inOutCubic: x => x < .5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2,
+  inOutQuint: x => x < .5 ? 16 * x ** 5 : 1 - (-2 * x + 2) ** 5 / 2,
+  outBack: (x, s = 1.70158) => 1 + (s + 1) * (x - 1) ** 3 + s * (x - 1) ** 2,
+};
+function rng(seed) {                 // 固定种子的随机数（mulberry32），每次渲染结果一样
+  let a = seed >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function txt(parent, x, y, s, o = {}) {
+  const e = el('text', {
+    x, y, 'font-size': o.size || 36, 'font-weight': o.weight || 500, fill: o.fill || SLATE,
+    'text-anchor': o.anchor || 'start', 'letter-spacing': o.ls ?? 0,
+  }, parent);
+  if (o.mono) e.setAttribute('class', 'mono');
+  if (o.opacity != null) e.setAttribute('opacity', o.opacity);
+  e.textContent = s;
+  return e;
+}
+const U = [];                      // 每帧要更新的函数
+const on = f => U.push(f);
+const tr = (g, x, y, s = 1, r = 0) => g.setAttribute('transform', `translate(${x.toFixed(2)},${y.toFixed(2)}) rotate(${r.toFixed(3)}) scale(${s.toFixed(4)})`);
+const op = (e, v) => e.setAttribute('opacity', clamp(v).toFixed(3));
+
+function popper(g, x, y, t0, o = {}) {
+  const dur = o.dur ?? .42, rot = o.rot ?? 0, from = o.from ?? .35;
+  on(t => {
+    const p = P(t, t0, t0 + dur);
+    if (p <= 0) { g.setAttribute('opacity', 0); return; }
+    let s = lerp(from, 1, ease.outBack(p, 2.0)), a = clamp(p * 3.5);
+    const r = rot * (1 - ease.outCubic(p));
+    if (o.out != null) { const q = P(t, o.out, o.out + (o.outDur ?? .3)); a *= 1 - q; s *= 1 - .15 * q; }
+    g.setAttribute('opacity', a.toFixed(3));
+    tr(g, x, y, s * (o.scale ?? 1), r);
+  });
+}
+function rise(e, t0, o = {}) {
+  const dur = o.dur ?? .45, dy = o.dy ?? 22;
+  on(t => {
+    const p = ease.outCubic(P(t, t0, t0 + dur));
+    let a = p;
+    if (o.out != null) a *= 1 - P(t, o.out, o.out + .3);
+    e.setAttribute('opacity', a.toFixed(3));
+    e.setAttribute('transform', `translate(0,${((1 - p) * dy).toFixed(2)})`);
+  });
+}
+function rrect(parent, x, y, w, h, r, fill, extra = {}) {
+  return el('rect', Object.assign({ x, y, width: w, height: h, rx: r, fill }, extra), parent);
+}
+function stampAt(s, x, y, t0, o = {}) {          // 印章砸下
+  const g = el('g', { opacity: 0 }, o.parent || W);
+  const r = el('g', { transform: `rotate(${o.rot ?? -9})` }, g), w = o.w || 210, size = o.size || 42, color = o.color || ACC;
+  rrect(r, -w / 2, -size, w, size * 2, 14, 'rgba(255,255,255,.92)', { stroke: color, 'stroke-width': 7 });
+  txt(r, 0, size * .36, s, { size, weight: 900, fill: color, anchor: 'middle', ls: 2 });
+  on(t => { const p = P(t, t0, t0 + .2); op(g, p > 0 ? 1 - (o.out != null ? P(t, o.out, o.out + .3) : 0) : 0); tr(g, x, y, p > 0 ? lerp(1.8, 1, ease.outCubic(p)) : 0); });
+  return g;
+}
+function appear(g, t0, o = {}) {                // 按绝对坐标画好的组：淡入并上移一点，不缩放
+  on(t => {
+    const p = ease.outCubic(P(t, t0, t0 + (o.dur ?? .4)));
+    let a = p;
+    if (o.out != null) a *= 1 - P(t, o.out, o.out + .3);
+    g.setAttribute('opacity', a.toFixed(3));
+    g.setAttribute('transform', `translate(0,${((1 - p) * (o.dy ?? 24)).toFixed(2)})`);
+  });
+}
+const W = document.getElementById('world'), CAM = document.getElementById('cam'), HUD = document.getElementById('hud');
+// 小团子贴纸：透明 PNG，按比例放进 size×size 的框（不拉伸）
+function mascot(file, x, y, size, t0, o = {}) {
+  const g = el('g', { opacity: 0 }, W);
+  const body = el('g', {}, g);
+  el('image', { href: `/assets/xiaotuanzi/${file}`, x: -size / 2, y: -size / 2, width: size, height: size, transform: o.flip ? 'scale(-1,1)' : '' }, body);
+  popper(g, x, y, t0, { rot: o.rot ?? -8, from: .5, out: o.out });
+  if (o.bob) on(t => body.setAttribute('transform', `translate(0,${(-Math.abs(Math.sin((t - t0) * 2.4)) * o.bob).toFixed(1)})`));
+  return body;
+}
+function arrowHead(parent, color, size = 34) {
+  return el('path', { d: `M0,0 L${-size},${-size * .62} L${-size},${size * .62} Z`, fill: color }, parent);
+}
+// 对勾、红叉：笔画沿路径画出来
+function tick(parent, x, y, s, color, t0) {
+  const p = el('path', { d: `M${x - .45 * s},${y + .02 * s} L${x - .12 * s},${y + .34 * s} L${x + .48 * s},${y - .36 * s}`, stroke: color, 'stroke-width': s * .17, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 1, opacity: 0 }, parent);
+  if (t0 != null) on(t => { const q = ease.outCubic(P(t, t0, t0 + .25)); p.setAttribute('stroke-dasharray', `${q} 1`); op(p, q > 0 ? 1 : 0); });
+  return p;
+}
+function cross(parent, x, y, s, color, t0) {
+  const g = el('g', { opacity: 0 }, parent);
+  const a = el('path', { d: `M${x - .4 * s},${y - .4 * s} L${x + .4 * s},${y + .4 * s}`, stroke: color, 'stroke-width': s * .17, 'stroke-linecap': 'round', pathLength: 1 }, g);
+  const b = el('path', { d: `M${x + .4 * s},${y - .4 * s} L${x - .4 * s},${y + .4 * s}`, stroke: color, 'stroke-width': s * .17, 'stroke-linecap': 'round', pathLength: 1 }, g);
+  if (t0 != null) on(t => {
+    const q1 = ease.outCubic(P(t, t0, t0 + .14)), q2 = ease.outCubic(P(t, t0 + .1, t0 + .24));
+    a.setAttribute('stroke-dasharray', `${q1} 1`); b.setAttribute('stroke-dasharray', `${q2} 1`); op(g, q1 > 0 ? 1 : 0);
+  });
+  return g;
+}
+// 气泡：文字量好宽度再画底；返回 {g, w}
+function bubble(parent, x, y, s, o = {}) {
+  const g = el('g', {}, parent), size = o.size || 36, h = o.h || size * 2.1;
+  const bg = rrect(g, 0, y - h / 2, 0, h, o.r ?? h / 2.6, o.fill || SOFT, o.stroke ? { stroke: o.stroke, 'stroke-width': 4 } : {});
+  const t = txt(g, 0, y + size * .36, s, { size, weight: o.weight || 700, fill: o.color || SLATE });
+  const w = t.getComputedTextLength() + size * 1.3;
+  const x0 = o.align === 'right' ? x - w : x;
+  bg.setAttribute('x', x0); bg.setAttribute('width', w); t.setAttribute('x', x0 + size * .65);
+  return { g, w, x0, t };
+}
+// 代码画的答题机器人：圆角方脑袋 + 屏幕脸 + 天线
+function robot(parent, x, y, s = 1, mood = 'calm') {
+  const g = el('g', { transform: `translate(${x},${y}) scale(${s})` }, parent);
+  const b = el('g', { filter: 'url(#stk)' }, g);
+  el('line', { x1: 0, y1: -86, x2: 0, y2: -118, stroke: SLATE, 'stroke-width': 8 }, b);
+  el('circle', { cx: 0, cy: -124, r: 13, fill: mood === 'sly' ? ACC : BLUE }, b);
+  rrect(b, -92, -88, 184, 150, 40, '#8FB0D6');
+  rrect(b, -70, -64, 140, 98, 26, SLATE);
+  if (mood === 'sly') {
+    for (const sx of [-1, 1]) el('path', { d: `M${sx * 30 - 16},-18 Q${sx * 30},-34 ${sx * 30 + 16},-18`, stroke: '#7FE0FF', 'stroke-width': 9, fill: 'none', 'stroke-linecap': 'round' }, b);
+    el('path', { d: 'M-22,6 Q0,24 22,6', stroke: '#7FE0FF', 'stroke-width': 8, fill: 'none', 'stroke-linecap': 'round' }, b);
+  } else {
+    for (const sx of [-1, 1]) el('circle', { cx: sx * 30, cy: -22, r: 12, fill: '#7FE0FF' }, b);
+    el('path', { d: 'M-18,10 H18', stroke: '#7FE0FF', 'stroke-width': 8, 'stroke-linecap': 'round' }, b);
+  }
+  for (const sx of [-1, 1]) rrect(b, sx * 92 - (sx > 0 ? 0 : 16), -40, 16, 46, 8, '#6F97C8');
+  return g;
+}
+// 放大镜
+function magnifier(parent, s = 1) {
+  const g = el('g', { transform: `scale(${s})` }, parent);
+  el('circle', { cx: 0, cy: 0, r: 46, fill: 'rgba(255,255,255,.35)', stroke: SLATE, 'stroke-width': 13 }, g);
+  el('path', { d: 'M33,33 L74,74', stroke: SLATE, 'stroke-width': 20, 'stroke-linecap': 'round' }, g);
+  return g;
+}
+// 书页：几行灰线
+function pageLines(parent, x, y, w, n, gap = 30, seed = 1) {
+  const r = rng(seed), out = [];
+  for (let i = 0; i < n; i++) {
+    const lw = w * (i === n - 1 ? .55 : .82 + r() * .18);
+    out.push({ x, y: y + i * gap, w: lw, e: rrect(parent, x, y + i * gap - 6, lw, 12, 6, GREY2) });
+  }
+  return out;
+}
+
+// ---------- 节拍 ----------
+let C, EV;
+const arrive = f => f[0] + (f[1] - f[0]) * .42;
+const HOOK = [2000, 1200], C1 = [4200, 1200], C2 = [6400, 1200], C3 = [6400, 2600], C4 = [4200, 2600], C5 = [2000, 2600];
+const CL = [2000, 4000], C6 = [4200, 4000], C7 = [6400, 4000];
+const HC = [HOOK[0] - 470, HOOK[1]];                 // 聊天框中心
+const PUSH = [CL[0] + 560, CL[1] + 20];             // 高潮推近：右边蒙的四格
+
+function build() {
+  el('rect', { x: -2000, y: -2000, width: 14000, height: 9000, fill: BG }, W);
+  el('rect', { x: -2000, y: -2000, width: 14000, height: 9000, fill: 'url(#dots)' }, W);
+  buildHook();
+  buildTitle();
+  buildTags();
+  buildNext();
+  buildRare();
+  buildTone();
+  buildExam();
+  buildScore();
+  buildClimax();
+  buildGuard();
+  buildOverview();
+  buildEnding();
+  buildHud();
+  buildSubs();
+}
+
+// ===== 钩子：问生日，三次三个日期，都说得很肯定 =====
+const ANS = ['3 月 7 日', '6 月 15 日', '1 月 1 日'];
+function buildHook() {
+  const ev = EV, [hx, hy] = HC;
+  const X0 = hx - 350, Y0 = hy - 380, CW = 700, CH = 760;
+  const card = el('g', { opacity: 0 }, W);
+  rrect(card, X0, Y0, CW, CH, 34, WHITE, { filter: 'url(#shadow)' });
+  rrect(card, X0, Y0, CW, 78, 34, SOFT); rrect(card, X0, Y0 + 44, CW, 34, 0, SOFT);
+  el('circle', { cx: X0 + 46, cy: Y0 + 39, r: 18, fill: SLATE }, card);
+  txt(card, X0 + 46, Y0 + 46, 'AI', { size: 18, weight: 900, fill: WHITE, anchor: 'middle' });
+  txt(card, X0 + 78, Y0 + 50, 'AI 助手', { size: 32, weight: 800 });
+  // 输入框
+  rrect(card, X0 + 26, Y0 + CH - 96, CW - 52, 70, 35, SOFT, { stroke: PALE, 'stroke-width': 3 });
+  const inp = txt(card, X0 + 58, Y0 + CH - 49, '', { size: 32, weight: 600 });
+  const caret = rrect(card, 0, Y0 + CH - 80, 4, 38, 2, ACC);
+  const sendB = el('circle', { cx: X0 + CW - 66, cy: Y0 + CH - 61, r: 26, fill: ACC }, card);
+  const sendA = el('path', { d: `M${X0 + CW - 76},${Y0 + CH - 61} H${X0 + CW - 56} M${X0 + CW - 64},${Y0 + CH - 70} L${X0 + CW - 55},${Y0 + CH - 61} L${X0 + CW - 64},${Y0 + CH - 52}`, stroke: WHITE, 'stroke-width': 5, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, card);
+  const Q = '小团子的生日是哪天？';
+  on(t => {
+    op(card, P(t, ev.box_in, ev.box_in + .3));
+    const n = t < ev.send ? Math.floor(P(t, ev.type[0], ev.type[1]) * Q.length + 1e-6) : 0;
+    inp.textContent = Q.slice(0, n);
+    caret.setAttribute('x', (X0 + 60 + n * 32).toFixed(1));
+    op(caret, t < ev.send && Math.floor(t * 2.6) % 2 === 0 ? 1 : 0);
+    const pr = Math.exp(-(((t - ev.send) / .07) ** 2));
+    const s = (1 - .15 * pr).toFixed(3), c = `${X0 + CW - 66},${Y0 + CH - 61}`;
+    sendB.setAttribute('transform', `translate(${c}) scale(${s}) translate(${-(X0 + CW - 66)},${-(Y0 + CH - 61)})`);
+    sendA.setAttribute('transform', sendB.getAttribute('transform'));
+  });
+  // 提问气泡
+  const qb = bubble(card, X0 + CW - 30, Y0 + 140, Q, { fill: ACC_L, align: 'right', size: 34 });
+  appear(qb.g, ev.send, { dy: 30 });
+  // 三次回答：每次先闪加载点点，再出答案；换下来的变灰
+  const AY = [Y0 + 268, Y0 + 404, Y0 + 540];
+  const starts = [ev.send + .25, ev.regen1 + .15, ev.regen2 + .15], shows = [ev.a1 - .15, ev.a2 - .15, ev.a3 - .15];
+  const outs = [ev.regen1, ev.regen2, 1e9];
+  const bubs = [];
+  ANS.forEach((d, i) => {
+    const g = el('g', { opacity: 0 }, card);
+    el('circle', { cx: X0 + 52, cy: AY[i], r: 24, fill: SLATE }, g);
+    txt(g, X0 + 52, AY[i] + 7, 'AI', { size: 19, weight: 900, fill: WHITE, anchor: 'middle' });
+    const load = el('g', {}, g);
+    rrect(load, X0 + 90, AY[i] - 36, 130, 72, 28, SOFT);
+    const dots = [0, 1, 2].map(k => el('circle', { cx: X0 + 128 + k * 27, cy: AY[i], r: 8, fill: GREY }, load));
+    const ans = el('g', {}, g);
+    const b = bubble(ans, X0 + 90, AY[i], '', { size: 34, fill: SOFT });
+    b.t.textContent = '';
+    const t1 = txt(ans, 0, 0, '小团子的生日是 ', { size: 34, weight: 700 }), t2 = txt(ans, 0, 0, d, { size: 34, weight: 900, fill: BLUE }), t3 = txt(ans, 0, 0, '。', { size: 34, weight: 700 });
+    const w1 = t1.getComputedTextLength(), w2 = t2.getComputedTextLength(), w3 = t3.getComputedTextLength();
+    const bw = w1 + w2 + w3 + 46;
+    b.g.querySelector('rect').setAttribute('width', bw);
+    [[t1, 0], [t2, w1], [t3, w1 + w2]].forEach(([e, dx]) => { e.setAttribute('x', X0 + 113 + dx); e.setAttribute('y', AY[i] + 12); });
+    bubs.push({ g: ans, x: X0 + 90, y: AY[i], w: bw });
+    on(t => {
+      op(g, P(t, starts[i], starts[i] + .2) * (t >= outs[i] ? lerp(1, .42, P(t, outs[i], outs[i] + .3)) : 1));
+      const sh = P(t, shows[i], shows[i] + .12);
+      op(load, 1 - sh); op(ans, sh);
+      dots.forEach((c, k) => c.setAttribute('cy', (AY[i] - 9 * Math.abs(Math.sin((t - starts[i]) * 7 - k * .7))).toFixed(1)));
+      // 结尾"特别肯定"：三个回答一起跳一下
+      const pulse = Math.exp(-(((t - ev.e_sure - .2 - i * .12) / .14) ** 2));
+      const s = 1 + .06 * pulse, cx = X0 + 90, cy = AY[i];
+      ans.setAttribute('transform', `translate(${cx},${cy}) scale(${s.toFixed(4)}) translate(${-cx},${-cy})`);
+    });
+  });
+  // 回答气泡下面的「重新生成」按钮，跟着最新的回答走
+  const rg = el('g', { opacity: 0 }, card);
+  const rgIn = el('g', {}, rg);
+  rrect(rgIn, -10, -24, 196, 48, 24, WHITE, { stroke: PALE, 'stroke-width': 3 });
+  el('path', { d: 'M22,-9 A12,12 0 1 0 26,6', stroke: MID, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, rgIn);
+  el('path', { d: 'M17,-15 L23,-9 L15,-5', stroke: MID, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, rgIn);
+  txt(rgIn, 44, 9, '重新生成', { size: 26, weight: 700, fill: MID });
+  const ring = rrect(rgIn, -10, -24, 196, 48, 24, 'none', { stroke: ACC, 'stroke-width': 5, opacity: 0 });
+  on(t => {
+    const i = t < ev.regen1 + .2 ? 0 : t < ev.regen2 + .2 ? 1 : 2;
+    const vis = P(t, ev.a1 + .2, ev.a1 + .45) * (1 - P(t, ev.a3 + .7, ev.a3 + 1.0));
+    op(rg, vis);
+    const by = AY[i] + 74;
+    const pr = Math.max(Math.exp(-(((t - ev.regen1) / .08) ** 2)), Math.exp(-(((t - ev.regen2) / .08) ** 2)));
+    tr(rg, X0 + 92, by, 1 - .1 * pr);
+    op(ring, pr);
+  });
+  // 语气标签：只出一次
+  const tone = el('g', { opacity: 0 }, card);
+  rrect(tone, X0 + 92, AY[2] + 52, 236, 56, 28, WHITE, { stroke: ACC, 'stroke-width': 4 });
+  txt(tone, X0 + 210, AY[2] + 91, '语气：肯定', { size: 30, weight: 800, fill: ACC, anchor: 'middle' });
+  appear(tone, ev.tone, { dy: 16 });
+  stampAt('都不对', hx + 330, hy - 90, ev.wrong, { w: 300, size: 64, out: ev.title1 - .35 });
+  mascot(C.stickers.shock, hx + 330, hy + 250, 290, ev.wrong + .05, { out: ev.fly1[0], rot: 10 });
+}
+
+// ===== 片名 =====
+function buildTitle() {
+  const ev = EV, TX = HOOK[0] - 30, Y = HOOK[1];
+  const t1 = txt(W, TX, Y - 50, 'AI 为什么会', { size: 110, weight: 900, ls: 4 });
+  const t2 = txt(W, TX, Y + 82, '一本正经地胡说八道', { size: 90, weight: 900, ls: 1 });
+  const hl = el('path', { d: '', stroke: ACC, 'stroke-opacity': .28, 'stroke-width': 30, 'stroke-linecap': 'round' }, W);
+  W.insertBefore(hl, t2);
+  const sub = txt(W, TX + 4, Y + 176, '它只管接得顺，不管说得对', { size: 40, weight: 700, fill: MID, ls: 2 });
+  [t1, t2].forEach((e, i) => on(t => {
+    const t0 = i ? ev.title2 : ev.title1, p = P(t, t0, t0 + .32), cy = i ? Y + 50 : Y - 80;
+    const s = p <= 0 ? 1.4 : lerp(1.4, 1, ease.outBack(p, 1.6));
+    op(e, clamp(p * 3) * (1 - P(t, ev.fly1[0], ev.fly1[0] + .45)));
+    e.setAttribute('transform', `translate(${TX},${cy}) scale(${s.toFixed(4)}) translate(${-TX},${-cy})`);
+  }));
+  on(t => { const p = ease.inOutCubic(P(t, ev.title2 + .3, ev.title2 + .75)); hl.setAttribute('d', p > 0 ? `M${TX + 8},${Y + 70} H${TX + 8 + 352 * p}` : ''); op(hl, 1 - P(t, ev.fly1[0], ev.fly1[0] + .45)); });
+  rise(sub, ev.sub, { out: ev.fly1[0] });
+}
+
+// ===== 章节标签 =====
+const CENTERS = [C1, C2, C3, C4, C5, C6];
+const TAG_TITLES = ['练的是接话', '见得少，就靠猜', '口气很肯定', '考试不会也写满', '打分奖励蒙', '怎么防'];
+function buildTags() {
+  const ev = EV;
+  TAG_TITLES.forEach((title, i) => {
+    const x = CENTERS[i][0] - 810, y = CENTERS[i][1] - 410, t0 = ev[`ch${i + 1}_tag`] - .3;
+    const cg = el('g', { opacity: 0 }, W);
+    el('circle', { cx: 0, cy: 0, r: 42, fill: ACC, filter: 'url(#stk)' }, cg);
+    txt(cg, 0, 17, String(i + 1), { size: 48, weight: 800, fill: WHITE, anchor: 'middle' });
+    const tg = el('g', {}, W);
+    const tt = txt(tg, x + 72, y + 21, title, { size: 62, weight: 800, ls: 1 });
+    const mark = el('path', { d: '', stroke: ACC, 'stroke-opacity': .28, 'stroke-width': 20, 'stroke-linecap': 'round', fill: 'none' }, tg);
+    tg.insertBefore(mark, tt);
+    let mw = 0;
+    on(t => {
+      if (!mw) mw = tt.getComputedTextLength();
+      const p = P(t, t0, t0 + .45);
+      op(cg, clamp(p * 4)); tr(cg, x, y, p <= 0 ? 0 : lerp(.3, 1, ease.outBack(p, 2.4)));
+      const q = ease.outCubic(P(t, t0 + .12, t0 + .55));
+      op(tt, q); tt.setAttribute('transform', `translate(${(-30 * (1 - q)).toFixed(1)},0)`);
+      const m = ease.inOutCubic(P(t, t0 + .4, t0 + .85));
+      mark.setAttribute('d', m > 0 ? `M${x + 76},${y + 26} H${x + 76 + mw * m}` : '');
+    });
+  });
+}
+
+// ===== ① 练的是接话：很多很多文字流进 AI；床前明月 □ → 光 =====
+function aiBox(parent, x, y, s = 1) {
+  const g = el('g', { transform: `translate(${x},${y}) scale(${s})` }, parent);
+  const b = el('g', { filter: 'url(#stk)' }, g);
+  rrect(b, -95, -95, 190, 190, 46, SLATE);
+  txt(b, 0, 26, 'AI', { size: 82, weight: 900, fill: WHITE, anchor: 'middle' });
+  return g;
+}
+function buildNext() {
+  const ev = EV, [cx, cy] = C1;
+  mascot(C.stickers.teach, cx - 650, cy - 150, 300, ev.books + .1, { rot: -6 });
+  // 书和网页
+  const books = el('g', { opacity: 0 }, W);
+  const bk = el('g', { filter: 'url(#stk)' }, books);
+  rrect(bk, cx - 760, cy + 100, 300, 170, 14, WHITE);
+  pageLines(bk, cx - 735, cy + 140, 250, 4, 30, 3);
+  [['#8DB4E2', 0, -2], ['#FFC93C', 46, 2], ['#F28B6E', 92, -1]].forEach(([c, dy, r]) => {
+    const g = el('g', { transform: `rotate(${r},${cx - 600},${cy + 240 + dy})` }, bk);
+    rrect(g, cx - 740, cy + 214 + dy, 290, 44, 8, c);
+    rrect(g, cx - 726, cy + 226 + dy, 120, 8, 4, 'rgba(255,255,255,.7)');
+  });
+  appear(books, ev.books, { dy: 30 });
+  const lbl = txt(W, cx - 600, cy + 386, '很多很多文字', { size: 36, weight: 800, fill: MID, anchor: 'middle' });
+  rise(lbl, ev.read);
+  // AI 方块
+  const ai = el('g', { opacity: 0 }, W); aiBox(ai, cx - 250, cy + 150);
+  popper(ai, 0, 0, ev.books + .15);
+  // 文字流：一截截文字沿弧线流进 AI（落地就开始流，念到"读"以后更密）
+  const flow = el('g', {}, W), r = rng(11), bits = [];
+  for (let i = 0; i < 26; i++) bits.push({ e: rrect(flow, -22, -7, 30 + r() * 30, 14, 7, i % 5 === 0 ? ACC : GREY), ph: r(), sp: .5 + r() * .3, dense: i >= 10 });
+  on(t => {
+    for (const b of bits) {
+      const start = b.dense ? ev.read : ev.books + .3;
+      if (t < start || t > ev.fly2[0] + .5) { op(b.e, 0); continue; }
+      const u = ((t - start) * b.sp + b.ph) % 1;
+      const x = lerp(cx - 470, cx - 330, u), y = lerp(cy + 170, cy + 150, u) - Math.sin(u * Math.PI) * 90;
+      b.e.setAttribute('transform', `translate(${x.toFixed(1)},${y.toFixed(1)})`);
+      op(b.e, Math.sin(u * Math.PI) * 1.4 * P(t, start, start + .3));
+    }
+  });
+  // 接话题：床 前 明 月 □
+  const TL = cx + 30, TY = cy - 250, TS = 124, TG = 16, CH = ['床', '前', '明', '月'];
+  CH.forEach((c, i) => {                          // 落地先摆虚线空格，念到"前半句"再出字
+    const gh = rrect(W, TL + i * (TS + TG), TY, TS, TS, 20, 'none', { stroke: GREY2, 'stroke-width': 5, 'stroke-dasharray': '14 12', opacity: 0 });
+    on(t => op(gh, P(t, ev.books + .3, ev.books + .6) * (1 - P(t, ev.half + i * .1, ev.half + i * .1 + .2))));
+    const g = el('g', { opacity: 0 }, W);
+    rrect(g, TL + i * (TS + TG), TY, TS, TS, 20, WHITE, { filter: 'url(#shadow)' });
+    txt(g, TL + i * (TS + TG) + TS / 2, TY + TS / 2 + 27, c, { size: 76, weight: 800, anchor: 'middle' });
+    appear(g, ev.half + i * .1, { dy: 30 });
+  });
+  const SX = TL + 4 * (TS + TG);
+  const slot = rrect(W, SX, TY, TS, TS, 20, 'rgba(255,90,54,.07)', { stroke: ACC, 'stroke-width': 6, 'stroke-dasharray': '16 12', opacity: 0 });
+  on(t => { op(slot, P(t, ev.half + .4, ev.half + .7)); slot.setAttribute('stroke-width', (6 + 3 * Math.max(0, Math.sin((t - ev.guess1) * 8)) * P(t, ev.guess1, ev.guess1 + .1) * (1 - P(t, ev.fill1, ev.fill1 + .1))).toFixed(2)); });
+  const q = txt(W, SX + TS / 2, TY + TS / 2 + 27, '？', { size: 76, weight: 900, fill: ACC, anchor: 'middle' });
+  on(t => op(q, P(t, ev.guess1, ev.guess1 + .2) * (1 - P(t, ev.fill1, ev.fill1 + .1))));
+  // 候选条：光 很长，亮、下 很短（示例）
+  const BX = cx + 120, BY = cy - 30, CAND = [['光', 560, ACC], ['亮', 64, GREY], ['下', 38, GREY]];
+  const lb = [];
+  CAND.forEach(([c, len, col], i) => {
+    const y = BY + i * 100;
+    const g = el('g', { opacity: 0 }, W);
+    const l = txt(g, BX - 34, y + 22, c, { size: 60, weight: 800, anchor: 'middle', fill: i ? MID : SLATE });
+    rrect(g, BX + 20, y - 22, 600, 44, 22, PALE);
+    const bar = rrect(g, BX + 20, y - 22, 0, 44, 22, col);
+    appear(g, ev.bars1 + i * .12, { dy: 18 });
+    on(t => bar.setAttribute('width', (Math.max(44, len * ease.outCubic(P(t, ev.bars1 + .15 + i * .12, ev.bars1 + .75 + i * .12)))).toFixed(1)));
+    lb.push(l);
+  });
+  const ex = txt(W, BX + 620, BY + 262, '示例', { size: 30, weight: 700, fill: MID, anchor: 'end' });
+  rise(ex, ev.bars1 + .5);
+  // 「光」从候选条飞进空格
+  const fly = txt(W, 0, 0, '光', { size: 76, weight: 900, fill: ACC, anchor: 'middle', opacity: 0 });
+  on(t => {
+    const p = ease.inOutCubic(P(t, ev.fill1, ev.fill1 + .5));
+    op(fly, p > 0 ? 1 : 0);
+    const x = lerp(BX - 34, SX + TS / 2, p), y = lerp(BY + 22, TY + TS / 2 + 27, p) - Math.sin(p * Math.PI) * 80;
+    fly.setAttribute('x', x.toFixed(1)); fly.setAttribute('y', y.toFixed(1));
+    fly.setAttribute('font-size', lerp(60, 76, p).toFixed(1));
+  });
+  // 练习条：越练越长
+  const pg = el('g', { opacity: 0 }, W);
+  txt(pg, BX - 70, cy + 340, '练习', { size: 36, weight: 800, fill: MID });
+  rrect(pg, BX + 20, cy + 318, 600, 28, 14, PALE);
+  const pf = rrect(pg, BX + 20, cy + 318, 0, 28, 14, BLUE);
+  appear(pg, ev.practice[0], { dy: 16 });
+  on(t => pf.setAttribute('width', (600 * ease.inOutCubic(P(t, ev.practice[0] + .1, ev.practice[1]))).toFixed(1)));
+}
+
+// ===== ② 见得少，就靠猜：小猫爱吃鱼 vs 小团子的生日 =====
+function buildRare() {
+  const ev = EV, [cx, cy] = C2;
+  const CT = cy - 320, CHh = 700;
+  const card = (x0, t0, phrase) => {
+    const g = el('g', { opacity: 0 }, W);
+    rrect(g, x0, CT, 780, CHh, 30, WHITE, { filter: 'url(#shadow)' });
+    const tx = txt(g, x0 + 50, CT + 92, phrase, { size: 52, weight: 900 });
+    appear(g, t0, { dy: 30 });
+    return { g, x0, tw: tx.getComputedTextLength() };
+  };
+  const ghR = rrect(W, cx + 50, CT, 780, CHh, 30, 'none', { stroke: GREY2, 'stroke-width': 6, 'stroke-dasharray': '18 14', opacity: 0 });
+  on(t => op(ghR, P(t, ev.cardL + .3, ev.cardL + .6) * (1 - P(t, ev.cardR, ev.cardR + .2))));
+  const L = card(cx - 830, ev.cardL, '小猫爱吃'), R = card(cx + 50, ev.cardR, '小团子的生日是');
+  // 空格
+  const slotAt = (c, t0, word, tFill, col) => {
+    const sx = c.x0 + 50 + c.tw + 18, w = word.length > 2 ? 230 : 90;
+    const s = rrect(c.g, sx, CT + 34, w, 78, 14, 'rgba(255,90,54,.07)', { stroke: ACC, 'stroke-width': 5, 'stroke-dasharray': '14 10' });
+    const ft = txt(c.g, sx + w / 2, CT + 92, word, { size: 52, weight: 900, fill: col, anchor: 'middle', opacity: 0 });
+    on(t => { const p = P(t, tFill, tFill + .25); op(ft, p); s.setAttribute('stroke-dasharray', p > 0 ? 'none' : '14 10'); s.setAttribute('fill', p > 0 ? 'rgba(255,255,255,0)' : 'rgba(255,90,54,.07)'); s.setAttribute('stroke', p > 0 ? PALE : ACC); });
+    return sx + w;
+  };
+  const lEnd = slotAt(L, ev.cardL, '鱼', ev.fish, ACC);
+  const rEnd = slotAt(R, ev.cardR, '3 月 7 日', ev.slot2, BLUE);
+  tick(L.g, lEnd + 50, CT + 74, 56, GREEN, ev.fish + .2);
+  tick(R.g, rEnd + 46, CT + 74, 52, GREEN, ev.slot2 + .35);
+  // 书页：左边高亮很多次，右边几乎找不到
+  const page = (c, seed) => {
+    rrect(c.g, c.x0 + 50, CT + 140, 680, 180, 16, SOFT);
+    return pageLines(c.g, c.x0 + 80, CT + 180, 620, 4, 34, seed);
+  };
+  const pl = page(L, 5), pr = page(R, 6);
+  const r = rng(9);
+  for (let i = 0; i < 9; i++) {
+    const ln = pl[i % 4], hx = ln.x + 20 + r() * (ln.w - 140);
+    const h = rrect(L.g, hx, ln.y - 12, 110, 24, 8, ACC, { opacity: 0 });
+    const t0 = lerp(ev.many, ev.cat + .6, i / 8);
+    on(t => op(h, .75 * P(t, t0, t0 + .15)));
+  }
+  const seen = txt(L.g, L.x0 + 390, CT + 372, '见过很多次', { size: 36, weight: 800, fill: ACC, anchor: 'middle' });
+  rise(seen, ev.many + .3);
+  const rare = txt(R.g, R.x0 + 390, CT + 372, '几乎没见过', { size: 36, weight: 800, fill: MID, anchor: 'middle' });
+  rise(rare, ev.rare);
+  // 放大镜在右边书页上找一圈，什么都没找到
+  const mg = el('g', { opacity: 0 }, W); magnifier(mg, .8);
+  on(t => {
+    const p = P(t, ev.rare - .2, ev.barsR);
+    op(mg, p > 0 && p < 1 ? Math.min(1, p * 8, (1 - p) * 8) : 0);
+    tr(mg, R.x0 + 140 + 480 * p, CT + 220 + Math.sin(p * 9) * 34);
+  });
+  // 候选条
+  const BB = CT + 640;
+  const bars = (c, items, t0, maxH, o = {}) => items.map(([lab, h], i) => {
+    const bw = o.bw || 90, gap = o.gap || 60, n = items.length, x0 = c.x0 + (o.left ?? (390 - (n * bw + (n - 1) * gap) / 2));
+    const x = x0 + i * (bw + gap);
+    const g = el('g', { opacity: 0 }, c.g);
+    rrect(g, x, BB - maxH, bw, maxH, 12, SOFT);
+    const b = rrect(g, x, BB, bw, 0, 12, o.col ? o.col(i) : GREY);
+    txt(g, x + bw / 2, BB + 44, lab, { size: o.size || 40, weight: 800, anchor: 'middle', fill: SLATE, mono: o.mono });
+    appear(g, t0 + i * .06, { dy: 12 });
+    on(t => { const hh = h * ease.outCubic(P(t, t0 + .1 + i * .06, t0 + .6 + i * .06)); b.setAttribute('y', (BB - hh).toFixed(1)); b.setAttribute('height', hh.toFixed(1)); });
+    return { b, x, bw };
+  });
+  bars(L, [['鱼', 230], ['肉', 46], ['米', 30]], ev.cat, 240, { col: i => i ? GREY : ACC });
+  const RB = bars(R, [['3/7', 64], ['6/15', 58], ['1/1', 70], ['5/20', 56], ['8/8', 62], ['2/14', 60]], ev.barsR, 240, { bw: 66, gap: 26, left: 60, size: 30, mono: true });
+  const ex = txt(R.g, R.x0 + 730, CT + 430, '示例', { size: 30, weight: 700, fill: MID, anchor: 'end' });
+  rise(ex, ev.barsR + .3);
+  on(t => RB[0].b.setAttribute('fill', t > ev.dice + 1.0 ? BLUE : GREY));
+  // 小团子按骰子，骰子滚出来停在 3/7
+  mascot(C.stickers.dice, cx + 770, cy + 250, 250, ev.dice - .35, { rot: 8 });
+  const die = el('g', { opacity: 0 }, W);
+  const dIn = el('g', { filter: 'url(#stk)' }, die);
+  rrect(dIn, -40, -40, 80, 80, 16, WHITE, { stroke: LINE, 'stroke-width': 3 });
+  for (const [a, b] of [[-18, -18], [18, 18], [0, 0], [18, -18], [-18, 18]]) el('circle', { cx: a, cy: b, r: 7, fill: ACC }, dIn);
+  on(t => {
+    const p = P(t, ev.dice, ev.dice + 1.0);
+    op(die, p > 0 ? 1 - P(t, ev.slot2 + .3, ev.slot2 + .6) : 0);
+    const x = lerp(cx + 650, RB[0].x + RB[0].bw / 2, ease.outCubic(p)), y = BB - 120 - Math.abs(Math.sin(p * Math.PI * 3)) * 90 * (1 - p);
+    tr(die, x, y, 1, (1 - ease.outCubic(p)) * 720);
+  });
+}
+
+// ===== ③ 口气很肯定：读过的句子几乎都直接给答案 =====
+function buildTone() {
+  const ev = EV, [cx, cy] = C3;
+  const S = ['地球绕着太阳转。', '一周有七天。', '长城在中国。', '猫有四条腿。', '水往低处流。', '冰摸起来是凉的。', '鱼生活在水里。', '一年有四季。'];
+  const r = rng(21);
+  S.forEach((s, i) => {
+    const col = i % 2, row = i >> 1;
+    const x = cx - 820 + col * 460 + (row % 2) * 40, y = cy - 270 + row * 150;
+    const g = el('g', { opacity: 0 }, W);
+    const inner = el('g', {}, g);
+    const b = bubble(inner, x, y, s, { fill: WHITE, size: 40, h: 92, r: 18 });
+    b.g.querySelector('rect').setAttribute('filter', 'url(#shadow)');
+    const t0 = lerp(ev.cards3, ev.read3 + .8, i / 7), ph = r() * 6, rot = (r() - .5) * 5;
+    on(t => {
+      const p = ease.outBack(P(t, t0, t0 + .4), 1.6);
+      op(g, P(t, t0, t0 + .2));
+      const dy = Math.sin(t * .9 + ph) * 8 + (1 - p) * 40;
+      g.setAttribute('transform', `translate(0,${dy.toFixed(1)}) rotate(${rot.toFixed(2)},${x},${y})`);
+    });
+  });
+  // 角落里很小的一张「我不知道。」
+  const idk = el('g', { opacity: 0 }, W);
+  const ib = bubble(idk, cx - 160, cy + 340, '我不知道。', { fill: SOFT, size: 30, h: 60, r: 14, color: MID });
+  appear(idk, ev.read3 + 1.0, { dy: 10 });
+  const ring = el('ellipse', { cx: cx - 160 + ib.w / 2, cy: cy + 340, rx: ib.w / 2 + 34, ry: 54, fill: 'none', stroke: ACC, 'stroke-width': 6, pathLength: 1, opacity: 0 }, W);
+  on(t => { const p = ease.outCubic(P(t, ev.idk, ev.idk + .4)); ring.setAttribute('stroke-dasharray', `${p} 1`); op(ring, p > 0 ? 1 : 0); });
+  const few = txt(W, cx - 160 + ib.w + 60, cy + 352, '很少', { size: 40, weight: 900, fill: ACC });
+  rise(few, ev.idk + .2);
+  // 它学会了：顺 ✔ 肯定 ✔ 查一查 ✘
+  const PX = cx + 300;
+  const panel = el('g', { opacity: 0 }, W);
+  rrect(panel, PX - 40, cy - 300, 420, 560, 30, WHITE, { filter: 'url(#shadow)' });
+  txt(panel, PX, cy - 220, '它学会了', { size: 40, weight: 800, fill: MID });
+  appear(panel, ev.cards3 + .3);
+  [['顺', ev.ck1, true], ['肯定', ev.ck2, true], ['查一查', ev.ck3, false]].forEach(([w, t0, ok], i) => {
+    const y = cy - 100 + i * 130;
+    const tt = txt(W, PX, y + 24, w, { size: 66, weight: 900, fill: ok ? SLATE : ACC });
+    rise(tt, t0 - .1);
+    if (ok) tick(W, PX + 290, y, 70, GREEN, t0 + .2); else cross(W, PX + 290, y, 64, ACC, t0 + .3);
+  });
+  mascot(C.stickers.ask, cx + 760, cy + 300, 230, ev.ask3, { rot: 8 });
+}
+
+// ===== ④ 考试不会也写满：同一题，两种做法 =====
+function optRow(parent, x, y, r, sel) {
+  return ['A', 'B', 'C', 'D'].map((c, i) => {
+    const g = el('g', {}, parent);
+    el('circle', { cx: x + i * (r * 2 + 18), cy: y, r, fill: WHITE, stroke: LINE, 'stroke-width': 4 }, g);
+    txt(g, x + i * (r * 2 + 18), y + r * .38, c, { size: r * 1.05, weight: 800, fill: MID, anchor: 'middle' });
+    return g;
+  });
+}
+function buildExam() {
+  const ev = EV, [cx, cy] = C4;
+  // 考卷
+  const pp = el('g', { opacity: 0 }, W);
+  const pIn = el('g', { transform: `rotate(-2,${cx - 530},${cy + 30})` }, pp);
+  const PX = cx - 860, PY = cy - 320;
+  rrect(pIn, PX, PY, 660, 700, 12, WHITE, { filter: 'url(#shadow)' });
+  txt(pIn, PX + 40, PY + 74, '小测验', { size: 46, weight: 900 });
+  txt(pIn, PX + 40, PY + 124, '姓名：小团子', { size: 30, weight: 700, fill: MID });
+  rrect(pIn, PX + 470, PY + 34, 150, 100, 10, 'none', { stroke: ACC, 'stroke-width': 4 });
+  txt(pIn, PX + 545, PY + 66, '得分', { size: 26, weight: 800, fill: ACC, anchor: 'middle' });
+  el('path', { d: `M${PX + 30},${PY + 156} H${PX + 630}`, stroke: PALE, 'stroke-width': 4 }, pIn);
+  [1, 2, 3, 4].forEach((n, i) => {
+    const y = PY + 220 + i * 120;
+    const g = el('g', {}, pIn);
+    txt(g, PX + 40, y + 12, `${n}.`, { size: 36, weight: 800 });
+    rrect(g, PX + 90, y - 6, n === 3 ? 260 : 360, 14, 7, GREY2);
+    optRow(g, PX + 120, y + 56, 20, null);
+    if (n < 3) { const s = el('circle', { cx: PX + 120 + (n === 1 ? 1 : 3) * 58, cy: y + 56, r: 26, fill: 'none', stroke: SLATE, 'stroke-width': 5 }, g); tick(g, PX + 560, y + 30, 54, ACC, ev.paper + .3 + i * .15); }
+  });
+  appear(pp, ev.paper, { dy: 30 });
+  // 第 3 题框出来
+  const hl = rrect(W, PX + 22, PY + 426, 620, 128, 16, 'rgba(255,90,54,.08)', { stroke: ACC, 'stroke-width': 6, opacity: 0, transform: `rotate(-2,${cx - 530},${cy + 30})` });
+  on(t => op(hl, P(t, ev.exam, ev.exam + .25)));
+  const no = txt(W, PX + 330, PY + 472, '这题不会', { size: 34, weight: 900, fill: ACC });
+  no.setAttribute('transform', `rotate(-2,${cx - 530},${cy + 30})`); rise(no, ev.exam + .2);
+  mascot(C.stickers.sweat, cx - 790, cy + 320, 220, ev.ask4, { rot: -8 });
+  // 同一题，两种做法
+  const head = txt(W, cx + 270, cy - 280, '同一题，两种做法', { size: 44, weight: 900, anchor: 'middle' });
+  rise(head, ev.exam + .3);
+  const mini = (x0, t0, label) => {
+    const g = el('g', { opacity: 0 }, W);
+    rrect(g, x0, cy - 210, 400, 470, 26, WHITE, { filter: 'url(#shadow)' });
+    txt(g, x0 + 200, cy - 136, label, { size: 48, weight: 900, anchor: 'middle' });
+    optRow(g, x0 + 65, cy - 40, 34, null);
+    appear(g, t0, { dy: 26 });
+    return g;
+  };
+  const A = mini(cx - 160, ev.blank, '空着'), B = mini(cx + 300, ev.guessC, '蒙一个');
+  stampAt('0 分', cx + 40, cy + 120, ev.zero, { w: 210, size: 56 });
+  // 蒙 C：圈起来
+  const cc = el('circle', { cx: cx + 365 + 2 * 86, cy: cy - 40, r: 44, fill: 'none', stroke: ACC, 'stroke-width': 7, pathLength: 1, opacity: 0 }, W);
+  on(t => { const p = ease.outCubic(P(t, ev.guessC + .4, ev.guessC + .8)); cc.setAttribute('stroke-dasharray', `${p} 1`); op(cc, p > 0 ? 1 : 0); });
+  // 四格小转盘：转一圈，停下时一格亮
+  const wx = cx + 500, wy = cy + 110, wr = 72;
+  const wheel = el('g', { opacity: 0 }, W);
+  const quads = [0, 1, 2, 3].map(k => {
+    const a0 = k * Math.PI / 2 - Math.PI / 2, a1 = a0 + Math.PI / 2;
+    return el('path', { d: `M${wx},${wy} L${wx + wr * Math.cos(a0)},${wy + wr * Math.sin(a0)} A${wr},${wr} 0 0 1 ${wx + wr * Math.cos(a1)},${wy + wr * Math.sin(a1)} Z`, fill: PALE, stroke: WHITE, 'stroke-width': 6 }, wheel);
+  });
+  const needle = el('path', { d: `M${wx},${wy} L${wx},${wy - wr - 12}`, stroke: SLATE, 'stroke-width': 8, 'stroke-linecap': 'round' }, wheel);
+  el('circle', { cx: wx, cy: wy, r: 12, fill: SLATE }, wheel);
+  appear(wheel, ev.guessC + .5, { dy: 16 });
+  const q4 = txt(W, wx, wy + wr + 54, '有 1/4 机会得分', { size: 34, weight: 900, fill: ACC, anchor: 'middle' });
+  rise(q4, ev.quarter + .6);
+  on(t => {
+    const p = ease.outCubic(P(t, ev.quarter, ev.quarter + .9));
+    const ang = p * (720 + 45);
+    needle.setAttribute('transform', `rotate(${ang.toFixed(1)},${wx},${wy})`);
+    quads.forEach((q, k) => q.setAttribute('fill', k === 0 && p >= 1 ? ACC : PALE));
+  });
+}
+
+// ===== ⑤ 打分奖励蒙：答错和"不知道"一样是 0 =====
+function buildScore() {
+  const ev = EV, [cx, cy] = C5;
+  const card = el('g', { opacity: 0 }, W);
+  rrect(card, cx - 800, cy - 320, 1000, 660, 30, WHITE, { filter: 'url(#shadow)' });
+  txt(card, cx - 740, cy - 226, '考 AI 的测试，怎么算分', { size: 48, weight: 900 });
+  el('path', { d: `M${cx - 760},${cy - 190} H${cx + 160}`, stroke: PALE, 'stroke-width': 4 }, card);
+  appear(card, ev.rules, { dy: 30 });
+  const rows = [['答对', '+1', GREEN, ev.rules + .4], ['答错', '0', MID, ev.rules + .7], ['说“不知道”', '0', MID, ev.r_idk]];
+  rows.forEach(([a, b, col, t0], i) => {
+    const y = cy - 90 + i * 130;
+    const g = el('g', { opacity: 0 }, W);
+    txt(g, cx - 720, y + 24, a, { size: 64, weight: 900 });
+    txt(g, cx + 100, y + 26, b, { size: 76, weight: 800, fill: col, anchor: 'end', mono: true });
+    appear(g, t0, { dy: 20 });
+  });
+  // 答对那行：蒙对了也算
+  const okHl = rrect(W, cx - 750, cy - 150, 900, 120, 22, 'none', { stroke: GREEN, 'stroke-width': 6, opacity: 0 });
+  on(t => op(okHl, P(t, ev.r_ok, ev.r_ok + .2)));
+  const lucky = txt(W, cx - 440, cy - 66, '（蒙对了也算）', { size: 34, weight: 800, fill: GREEN });
+  rise(lucky, ev.r_ok + .2);
+  // 答错和"不知道"一样
+  const br = rrect(W, cx - 750, cy - 20, 900, 250, 22, 'rgba(255,90,54,.05)', { stroke: ACC, 'stroke-width': 6, 'stroke-dasharray': '18 12', opacity: 0 });
+  on(t => op(br, P(t, ev.same0, ev.same0 + .25)));
+  const same = txt(W, cx + 125, cy + 112, '一样', { size: 44, weight: 900, fill: ACC, anchor: 'end' });
+  same.setAttribute('x', cx - 120); rise(same, ev.same0 + .15);
+  const fm = txt(W, cx - 300, cy + 300, '得分 = 答对几道', { size: 34, weight: 800, fill: MID, anchor: 'middle' });
+  rise(fm, ev.rules + 1.0);
+  // 右边：机器人举着"不知道"的牌子；念到"训练成"牌子掉下去，小团子举着写满的试卷出来
+  const rb = el('g', { opacity: 0 }, W);
+  robot(rb, 0, 0, 1.05, 'calm');
+  const sign = el('g', {}, rb);
+  rrect(sign, 70, -170, 190, 76, 18, WHITE, { stroke: LINE, 'stroke-width': 4 });
+  txt(sign, 165, -120, '不知道', { size: 36, weight: 900, fill: MID, anchor: 'middle' });
+  popper(rb, cx + 470, cy - 130, ev.rules + .3, { from: .5 });
+  on(t => {
+    const p = ease.inCubic(P(t, ev.train5, ev.train5 + .6));
+    sign.setAttribute('transform', `translate(${(40 * p).toFixed(1)},${(380 * p).toFixed(1)}) rotate(${(70 * p).toFixed(1)},165,-130)`);
+    op(sign, 1 - P(t, ev.train5 + .4, ev.train5 + .6));
+  });
+  mascot(C.stickers.paper, cx + 620, cy + 200, 330, ev.full, { rot: 8 });
+}
+
+// ===== 高潮：十道题，老老实实 6 分，不会就蒙 7 分排第一 =====
+function buildClimax() {
+  const ev = EV, [cx, cy] = CL;
+  const CS = 104, CG = 14, RY = [cy - 100, cy + 20];
+  const side = (sx, mood, label, t0, kinds, rows, score, tScore) => {
+    const gx = sx < 0 ? cx - 820 : cx + 244;
+    const rb = el('g', { opacity: 0 }, W); robot(rb, 0, 0, .78, mood);
+    popper(rb, gx + 60, cy - 290, ev.grids + (sx > 0 ? .15 : 0), { from: .5 });
+    const lb = txt(W, gx + 150, cy - 270, label, { size: 50, weight: 900, fill: sx > 0 ? ACC : BLUE });
+    rise(lb, t0);
+    const cells = kinds.map((k, i) => {
+      const x = gx + (i % 5) * (CS + CG), y = RY[i / 5 | 0];
+      const g = el('g', { opacity: 0 }, W);
+      const back = rrect(g, x, y, CS, CS, 18, PALE);
+      const face = el('g', {}, g);
+      rrect(face, x, y, CS, CS, 18, k === 'idk' ? '#EEF2F5' : WHITE, { stroke: k === 'bad' ? ACC : k === 'idk' ? GREY2 : GREEN, 'stroke-width': 5 });
+      if (k === 'ok' || k === 'lucky') tick(face, x + CS / 2, y + CS / 2, 58, GREEN).setAttribute('opacity', 1);
+      if (k === 'bad') { const c = cross(face, x + CS / 2, y + CS / 2, 52, ACC); c.setAttribute('opacity', 1); c.querySelectorAll('path').forEach(p => p.removeAttribute('pathLength')); }
+      if (k === 'idk') txt(face, x + CS / 2, y + CS / 2 + 10, '不知道', { size: 27, weight: 800, fill: MID, anchor: 'middle' });
+      appear(g, ev.grids + .2 + i * .02, { dy: 10 });
+      const tf = rows[i / 5 | 0] + (i % 5) * .05;
+      on(t => {                                   // 按排翻开：横向压扁再展开
+        const p = P(t, tf, tf + .28), sxv = Math.abs(Math.cos(p * Math.PI));
+        const c = x + CS / 2;
+        g.setAttribute('transform', `translate(${c},0) scale(${Math.max(.02, p <= 0 ? 1 : sxv).toFixed(3)},1) translate(${-c},0)`);
+        op(back, p < .5 ? 1 : 0); op(face, p >= .5 ? 1 : 0);
+      });
+      return { x, y, g, face, k };
+    });
+    const sc = txt(W, gx + 288, cy + 280, '', { size: 120, weight: 900, anchor: 'middle', fill: sx > 0 ? ACC : BLUE });
+    on(t => {
+      op(sc, P(t, tScore - .1, tScore + .1));
+      const n = Math.round(score * ease.outCubic(P(t, tScore - .1, tScore + .35)));
+      sc.textContent = `${n} 分`;
+    });
+    return cells;
+  };
+  side(-1, 'calm', '老老实实', ev.honest, ['ok', 'ok', 'ok', 'ok', 'ok', 'ok', 'idk', 'idk', 'idk', 'idk'], [ev.L1, ev.L2], 6, ev.Ls);
+  const R = side(1, 'sly', '不会就蒙', ev.guesser, ['ok', 'ok', 'ok', 'ok', 'ok', 'ok', 'lucky', 'bad', 'bad', 'bad'], [ev.R1, ev.R2], 7, ev.Rs);
+  const ten = txt(W, cx, cy - 400, '同样 10 道题（示例）', { size: 40, weight: 800, fill: MID, anchor: 'middle' });
+  rise(ten, ev.ten);
+  mascot(C.stickers.judge, cx, cy + 130, 250, ev.grids + .3, { rot: 6 });
+  // 奖杯砸下：第一名
+  const cup = el('g', { opacity: 0 }, W);
+  const cIn = el('g', { filter: 'url(#stk)' }, cup);
+  el('path', { d: 'M-52,-60 H52 Q52,10 0,26 Q-52,10 -52,-60 Z', fill: '#FFC93C' }, cIn);
+  el('path', { d: 'M-52,-46 Q-92,-46 -84,-16 Q-76,8 -44,4 M52,-46 Q92,-46 84,-16 Q76,8 44,4', stroke: '#FFC93C', 'stroke-width': 12, fill: 'none' }, cIn);
+  rrect(cIn, -12, 24, 24, 30, 4, '#E8A92A'); rrect(cIn, -40, 52, 80, 22, 8, '#E8A92A');
+  txt(cIn, 0, -6, '1', { size: 52, weight: 900, fill: WHITE, anchor: 'middle' });
+  on(t => {
+    const p = P(t, ev.land, ev.land + .22);
+    op(cup, p > 0 ? 1 : 0);
+    tr(cup, cx + 700, cy - 320, p > 0 ? lerp(2.2, 1, ease.outBack(p, 1.4)) : 0, (1 - p) * -20 + Math.sin((t - ev.land) * 3) * 2 * (p >= 1 ? 1 : 0));
+  });
+  const first = txt(W, cx + 700, cy - 196, '第一名', { size: 42, weight: 900, fill: ACC, anchor: 'middle' });
+  rise(first, ev.land + .1, { dy: 14 });
+  // 推近：蒙的四格都标「猜的」，其中一格"碰巧对"，三个红叉一闪一闪
+  R.slice(6).forEach((c, i) => {
+    const g = el('g', { opacity: 0 }, W);
+    rrect(g, c.x + 10, c.y + CS + 10, 84, 38, 12, ACC);
+    txt(g, c.x + 52, c.y + CS + 38, '猜的', { size: 26, weight: 900, fill: WHITE, anchor: 'middle' });
+    appear(g, ev.tags + i * .12, { dy: 12 });
+    if (c.k === 'lucky') {
+      const l = el('g', { opacity: 0 }, W);
+      rrect(l, c.x + 6, c.y + CS - 36, CS - 12, 30, 8, GREEN);
+      txt(l, c.x + CS / 2, c.y + CS - 13, '碰巧对', { size: 22, weight: 900, fill: WHITE, anchor: 'middle' });
+      appear(l, c.lucky ?? ev.lucky, { dy: 6 });
+    }
+    if (c.k === 'bad') on(t => { const fl = t > ev.xs ? .5 + .5 * Math.cos((t - ev.xs) * 9) : 1; if (t > ev.R2 + .5) op(c.face, fl); });
+  });
+}
+
+// ===== ⑥ 怎么防：列出处并点开看；先上网搜；直接说不确定 =====
+function buildGuard() {
+  const ev = EV, [cx, cy] = C6;
+  const CX = [cx - 830, cx - 260, cx + 310], CW = 520, CT = cy - 330, CHh = 660;
+  const heads = ['让它列出处', '先上网搜一搜', '直接说不确定'], t0s = [ev.src - .3, ev.search - .3, ev.sure - .3];
+  CX.forEach((x, i) => {
+    const ghost = rrect(W, x, CT, CW, CHh, 30, 'none', { stroke: GREY2, 'stroke-width': 6, 'stroke-dasharray': '18 14', opacity: 0 });
+    on(t => op(ghost, P(t, ev.cards6, ev.cards6 + .3) * (1 - P(t, t0s[i], t0s[i] + .2))));
+    const g = el('g', { opacity: 0 }, W);
+    rrect(g, x, CT, CW, CHh, 30, WHITE, { filter: 'url(#shadow)' });
+    el('circle', { cx: x + 56, cy: CT + 62, r: 28, fill: ACC }, g);
+    txt(g, x + 56, CT + 76, String(i + 1), { size: 36, weight: 900, fill: WHITE, anchor: 'middle' });
+    txt(g, x + 100, CT + 78, heads[i], { size: 42, weight: 900 });
+    appear(g, i ? t0s[i] : ev.cards6, { dy: 26 });
+  });
+  // 1：出处链接 → 点开 → 正文里没有这个说法 → 打叉
+  const x1 = CX[0];
+  const link = el('g', { opacity: 0 }, W);
+  rrect(link, x1 + 36, CT + 128, CW - 72, 64, 32, BLUE_L);
+  txt(link, x1 + 66, CT + 170, '出处：example.com/…', { size: 30, weight: 700, fill: BLUE });
+  appear(link, ev.src, { dy: 14 });
+  const br = el('g', { opacity: 0 }, W);
+  rrect(br, x1 + 36, CT + 220, CW - 72, 400, 18, SOFT, { stroke: PALE, 'stroke-width': 3 });
+  rrect(br, x1 + 36, CT + 220, CW - 72, 56, 18, PALE); rrect(br, x1 + 36, CT + 250, CW - 72, 26, 0, PALE);
+  for (let k = 0; k < 3; k++) el('circle', { cx: x1 + 66 + k * 24, cy: CT + 248, r: 7, fill: WHITE }, br);
+  rrect(br, x1 + 150, CT + 233, 280, 30, 15, WHITE);
+  txt(br, x1 + 166, CT + 256, 'example.com/…', { size: 22, weight: 600, fill: MID, mono: true });
+  txt(br, x1 + 66, CT + 334, '小团子档案', { size: 36, weight: 900 });
+  const pl = pageLines(br, x1 + 66, CT + 384, 380, 6, 36, 31);
+  appear(br, ev.open6, { dy: 20 });
+  const mg = el('g', { opacity: 0 }, W); magnifier(mg, .7);
+  on(t => {
+    const p = P(t, ev.check, ev.nope + .2);
+    op(mg, p > 0 && p < 1 ? Math.min(1, p * 8, (1 - p) * 8) : 0);
+    const ln = pl[Math.min(5, Math.floor(p * 6))];
+    tr(mg, ln.x + ((p * 6) % 1) * 360, ln.y - 6);
+  });
+  cross(W, x1 + CW / 2, CT + 470, 150, ACC, ev.nope + .2);
+  const nope = txt(W, x1 + CW / 2, CT + 645 - 40, '正文不是这么说的', { size: 30, weight: 900, fill: ACC, anchor: 'middle' });
+  rise(nope, ev.nope + .4);
+  // 2：先上网搜
+  const x2 = CX[1];
+  const sb = el('g', { opacity: 0 }, W);
+  rrect(sb, x2 + 36, CT + 140, CW - 72, 70, 35, SOFT, { stroke: PALE, 'stroke-width': 3 });
+  const sm = el('g', { transform: `translate(${x2 + 80},${CT + 172})` }, sb); magnifier(sm, .32);
+  txt(sb, x2 + 116, CT + 186, '小团子 生日', { size: 32, weight: 700 });
+  appear(sb, ev.search, { dy: 14 });
+  const res = [0, 1, 2].map(k => {
+    const g = el('g', { opacity: 0 }, W);
+    rrect(g, x2 + 36, CT + 240 + k * 124, CW - 72, 104, 16, SOFT);
+    rrect(g, x2 + 60, CT + 264 + k * 124, 220, 16, 8, BLUE);
+    pageLines(g, x2 + 60, CT + 308 + k * 124, 380, 2, 26, 40 + k);
+    appear(g, ev.search + .4 + k * .2, { dy: 14 });
+    return g;
+  });
+  const sweep = el('g', { opacity: 0 }, W); magnifier(sweep, .6);
+  on(t => {
+    const p = P(t, ev.search + .6, ev.sure - .3);
+    op(sweep, p > 0 && p < 1 ? Math.min(1, p * 8, (1 - p) * 8) : 0);
+    tr(sweep, x2 + 140 + 260 * (.5 + .5 * Math.sin(p * 9)), CT + 280 + 260 * p);
+  });
+  // 3：直接说"这个我不确定"
+  const x3 = CX[2];
+  const av = el('g', { opacity: 0 }, W);
+  el('circle', { cx: x3 + 70, cy: CT + 200, r: 30, fill: SLATE }, av);
+  txt(av, x3 + 70, CT + 209, 'AI', { size: 24, weight: 900, fill: WHITE, anchor: 'middle' });
+  appear(av, ev.sure, { dy: 10 });
+  const sbub = bubble(W, x3 + 116, CT + 200, '', { size: 38, fill: BLUE_L, h: 86 });
+  const SURE = '这个我不确定。';
+  sbub.t.textContent = SURE;
+  const fullW = sbub.t.getComputedTextLength() + 38 * 1.3;
+  sbub.g.querySelector('rect').setAttribute('width', fullW);
+  on(t => {
+    op(sbub.g, P(t, ev.sure + .1, ev.sure + .3));
+    const n = Math.floor(P(t, ev.sure_t, ev.sure_t + .7) * SURE.length + 1e-6);
+    sbub.t.textContent = SURE.slice(0, n);
+  });
+  const hon = el('g', { opacity: 0 }, W);
+  tick(hon, x3 + CW / 2, CT + 420, 130, GREEN).setAttribute('opacity', 1);
+  txt(hon, x3 + CW / 2, CT + 560, '不确定就说', { size: 36, weight: 900, fill: GREEN, anchor: 'middle' });
+  appear(hon, ev.sure_t + .9, { dy: 14 });
+  mascot(C.stickers.mag, cx - 790, cy + 330, 180, ev.open6, { rot: -6, out: ev.search });
+}
+
+// ===== 总览：练的是接话 → 见得少，就靠猜 → 不会也写满 → 一本正经地胡说八道 =====
+function buildOverview() {
+  const ev = EV, [cx, cy] = C7, NY = cy - 40, R = 100;
+  const SX = [cx - 640, cx - 180, cx + 280];
+  const A = lerp(ev.pull[0], ev.pull[1], .42);
+  const head = txt(W, cx, cy - 350, '为什么会一本正经地胡说八道', { size: 60, weight: 900, anchor: 'middle' });
+  rise(head, A);
+  // 骨架：虚线和空圈
+  const ghost = el('g', { opacity: 0 }, W);
+  el('path', { d: `M${SX[0]},${NY} H${cx + 520}`, stroke: GREY2, 'stroke-width': 12, 'stroke-dasharray': '4 24', 'stroke-linecap': 'round' }, ghost);
+  SX.forEach(x => el('circle', { cx: x, cy: NY, r: R, fill: WHITE, stroke: GREY2, 'stroke-width': 8, 'stroke-dasharray': '18 14' }, ghost));
+  appear(ghost, A, { dy: 0 });
+  const line = el('path', { d: `M${SX[0]},${NY} H${cx + 520}`, stroke: SLATE, 'stroke-width': 12, 'stroke-linecap': 'round', pathLength: 1, opacity: 0 }, W);
+  const LAB = ['练的是接话', '见得少，就靠猜', '不会也写满'], TS = [ev.s1, ev.s2, ev.s3];
+  on(t => {
+    const p = P(t, ev.s1, ev.bubble) ;
+    line.setAttribute('stroke-dasharray', `${(ease.inOutCubic(p)).toFixed(3)} 1`); op(line, p > 0 ? 1 : 0);
+  });
+  SX.forEach((x, i) => {
+    const g = el('g', { opacity: 0 }, W);
+    el('circle', { cx: 0, cy: 0, r: R, fill: i === 2 ? ACC : i === 1 ? BLUE : SLATE, filter: 'url(#stk)' }, g);
+    txt(g, 0, 30, String(i + 1), { size: 88, weight: 900, fill: WHITE, anchor: 'middle' });
+    popper(g, x, NY, TS[i] - .1, { from: .4 });
+    const l = txt(W, x, NY + 180, LAB[i], { size: 52, weight: 900, anchor: 'middle' });
+    rise(l, TS[i]);
+  });
+  const neq = txt(W, SX[0], NY + 250, '≠ 说得对', { size: 40, weight: 800, fill: ACC, anchor: 'middle' });
+  rise(neq, ev.s1b);
+  // 终点气泡
+  const bb = el('g', { opacity: 0 }, W);
+  const bIn = el('g', { filter: 'url(#stk)' }, bb);
+  rrect(bIn, -160, -112, 320, 224, 40, WHITE, { stroke: ACC, 'stroke-width': 6 });
+  el('path', { d: 'M-150,30 L-200,64 L-140,64 Z', fill: WHITE }, bIn);
+  txt(bIn, 0, -14, '一本正经地', { size: 50, weight: 900, anchor: 'middle' });
+  txt(bIn, 0, 56, '胡说八道', { size: 50, weight: 900, fill: ACC, anchor: 'middle' });
+  popper(bb, cx + 690, NY, ev.bubble, { from: .4, rot: 6 });
+}
+
+// ===== 结尾：回到聊天框，小团子拿放大镜凑过去看 =====
+function buildEnding() {
+  const ev = EV, TX = HOOK[0] - 30, Y = HOOK[1];
+  const big = el('g', { opacity: 0 }, W);
+  txt(big, TX, Y - 20, '肯定', { size: 140, weight: 900, ls: 4 });
+  txt(big, TX + 300, Y - 20, '≠', { size: 140, weight: 900, fill: ACC });
+  txt(big, TX + 420, Y - 20, '正确', { size: 140, weight: 900, ls: 4 });
+  appear(big, ev.e_trust, { dy: 50 });
+  const sign = txt(W, TX + 6, Y + 120, (C.brand && C.brand.name) || '', { size: 56, weight: 900, fill: ACC, ls: 4 });
+  rise(sign, ev.sign, { dy: 30 });
+  // 小团子拿放大镜在三个回答上看来看去
+  const m = el('g', { opacity: 0 }, W);
+  el('image', { href: C.brand.mascot, x: -140, y: -140, width: 280, height: 280 }, m);
+  on(t => {
+    const p = P(t, ev.end_b + .2, ev.end_b + .6);
+    op(m, p > 0 ? clamp(p * 3) : 0);
+    const u = t - ev.end_b;
+    tr(m, HC[0] + 400 + Math.sin(u * 1.4) * 30, HOOK[1] + 300 - 220 * (1 - ease.outBack(p, 1.5)) + Math.sin(u * 2.8) * 8, 1, Math.sin(u * 1.4) * 3);
+  });
+}
+
+// ---------- 字幕 ----------
+function buildSubs() {
+  (C.subs || []).forEach(sb => {
+    const g = el('g', { opacity: 0 }, HUD);
+    const bg = rrect(g, 0, 962, 0, 70, 35, 'rgba(255,255,255,.92)', { filter: 'url(#shadow)' });
+    const tx = txt(g, 960, 1012, sb.text, { size: 44, weight: 700, anchor: 'middle', ls: 1 });
+    const w = tx.getComputedTextLength() + 64;
+    bg.setAttribute('x', (960 - w / 2).toFixed(1)); bg.setAttribute('width', w.toFixed(1));
+    const [a, b] = sb.t;
+    on(t => op(g, clamp((t - a) / .06) * (1 - clamp((t - b + .06) / .06))));
+  });
+}
+
+// ---------- HUD：右上进度胶囊 ----------
+function buildHud() {
+  const ev = EV;
+  const g = el('g', { opacity: 0 }, HUD);
+  rrect(g, 1196, 46, 660, 64, 32, 'rgba(255,255,255,.86)', { filter: 'url(#shadow)' });
+  const dots = [];
+  for (let i = 0; i < 6; i++) {
+    dots.push(el('circle', { cx: 1234 + i * 42, cy: 78, r: 14.5, fill: PALE }, g));
+    txt(g, 1234 + i * 42, 85.5, String(i + 1), { size: 19, weight: 800, fill: WHITE, anchor: 'middle' });
+  }
+  const name = txt(g, 1492, 88, '', { size: 28, weight: 800 });
+  const tags = [1, 2, 3, 4, 5, 6].map(i => ev[`ch${i}_tag`]);
+  on(t => {
+    op(g, P(t, ev.ch1_tag - .1, ev.ch1_tag + .3) * (1 - P(t, ev.pull[0], ev.pull[0] + .4)));
+    let cur = 0;
+    tags.forEach((tt, i) => { if (t >= tt - .3) cur = i; });
+    dots.forEach((c, i) => c.setAttribute('fill', i < cur ? SLATE : i === cur ? ACC : PALE));
+    name.textContent = TAG_TITLES[cur];
+  });
+}
+
+// ---------- 镜头 ----------
+let KEYS;
+function camKeys() {
+  const ev = EV;
+  const k = (t, p, z, fly = false, dx = 0, dy = 0) => ({ t, x: p[0] + dx, y: p[1] + dy, z, fly });
+  return [
+    k(0, HC, 1.12), k(ev.hook_pan[0], HC, 1.15, false, 4, 2),
+    k(ev.hook_pan[1], HOOK, 1.0, true), k(ev.fly1[0], HOOK, 1.03, false, 6, 3),
+    k(ev.fly1[1], C1, 1.0, true), k(ev.fly2[0], C1, 1.03, false, 6, 4),
+    k(ev.fly2[1], C2, 1.0, true), k(ev.fly3[0], C2, 1.03, false, 6, 4),
+    k(ev.fly3[1], C3, 1.0, true), k(ev.fly4[0], C3, 1.03, false, -6, 4),
+    k(ev.fly4[1], C4, 1.0, true), k(ev.fly5[0], C4, 1.03, false, -6, 4),
+    k(ev.fly5[1], C5, 1.0, true), k(ev.fly_cl[0], C5, 1.03, false, 0, 6),
+    k(ev.fly_cl[1], CL, 1.0, true), k(ev.push - .1, CL, 1.03),
+    k(ev.push + .9, PUSH, 1.5, true), k(ev.fly6[0], PUSH, 1.55),
+    k(ev.fly6[1], C6, 1.0, true), k(ev.pull[0], C6, 1.03, false, 6, 0),
+    k(ev.pull[1], C7, 1.0, true), k(ev.fly_end[0], C7, 1.03),
+    k(ev.fly_end[1], HOOK, 1.0, true), k(C.duration, HOOK, 1.04),
+  ];
+}
+function camAt(t) {
+  let i = 0;
+  while (i < KEYS.length - 2 && t >= KEYS[i + 1].t) i++;
+  const a = KEYS[i], b = KEYS[i + 1];
+  const p = P(t, a.t, b.t);
+  if (!b.fly) return { x: lerp(a.x, b.x, p), y: lerp(a.y, b.y, p), z: lerp(a.z, b.z, p) };
+  const e = ease.inOutQuint(p);
+  const lz = Math.exp(lerp(Math.log(a.z), Math.log(b.z), ease.inOutCubic(p)));
+  const dist = Math.hypot(b.x - a.x, b.y - a.y);
+  const dip = Math.min(.22, dist / 12000) * Math.sin(Math.PI * p);
+  return { x: lerp(a.x, b.x, e), y: lerp(a.y, b.y, e), z: lz * (1 - dip) };
+}
+
+// ---------- 入口 ----------
+window.DEMO = { width: 1920, height: 1080, fps: 30, duration: 60 };
+window.renderAt = async (t) => {
+  const cam = camAt(t);
+  // 奖杯砸下时镜头抖一下
+  const sh = EV && t >= EV.land ? Math.exp(-(t - EV.land) * 9) : 0;
+  const jx = sh * 10 * Math.sin(t * 90), jy = sh * 8 * Math.cos(t * 77);
+  CAM.setAttribute('transform', `translate(${(960 + jx).toFixed(2)},${(540 + jy).toFixed(2)}) scale(${cam.z.toFixed(5)}) translate(${(-cam.x).toFixed(2)},${(-cam.y).toFixed(2)})`);
+  for (const f of U) f(t, cam);
+};
+(async () => {
+  C = await (await fetch('cues.json')).json();
+  EV = C.ev;
+  window.DEMO.duration = C.duration;
+  await document.fonts.load('800 40px NS', 'AI为什么会一本正经地胡说八道练的是接话见得少就靠猜口气很肯定考试不会也写满打分奖励蒙怎么防'); await document.fonts.load('600 30px JB', '0123456789/+.'); await document.fonts.load('800 40px IN', 'AI');
+  await document.fonts.ready;
+  await Promise.all(Object.values(C.stickers).concat([C.brand.mascot.split('/').pop()]).map(f => new Promise(res => { const im = new Image(); im.onload = im.onerror = res; im.src = `/assets/xiaotuanzi/${f}`; })));
+  KEYS = camKeys();
+  build();
+  const q = new URLSearchParams(location.search);
+  await window.renderAt(+(q.get('t') || 0));
+  window.__ready = true;
+})();
+</script>
+</body>
+</html>

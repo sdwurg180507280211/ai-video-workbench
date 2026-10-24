@@ -1,0 +1,179 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf26-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/owFlWA3q3N5iAjmAEnnKDtqCDZcfArfA0ZJgED?x-expires=1792849784&x-signature=%2F7pNdzqpLc1jeDcs2tvNNZY61s0%3D",
+  "req_text_length": 30,
+  "sentences": [
+   {
+    "endTime": 2.155,
+    "startTime": 0.285,
+    "text": "接得顺，不等于说得对；",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.485,
+      "startTime": 0.285,
+      "word": "接"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.615,
+      "startTime": 0.485,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.945,
+      "startTime": 0.615,
+      "word": "顺，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.215,
+      "startTime": 1.085,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.385,
+      "startTime": 1.215,
+      "word": "等"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.485,
+      "startTime": 1.385,
+      "word": "于"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.695,
+      "startTime": 1.485,
+      "word": "说"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.825,
+      "startTime": 1.695,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.155,
+      "startTime": 1.825,
+      "word": "对；"
+     }
+    ]
+   },
+   {
+    "endTime": 4.175,
+    "startTime": 2.475,
+    "text": "见得少，它就靠猜；",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 2.735,
+      "startTime": 2.475,
+      "word": "见"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.845,
+      "startTime": 2.735,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.245,
+      "startTime": 2.845,
+      "word": "少，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.465,
+      "startTime": 3.315,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.585,
+      "startTime": 3.465,
+      "word": "就"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.815,
+      "startTime": 3.585,
+      "word": "靠"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.175,
+      "startTime": 3.815,
+      "word": "猜；"
+     }
+    ]
+   },
+   {
+    "endTime": 6.795,
+    "startTime": 4.505,
+    "text": "不会的，也常常写满。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 4.615,
+      "startTime": 4.505,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.885,
+      "startTime": 4.615,
+      "word": "会"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.135,
+      "startTime": 4.885,
+      "word": "的，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.305,
+      "startTime": 5.165,
+      "word": "也"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.495,
+      "startTime": 5.305,
+      "word": "常"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.675,
+      "startTime": 5.495,
+      "word": "常"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.915,
+      "startTime": 5.675,
+      "word": "写"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.145,
+      "startTime": 5.915,
+      "word": "满。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 30,
+  "task_id": "8ec36f8f-7a67-4f2e-8cf0-c85939f4a2a5",
+  "task_status": 2,
+  "url_expire_time": 1792849784
+ },
+ "message": "ok"
+}

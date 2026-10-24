@@ -1,0 +1,262 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf3-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/oQzr4fVfA3AOA28tAILicUMGfePDFrqICSIG5A?x-expires=1792849775&x-signature=9FeMdj%2BOBXTz2tl4WJvMaBwj%2FjY%3D",
+  "req_text_length": 47,
+  "sentences": [
+   {
+    "endTime": 5.555,
+    "startTime": 0.275,
+    "text": "很多考 AI 的测试也这样：说不知道不得分，蒙对了才得分。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.455,
+      "startTime": 0.275,
+      "word": "很"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.635,
+      "startTime": 0.455,
+      "word": "多"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.865,
+      "startTime": 0.635,
+      "word": "考"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.225,
+      "startTime": 1.085,
+      "word": "AI"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.365,
+      "startTime": 1.225,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.595,
+      "startTime": 1.365,
+      "word": "测"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.825,
+      "startTime": 1.595,
+      "word": "试"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.965,
+      "startTime": 1.825,
+      "word": "也"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.145,
+      "startTime": 1.965,
+      "word": "这"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.365,
+      "startTime": 2.145,
+      "word": "样："
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.915,
+      "startTime": 2.585,
+      "word": "说"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.045,
+      "startTime": 2.915,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.175,
+      "startTime": 3.045,
+      "word": "知"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.455,
+      "startTime": 3.175,
+      "word": "道"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.575,
+      "startTime": 3.485,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.755,
+      "startTime": 3.575,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.075,
+      "startTime": 3.755,
+      "word": "分，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.545,
+      "startTime": 4.275,
+      "word": "蒙"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.715,
+      "startTime": 4.545,
+      "word": "对"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.855,
+      "startTime": 4.715,
+      "word": "了"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.045,
+      "startTime": 4.855,
+      "word": "才"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.215,
+      "startTime": 5.045,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.555,
+      "startTime": 5.215,
+      "word": "分。"
+     }
+    ]
+   },
+   {
+    "endTime": 9.647,
+    "startTime": 5.775,
+    "text": "所以它更容易被训练成：不会也要写满。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 5.955,
+      "startTime": 5.775,
+      "word": "所"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.175,
+      "startTime": 5.955,
+      "word": "以"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.405,
+      "startTime": 6.175,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.605,
+      "startTime": 6.405,
+      "word": "更"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.745,
+      "startTime": 6.605,
+      "word": "容"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.895,
+      "startTime": 6.745,
+      "word": "易"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.065,
+      "startTime": 6.895,
+      "word": "被"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.265,
+      "startTime": 7.065,
+      "word": "训"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.395,
+      "startTime": 7.265,
+      "word": "练"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.425,
+      "startTime": 7.395,
+      "word": "成："
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.945,
+      "startTime": 7.825,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.285,
+      "startTime": 7.945,
+      "word": "会"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.475,
+      "startTime": 8.315,
+      "word": "也"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.555,
+      "startTime": 8.475,
+      "word": "要"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.795,
+      "startTime": 8.555,
+      "word": "写"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.035,
+      "startTime": 8.795,
+      "word": "满。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 47,
+  "task_id": "8487395d-d708-4bbd-945d-c2ebf2bc39db",
+  "task_status": 2,
+  "url_expire_time": 1792849775
+ },
+ "message": "ok"
+}

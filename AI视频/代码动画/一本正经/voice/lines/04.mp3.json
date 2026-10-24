@@ -1,0 +1,263 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf9-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/oIBCcVfSAQAl1iA6jw4BGvBIibAgqECQWQDA8m?x-expires=1792849776&x-signature=lWT1xpXlf%2BY%2FsPnQBCbC1G8xzMc%3D",
+  "req_text_length": 44,
+  "sentences": [
+   {
+    "endTime": 2.135,
+    "startTime": 0.385,
+    "text": "为什么不干脆说不知道？",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.465,
+      "startTime": 0.385,
+      "word": "为"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.615,
+      "startTime": 0.465,
+      "word": "什"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.785,
+      "startTime": 0.615,
+      "word": "么"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.925,
+      "startTime": 0.785,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.115,
+      "startTime": 0.925,
+      "word": "干"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.295,
+      "startTime": 1.115,
+      "word": "脆"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.545,
+      "startTime": 1.295,
+      "word": "说"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.665,
+      "startTime": 1.545,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.815,
+      "startTime": 1.665,
+      "word": "知"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.135,
+      "startTime": 1.815,
+      "word": "道？"
+     }
+    ]
+   },
+   {
+    "endTime": 5.835,
+    "startTime": 2.445,
+    "text": "想想考试：选择题空着，一定是零分；",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 2.625,
+      "startTime": 2.445,
+      "word": "想"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.795,
+      "startTime": 2.625,
+      "word": "想"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.975,
+      "startTime": 2.795,
+      "word": "考"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.005,
+      "startTime": 2.975,
+      "word": "试："
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.775,
+      "startTime": 3.535,
+      "word": "选"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.975,
+      "startTime": 3.775,
+      "word": "择"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.195,
+      "startTime": 3.975,
+      "word": "题"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.495,
+      "startTime": 4.195,
+      "word": "空"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.695,
+      "startTime": 4.495,
+      "word": "着，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.985,
+      "startTime": 4.825,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.165,
+      "startTime": 4.985,
+      "word": "定"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.325,
+      "startTime": 5.165,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.515,
+      "startTime": 5.325,
+      "word": "零"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.835,
+      "startTime": 5.515,
+      "word": "分；"
+     }
+    ]
+   },
+   {
+    "endTime": 9.221,
+    "startTime": 6.115,
+    "text": "随便蒙一个，还有四分之一的机会。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 6.335,
+      "startTime": 6.115,
+      "word": "随"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.535,
+      "startTime": 6.335,
+      "word": "便"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.735,
+      "startTime": 6.535,
+      "word": "蒙"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.875,
+      "startTime": 6.735,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.155,
+      "startTime": 6.875,
+      "word": "个，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.405,
+      "startTime": 7.185,
+      "word": "还"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.465,
+      "startTime": 7.405,
+      "word": "有"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.675,
+      "startTime": 7.465,
+      "word": "四"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.855,
+      "startTime": 7.675,
+      "word": "分"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.995,
+      "startTime": 7.855,
+      "word": "之"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.135,
+      "startTime": 7.995,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.245,
+      "startTime": 8.135,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.435,
+      "startTime": 8.245,
+      "word": "机"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.685,
+      "startTime": 8.435,
+      "word": "会。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 44,
+  "task_id": "0781a398-7563-4c32-971b-5138556b9682",
+  "task_status": 2,
+  "url_expire_time": 1792849776
+ },
+ "message": "ok"
+}

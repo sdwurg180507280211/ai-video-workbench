@@ -1,0 +1,8 @@
+{
+  "name": "yibenzhengjing",
+  "private": true,
+  "type": "module",
+  "description": "AI 为什么会一本正经地胡说八道：Opus 5.5 写代码做的 MG 科普短片（渲染器来自 mg-styles-15，MIT）",
+  "scripts": { "render": "node harness/render.mjs film" },
+  "dependencies": { "puppeteer-core": "25.12.0" }
+}

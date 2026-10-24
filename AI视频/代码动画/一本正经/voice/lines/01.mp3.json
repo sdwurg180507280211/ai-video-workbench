@@ -1,0 +1,256 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf26-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/oYAPArOebVIzDEBKEeGcfKLVAVwuAbCEDXqAAp?x-expires=1792849768&x-signature=8eq%2BJ8FJL3mhUq8QLur7cMSrj3U%3D",
+  "req_text_length": 45,
+  "sentences": [
+   {
+    "endTime": 7.245,
+    "startTime": 0.305,
+    "text": "它平时练的，是接话：读很多很多文字，看前半句，猜下一个字最可能是什么。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.535,
+      "startTime": 0.305,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.745,
+      "startTime": 0.565,
+      "word": "平"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.045,
+      "startTime": 0.745,
+      "word": "时"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.345,
+      "startTime": 1.045,
+      "word": "练"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.555,
+      "startTime": 1.345,
+      "word": "的，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.765,
+      "startTime": 1.555,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.025,
+      "startTime": 1.765,
+      "word": "接"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.055,
+      "startTime": 2.025,
+      "word": "话："
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.595,
+      "startTime": 2.425,
+      "word": "读"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.825,
+      "startTime": 2.595,
+      "word": "很"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.965,
+      "startTime": 2.825,
+      "word": "多"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.135,
+      "startTime": 2.965,
+      "word": "很"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.305,
+      "startTime": 3.135,
+      "word": "多"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.525,
+      "startTime": 3.305,
+      "word": "文"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.805,
+      "startTime": 3.525,
+      "word": "字，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.295,
+      "startTime": 4.065,
+      "word": "看"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.535,
+      "startTime": 4.295,
+      "word": "前"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.785,
+      "startTime": 4.535,
+      "word": "半"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.075,
+      "startTime": 4.785,
+      "word": "句，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.305,
+      "startTime": 5.115,
+      "word": "猜"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.575,
+      "startTime": 5.305,
+      "word": "下"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.705,
+      "startTime": 5.575,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.825,
+      "startTime": 5.705,
+      "word": "个"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.105,
+      "startTime": 5.825,
+      "word": "字"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.345,
+      "startTime": 6.145,
+      "word": "最"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.525,
+      "startTime": 6.345,
+      "word": "可"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.675,
+      "startTime": 6.525,
+      "word": "能"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.845,
+      "startTime": 6.675,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.015,
+      "startTime": 6.845,
+      "word": "什"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.245,
+      "startTime": 7.015,
+      "word": "么。"
+     }
+    ]
+   },
+   {
+    "endTime": 9.91,
+    "startTime": 7.575,
+    "text": "练得越多，接得越顺。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 7.775,
+      "startTime": 7.575,
+      "word": "练"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.875,
+      "startTime": 7.775,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.095,
+      "startTime": 7.875,
+      "word": "越"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.395,
+      "startTime": 8.095,
+      "word": "多，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.645,
+      "startTime": 8.435,
+      "word": "接"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.755,
+      "startTime": 8.645,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.935,
+      "startTime": 8.755,
+      "word": "越"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.325,
+      "startTime": 8.935,
+      "word": "顺。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 45,
+  "task_id": "866848f3-13a6-4c35-a436-8f1bf692b7f7",
+  "task_status": 2,
+  "url_expire_time": 1792849768
+ },
+ "message": "ok"
+}

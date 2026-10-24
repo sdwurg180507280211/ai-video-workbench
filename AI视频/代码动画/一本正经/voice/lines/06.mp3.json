@@ -1,0 +1,347 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf26-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/o47ilnASEEifKaAAKqq0cDWC3AmnDiAfgNZFDt?x-expires=1792849780&x-signature=miZbQNxGvTV5FQ3HvfMSoUOj61w%3D",
+  "req_text_length": 63,
+  "sentences": [
+   {
+    "endTime": 4.375,
+    "startTime": 0.325,
+    "text": "同样十道题，老老实实说“不知道”的那个，得六分；",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.525,
+      "startTime": 0.325,
+      "word": "同"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.705,
+      "startTime": 0.525,
+      "word": "样"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.905,
+      "startTime": 0.705,
+      "word": "十"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.095,
+      "startTime": 0.905,
+      "word": "道"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.425,
+      "startTime": 1.095,
+      "word": "题，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.795,
+      "startTime": 1.635,
+      "word": "老"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.925,
+      "startTime": 1.795,
+      "word": "老"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.085,
+      "startTime": 1.925,
+      "word": "实"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.195,
+      "startTime": 2.085,
+      "word": "实"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.435,
+      "startTime": 2.405,
+      "word": "说“"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.585,
+      "startTime": 2.435,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.795,
+      "startTime": 2.585,
+      "word": "知"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.825,
+      "startTime": 2.795,
+      "word": "道”"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.005,
+      "startTime": 2.825,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.195,
+      "startTime": 3.005,
+      "word": "那"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.425,
+      "startTime": 3.195,
+      "word": "个，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.765,
+      "startTime": 3.595,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.985,
+      "startTime": 3.765,
+      "word": "六"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.375,
+      "startTime": 3.985,
+      "word": "分；"
+     }
+    ]
+   },
+   {
+    "endTime": 7.785,
+    "startTime": 4.635,
+    "text": "不会就蒙的那个，得七分，还排第一。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 4.745,
+      "startTime": 4.635,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.945,
+      "startTime": 4.745,
+      "word": "会"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.105,
+      "startTime": 4.945,
+      "word": "就"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.335,
+      "startTime": 5.105,
+      "word": "蒙"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.455,
+      "startTime": 5.335,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.675,
+      "startTime": 5.455,
+      "word": "那"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.895,
+      "startTime": 5.675,
+      "word": "个，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.235,
+      "startTime": 6.065,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.515,
+      "startTime": 6.235,
+      "word": "七"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.865,
+      "startTime": 6.515,
+      "word": "分，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.135,
+      "startTime": 6.955,
+      "word": "还"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.345,
+      "startTime": 7.135,
+      "word": "排"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.445,
+      "startTime": 7.345,
+      "word": "第"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.785,
+      "startTime": 7.445,
+      "word": "一。"
+     }
+    ]
+   },
+   {
+    "endTime": 13.196,
+    "startTime": 8.175,
+    "text": "可它蒙的四道都是猜的：一道碰巧对，三道错了。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 8.325,
+      "startTime": 8.175,
+      "word": "可"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.525,
+      "startTime": 8.325,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.695,
+      "startTime": 8.525,
+      "word": "蒙"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.835,
+      "startTime": 8.695,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.035,
+      "startTime": 8.835,
+      "word": "四"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.275,
+      "startTime": 9.035,
+      "word": "道"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.415,
+      "startTime": 9.275,
+      "word": "都"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.585,
+      "startTime": 9.415,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.905,
+      "startTime": 9.585,
+      "word": "猜"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.035,
+      "startTime": 10.005,
+      "word": "的："
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.525,
+      "startTime": 10.415,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.695,
+      "startTime": 10.525,
+      "word": "道"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.915,
+      "startTime": 10.695,
+      "word": "碰"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.145,
+      "startTime": 10.915,
+      "word": "巧"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.535,
+      "startTime": 11.145,
+      "word": "对，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.825,
+      "startTime": 11.585,
+      "word": "三"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.995,
+      "startTime": 11.825,
+      "word": "道"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.295,
+      "startTime": 11.995,
+      "word": "错"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.555,
+      "startTime": 12.295,
+      "word": "了。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 63,
+  "task_id": "0dbd06c8-c1c5-4192-bfd0-15221ff7df58",
+  "task_status": 2,
+  "url_expire_time": 1792849780
+ },
+ "message": "ok"
+}

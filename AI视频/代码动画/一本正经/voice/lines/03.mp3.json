@@ -1,0 +1,395 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf6-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/o8fX5pVNAACEAyg5gmDACqAq3IAlwUtfKFO0GP?x-expires=1792849767&x-signature=Pxx5YyeMAyB5xmPaYZXaawRYIxg%3D",
+  "req_text_length": 68,
+  "sentences": [
+   {
+    "endTime": 1.835,
+    "startTime": 0.245,
+    "text": "那它为什么说得这么肯定？",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.365,
+      "startTime": 0.245,
+      "word": "那"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.505,
+      "startTime": 0.365,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.615,
+      "startTime": 0.505,
+      "word": "为"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.755,
+      "startTime": 0.615,
+      "word": "什"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.845,
+      "startTime": 0.755,
+      "word": "么"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.985,
+      "startTime": 0.845,
+      "word": "说"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.085,
+      "startTime": 0.985,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.195,
+      "startTime": 1.085,
+      "word": "这"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.295,
+      "startTime": 1.195,
+      "word": "么"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.565,
+      "startTime": 1.295,
+      "word": "肯"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.835,
+      "startTime": 1.565,
+      "word": "定？"
+     }
+    ]
+   },
+   {
+    "endTime": 7.125,
+    "startTime": 2.035,
+    "text": "因为它读过的句子，几乎都是直接给答案的，很少有人写“我不知道”。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 2.175,
+      "startTime": 2.035,
+      "word": "因"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.295,
+      "startTime": 2.175,
+      "word": "为"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.505,
+      "startTime": 2.295,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.675,
+      "startTime": 2.505,
+      "word": "读"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.825,
+      "startTime": 2.675,
+      "word": "过"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.945,
+      "startTime": 2.825,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.155,
+      "startTime": 2.945,
+      "word": "句"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.395,
+      "startTime": 3.155,
+      "word": "子，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.695,
+      "startTime": 3.535,
+      "word": "几"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.855,
+      "startTime": 3.695,
+      "word": "乎"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.995,
+      "startTime": 3.855,
+      "word": "都"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.165,
+      "startTime": 3.995,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.375,
+      "startTime": 4.165,
+      "word": "直"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.595,
+      "startTime": 4.375,
+      "word": "接"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.745,
+      "startTime": 4.595,
+      "word": "给"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.945,
+      "startTime": 4.745,
+      "word": "答"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.095,
+      "startTime": 4.945,
+      "word": "案"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.335,
+      "startTime": 5.095,
+      "word": "的，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.615,
+      "startTime": 5.435,
+      "word": "很"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.815,
+      "startTime": 5.615,
+      "word": "少"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.945,
+      "startTime": 5.815,
+      "word": "有"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.095,
+      "startTime": 5.945,
+      "word": "人"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.125,
+      "startTime": 6.095,
+      "word": "写“"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.695,
+      "startTime": 6.535,
+      "word": "我"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.805,
+      "startTime": 6.695,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.965,
+      "startTime": 6.805,
+      "word": "知"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.125,
+      "startTime": 7.095,
+      "word": "道”。"
+     }
+    ]
+   },
+   {
+    "endTime": 12.568,
+    "startTime": 7.525,
+    "text": "它学会了把话说得又顺又肯定，却不会主动先查一查。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 7.695,
+      "startTime": 7.525,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.905,
+      "startTime": 7.695,
+      "word": "学"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.055,
+      "startTime": 7.905,
+      "word": "会"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.155,
+      "startTime": 8.055,
+      "word": "了"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.305,
+      "startTime": 8.155,
+      "word": "把"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.525,
+      "startTime": 8.305,
+      "word": "话"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.765,
+      "startTime": 8.525,
+      "word": "说"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.905,
+      "startTime": 8.765,
+      "word": "得"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.085,
+      "startTime": 8.905,
+      "word": "又"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.425,
+      "startTime": 9.085,
+      "word": "顺"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.625,
+      "startTime": 9.465,
+      "word": "又"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.885,
+      "startTime": 9.625,
+      "word": "肯"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.135,
+      "startTime": 9.885,
+      "word": "定，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.425,
+      "startTime": 10.245,
+      "word": "却"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.545,
+      "startTime": 10.425,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.725,
+      "startTime": 10.545,
+      "word": "会"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.945,
+      "startTime": 10.725,
+      "word": "主"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.125,
+      "startTime": 10.945,
+      "word": "动"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.375,
+      "startTime": 11.125,
+      "word": "先"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.665,
+      "startTime": 11.375,
+      "word": "查"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.765,
+      "startTime": 11.665,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.095,
+      "startTime": 11.765,
+      "word": "查。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 68,
+  "task_id": "c892e6c2-1640-406e-a54e-57e4fde1414f",
+  "task_status": 2,
+  "url_expire_time": 1792849767
+ },
+ "message": "ok"
+}

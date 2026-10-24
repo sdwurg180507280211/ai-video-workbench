@@ -1,0 +1,346 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf3-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/o8DgpQBjXAE9Wi4ctBQCJIdAaLqSCwADyiAPa?x-expires=1792849785&x-signature=AogjObANLg6%2B4DVjGfmHDu4wzbw%3D",
+  "req_text_length": 63,
+  "sentences": [
+   {
+    "endTime": 6.425,
+    "startTime": 0.355,
+    "text": "所以要紧的事，让它把出处列出来，再点开看看，里面到底有没有这么说。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.475,
+      "startTime": 0.355,
+      "word": "所"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.695,
+      "startTime": 0.475,
+      "word": "以"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.865,
+      "startTime": 0.695,
+      "word": "要"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.065,
+      "startTime": 0.865,
+      "word": "紧"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.165,
+      "startTime": 1.065,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.485,
+      "startTime": 1.165,
+      "word": "事，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.805,
+      "startTime": 1.665,
+      "word": "让"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.955,
+      "startTime": 1.805,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.125,
+      "startTime": 1.955,
+      "word": "把"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.345,
+      "startTime": 2.125,
+      "word": "出"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.555,
+      "startTime": 2.345,
+      "word": "处"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.765,
+      "startTime": 2.555,
+      "word": "列"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.955,
+      "startTime": 2.765,
+      "word": "出"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.215,
+      "startTime": 2.955,
+      "word": "来，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.555,
+      "startTime": 3.365,
+      "word": "再"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.755,
+      "startTime": 3.555,
+      "word": "点"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.935,
+      "startTime": 3.755,
+      "word": "开"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.155,
+      "startTime": 3.935,
+      "word": "看"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.445,
+      "startTime": 4.155,
+      "word": "看，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.795,
+      "startTime": 4.645,
+      "word": "里"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.995,
+      "startTime": 4.795,
+      "word": "面"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.175,
+      "startTime": 4.995,
+      "word": "到"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.335,
+      "startTime": 5.175,
+      "word": "底"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.475,
+      "startTime": 5.335,
+      "word": "有"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.705,
+      "startTime": 5.475,
+      "word": "没"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.745,
+      "startTime": 5.705,
+      "word": "有"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.875,
+      "startTime": 5.745,
+      "word": "这"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.995,
+      "startTime": 5.875,
+      "word": "么"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.425,
+      "startTime": 5.995,
+      "word": "说。"
+     }
+    ]
+   },
+   {
+    "endTime": 12.526,
+    "startTime": 6.775,
+    "text": "现在有些 AI 会先上网搜一搜，有些会直接说：这个我不确定。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 6.985,
+      "startTime": 6.775,
+      "word": "现"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.135,
+      "startTime": 6.985,
+      "word": "在"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.255,
+      "startTime": 7.135,
+      "word": "有"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.605,
+      "startTime": 7.255,
+      "word": "些"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.825,
+      "startTime": 7.605,
+      "word": "AI"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.045,
+      "startTime": 7.825,
+      "word": "会"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.275,
+      "startTime": 8.045,
+      "word": "先"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.495,
+      "startTime": 8.275,
+      "word": "上"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.645,
+      "startTime": 8.495,
+      "word": "网"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.935,
+      "startTime": 8.645,
+      "word": "搜"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.015,
+      "startTime": 8.935,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.305,
+      "startTime": 9.015,
+      "word": "搜，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.735,
+      "startTime": 9.605,
+      "word": "有"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.925,
+      "startTime": 9.735,
+      "word": "些"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.095,
+      "startTime": 9.925,
+      "word": "会"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.255,
+      "startTime": 10.095,
+      "word": "直"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.425,
+      "startTime": 10.255,
+      "word": "接"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.455,
+      "startTime": 10.425,
+      "word": "说："
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.165,
+      "startTime": 10.985,
+      "word": "这"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.245,
+      "startTime": 11.165,
+      "word": "个"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.385,
+      "startTime": 11.245,
+      "word": "我"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.505,
+      "startTime": 11.385,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.745,
+      "startTime": 11.505,
+      "word": "确"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.045,
+      "startTime": 11.745,
+      "word": "定。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 63,
+  "task_id": "de8188a3-60b0-4404-848f-740de51ffb7c",
+  "task_status": 2,
+  "url_expire_time": 1792849785
+ },
+ "message": "ok"
+}
