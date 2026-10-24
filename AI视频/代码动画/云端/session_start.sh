@@ -39,7 +39,7 @@ for pkg in "$ROOT"/AI视频/代码动画/*/package.json; do
   d=$(dirname "$pkg")
   [ -e "$d/lib" ] || [ -L "$d/lib" ] || ln -s ~/ideaProjects/mg-styles-15/lib "$d/lib"   # -L：目标还没装好的软链接也算已有
   [ -e "$d/.venv" ] || [ -L "$d/.venv" ] || ln -s /opt/venv-video "$d/.venv"
-  [ -d "$d/node_modules" ] || (cd "$d" && npm install --no-audit --no-fund --loglevel=error >/dev/null 2>&1) || echo "[session] npm install 失败：$d"
+  [ -d "$d/node_modules" ] || (cd "$d" && npm install --no-package-lock --no-audit --no-fund --loglevel=error >/dev/null 2>&1) || echo "[session] npm install 失败：$d"
 done
 
 ok() { [ "$1" ] && echo "有" || echo "缺"; }
