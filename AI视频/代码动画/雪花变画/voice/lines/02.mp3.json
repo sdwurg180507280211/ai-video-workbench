@@ -1,0 +1,275 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf3-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/oMLPeArVtbCeBzXAIokpGbkEGv2eAbhApnMAIG?x-expires=1792759804&x-signature=ev8%2F2wclH1DbO09%2FOBrAFtstuYA%3D",
+  "req_text_length": 48,
+  "sentences": [
+   {
+    "endTime": 6.285,
+    "startTime": 0.315,
+    "text": "画图的时候反过来：从一屏随机雪花开始，猜哪些是雾，擦掉一点；",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.485,
+      "startTime": 0.315,
+      "word": "画"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.645,
+      "startTime": 0.485,
+      "word": "图"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.765,
+      "startTime": 0.645,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.915,
+      "startTime": 0.765,
+      "word": "时"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.075,
+      "startTime": 0.915,
+      "word": "候"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.335,
+      "startTime": 1.075,
+      "word": "反"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.575,
+      "startTime": 1.335,
+      "word": "过"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.635,
+      "startTime": 1.575,
+      "word": "来："
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.245,
+      "startTime": 1.995,
+      "word": "从"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.405,
+      "startTime": 2.245,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.695,
+      "startTime": 2.405,
+      "word": "屏"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.915,
+      "startTime": 2.695,
+      "word": "随"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.105,
+      "startTime": 2.915,
+      "word": "机"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.295,
+      "startTime": 3.105,
+      "word": "雪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.505,
+      "startTime": 3.295,
+      "word": "花"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.685,
+      "startTime": 3.505,
+      "word": "开"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.025,
+      "startTime": 3.685,
+      "word": "始，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.505,
+      "startTime": 4.275,
+      "word": "猜"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.675,
+      "startTime": 4.505,
+      "word": "哪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.855,
+      "startTime": 4.675,
+      "word": "些"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.025,
+      "startTime": 4.855,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.425,
+      "startTime": 5.025,
+      "word": "雾，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.715,
+      "startTime": 5.495,
+      "word": "擦"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.895,
+      "startTime": 5.715,
+      "word": "掉"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.005,
+      "startTime": 5.895,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.285,
+      "startTime": 6.005,
+      "word": "点；"
+     }
+    ]
+   },
+   {
+    "endTime": 7.705,
+    "startTime": 6.455,
+    "text": "再猜，再擦。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 6.665,
+      "startTime": 6.455,
+      "word": "再"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.035,
+      "startTime": 6.665,
+      "word": "猜，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.345,
+      "startTime": 7.155,
+      "word": "再"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.705,
+      "startTime": 7.345,
+      "word": "擦。"
+     }
+    ]
+   },
+   {
+    "endTime": 10.542,
+    "startTime": 7.995,
+    "text": "几十步以后，图就出来了。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 8.135,
+      "startTime": 7.995,
+      "word": "几"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.305,
+      "startTime": 8.135,
+      "word": "十"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.495,
+      "startTime": 8.305,
+      "word": "步"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.575,
+      "startTime": 8.495,
+      "word": "以"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.945,
+      "startTime": 8.575,
+      "word": "后，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.175,
+      "startTime": 8.975,
+      "word": "图"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.325,
+      "startTime": 9.175,
+      "word": "就"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.505,
+      "startTime": 9.325,
+      "word": "出"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.685,
+      "startTime": 9.505,
+      "word": "来"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.895,
+      "startTime": 9.685,
+      "word": "了。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 48,
+  "task_id": "85b52893-bd45-42b5-83b5-3d18b0a99da5",
+  "task_status": 2,
+  "url_expire_time": 1792759804
+ },
+ "message": "ok"
+}

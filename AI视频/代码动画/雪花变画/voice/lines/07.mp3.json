@@ -1,0 +1,201 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf3-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/o8f5kVAGebEtAoGrpfU2PHAArLbVptRAhGIIBS?x-expires=1792759815&x-signature=csBgKI3RHTTqw1uR52UVPmgUpno%3D",
+  "req_text_length": 36,
+  "sentences": [
+   {
+    "endTime": 7.733,
+    "startTime": 0.315,
+    "text": "一屏雪花，加上你的一句话，猜雾、擦掉，重复几十步，图就从雪花里走出来了。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.435,
+      "startTime": 0.315,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.655,
+      "startTime": 0.435,
+      "word": "屏"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.905,
+      "startTime": 0.655,
+      "word": "雪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.245,
+      "startTime": 0.905,
+      "word": "花，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.525,
+      "startTime": 1.335,
+      "word": "加"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.715,
+      "startTime": 1.525,
+      "word": "上"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.825,
+      "startTime": 1.715,
+      "word": "你"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.955,
+      "startTime": 1.825,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.055,
+      "startTime": 1.955,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.245,
+      "startTime": 2.055,
+      "word": "句"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.585,
+      "startTime": 2.245,
+      "word": "话，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.065,
+      "startTime": 2.735,
+      "word": "猜"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.095,
+      "startTime": 3.065,
+      "word": "雾、"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.695,
+      "startTime": 3.435,
+      "word": "擦"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.995,
+      "startTime": 3.695,
+      "word": "掉，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.285,
+      "startTime": 4.075,
+      "word": "重"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.445,
+      "startTime": 4.285,
+      "word": "复"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.615,
+      "startTime": 4.445,
+      "word": "几"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.795,
+      "startTime": 4.615,
+      "word": "十"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.125,
+      "startTime": 4.795,
+      "word": "步，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.555,
+      "startTime": 5.275,
+      "word": "图"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.725,
+      "startTime": 5.555,
+      "word": "就"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.875,
+      "startTime": 5.725,
+      "word": "从"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.075,
+      "startTime": 5.875,
+      "word": "雪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.285,
+      "startTime": 6.075,
+      "word": "花"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.425,
+      "startTime": 6.285,
+      "word": "里"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.595,
+      "startTime": 6.425,
+      "word": "走"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.795,
+      "startTime": 6.595,
+      "word": "出"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.975,
+      "startTime": 6.795,
+      "word": "来"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.195,
+      "startTime": 6.975,
+      "word": "了。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 36,
+  "task_id": "b36d5ebf-023d-4203-9d99-528bde789da0",
+  "task_status": 2,
+  "url_expire_time": 1792759815
+ },
+ "message": "ok"
+}

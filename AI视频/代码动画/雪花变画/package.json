@@ -1,0 +1,8 @@
+{
+  "name": "enter-one-second",
+  "private": true,
+  "type": "module",
+  "description": "按下回车之后的 1 秒：Opus 5.5 写代码做的 MG 科普短片（渲染器来自 mg-styles-15，MIT）",
+  "scripts": { "render": "node harness/render.mjs film" },
+  "dependencies": { "puppeteer-core": "25.12.0" }
+}

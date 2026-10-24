@@ -1,0 +1,274 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf26-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/okAwk0y3DAGe82nnNhFANCtsSCfMqAAIEJgM02?x-expires=1792759806&x-signature=MKT1AGBLTacwS%2B7wDtr75qwJcUA%3D",
+  "req_text_length": 48,
+  "sentences": [
+   {
+    "endTime": 2.035,
+    "startTime": 0.355,
+    "text": "它怎么知道要擦出一只猫？",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.475,
+      "startTime": 0.355,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.605,
+      "startTime": 0.475,
+      "word": "怎"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.695,
+      "startTime": 0.605,
+      "word": "么"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.835,
+      "startTime": 0.695,
+      "word": "知"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.005,
+      "startTime": 0.835,
+      "word": "道"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.095,
+      "startTime": 1.005,
+      "word": "要"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.335,
+      "startTime": 1.095,
+      "word": "擦"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.465,
+      "startTime": 1.335,
+      "word": "出"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.565,
+      "startTime": 1.465,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.715,
+      "startTime": 1.565,
+      "word": "只"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.035,
+      "startTime": 1.715,
+      "word": "猫？"
+     }
+    ]
+   },
+   {
+    "endTime": 8.886,
+    "startTime": 2.295,
+    "text": "你写的话先变成一串数字，每擦一步，它都看一眼，往“戴红围巾的猫”那边擦。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 2.425,
+      "startTime": 2.295,
+      "word": "你"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.625,
+      "startTime": 2.425,
+      "word": "写"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.735,
+      "startTime": 2.625,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.965,
+      "startTime": 2.735,
+      "word": "话"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.195,
+      "startTime": 2.965,
+      "word": "先"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.345,
+      "startTime": 3.195,
+      "word": "变"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.495,
+      "startTime": 3.345,
+      "word": "成"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.555,
+      "startTime": 3.495,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.725,
+      "startTime": 3.555,
+      "word": "串"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.975,
+      "startTime": 3.725,
+      "word": "数"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.315,
+      "startTime": 3.975,
+      "word": "字，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.735,
+      "startTime": 4.575,
+      "word": "每"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.995,
+      "startTime": 4.735,
+      "word": "擦"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.075,
+      "startTime": 4.995,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.375,
+      "startTime": 5.075,
+      "word": "步，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.585,
+      "startTime": 5.425,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.705,
+      "startTime": 5.585,
+      "word": "都"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.945,
+      "startTime": 5.705,
+      "word": "看"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.055,
+      "startTime": 5.945,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.255,
+      "startTime": 6.055,
+      "word": "眼，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.755,
+      "startTime": 6.725,
+      "word": "往“"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.955,
+      "startTime": 6.755,
+      "word": "戴"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.145,
+      "startTime": 6.955,
+      "word": "红"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.235,
+      "startTime": 7.145,
+      "word": "围"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.385,
+      "startTime": 7.235,
+      "word": "巾"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.495,
+      "startTime": 7.385,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.685,
+      "startTime": 7.655,
+      "word": "猫”"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.805,
+      "startTime": 7.685,
+      "word": "那"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.965,
+      "startTime": 7.805,
+      "word": "边"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.295,
+      "startTime": 7.965,
+      "word": "擦。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 48,
+  "task_id": "55402be4-abeb-45d0-b3f2-39452e5e47c3",
+  "task_status": 2,
+  "url_expire_time": 1792759806
+ },
+ "message": "ok"
+}

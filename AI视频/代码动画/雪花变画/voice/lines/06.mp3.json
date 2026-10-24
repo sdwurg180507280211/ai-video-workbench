@@ -1,0 +1,177 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf6-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/oYo62DibOEBOHxAGUUAQf2iL1bA8Wo6gBAgaSB?x-expires=1792759840&x-signature=MHw4mTvEixXvGO4SuQHIbfbnoxk%3D",
+  "req_text_length": 29,
+  "sentences": [
+   {
+    "endTime": 6.53,
+    "startTime": 0.315,
+    "text": "很多模型为了省力，先在压缩过的小图上擦，最后再还原成大图。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.465,
+      "startTime": 0.315,
+      "word": "很"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.585,
+      "startTime": 0.465,
+      "word": "多"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.755,
+      "startTime": 0.585,
+      "word": "模"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.025,
+      "startTime": 0.755,
+      "word": "型"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.145,
+      "startTime": 1.025,
+      "word": "为"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.275,
+      "startTime": 1.145,
+      "word": "了"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.535,
+      "startTime": 1.275,
+      "word": "省"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.865,
+      "startTime": 1.535,
+      "word": "力，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.205,
+      "startTime": 1.975,
+      "word": "先"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.425,
+      "startTime": 2.205,
+      "word": "在"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.565,
+      "startTime": 2.425,
+      "word": "压"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.755,
+      "startTime": 2.565,
+      "word": "缩"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.895,
+      "startTime": 2.755,
+      "word": "过"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.985,
+      "startTime": 2.895,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.235,
+      "startTime": 2.985,
+      "word": "小"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.435,
+      "startTime": 3.235,
+      "word": "图"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.655,
+      "startTime": 3.435,
+      "word": "上"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.995,
+      "startTime": 3.655,
+      "word": "擦，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.405,
+      "startTime": 4.235,
+      "word": "最"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.625,
+      "startTime": 4.405,
+      "word": "后"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.855,
+      "startTime": 4.625,
+      "word": "再"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.055,
+      "startTime": 4.855,
+      "word": "还"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.215,
+      "startTime": 5.055,
+      "word": "原"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.465,
+      "startTime": 5.215,
+      "word": "成"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.675,
+      "startTime": 5.465,
+      "word": "大"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.025,
+      "startTime": 5.675,
+      "word": "图。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 29,
+  "task_id": "30c45773-2ced-430f-82cd-ce08c5ab488e",
+  "task_status": 2,
+  "url_expire_time": 1792759840
+ },
+ "message": "ok"
+}

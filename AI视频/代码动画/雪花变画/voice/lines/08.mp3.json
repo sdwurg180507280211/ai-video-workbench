@@ -1,0 +1,165 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf26-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/okkFpAtQbEr88PNUJAApTAAtQbhVehMfS1fBWE?x-expires=1792759819&x-signature=0oeODhjooKAfsedUsX5xhhs996o%3D",
+  "req_text_length": 30,
+  "sentences": [
+   {
+    "endTime": 6.386,
+    "startTime": 0.255,
+    "text": "下次要是看到 AI 画图先冒出一屏雪花，别着急：它正在擦呢。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.525,
+      "startTime": 0.255,
+      "word": "下"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.705,
+      "startTime": 0.525,
+      "word": "次"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.845,
+      "startTime": 0.705,
+      "word": "要"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.005,
+      "startTime": 0.845,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.225,
+      "startTime": 1.005,
+      "word": "看"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.395,
+      "startTime": 1.225,
+      "word": "到"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.695,
+      "startTime": 1.665,
+      "word": "AI"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.945,
+      "startTime": 1.695,
+      "word": "画"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.245,
+      "startTime": 1.945,
+      "word": "图"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.535,
+      "startTime": 2.275,
+      "word": "先"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.725,
+      "startTime": 2.535,
+      "word": "冒"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.885,
+      "startTime": 2.725,
+      "word": "出"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.995,
+      "startTime": 2.885,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.185,
+      "startTime": 2.995,
+      "word": "屏"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.395,
+      "startTime": 3.185,
+      "word": "雪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.725,
+      "startTime": 3.395,
+      "word": "花，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.145,
+      "startTime": 3.995,
+      "word": "别"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.355,
+      "startTime": 4.145,
+      "word": "着"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.385,
+      "startTime": 4.355,
+      "word": "急："
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.005,
+      "startTime": 4.825,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.165,
+      "startTime": 5.005,
+      "word": "正"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.315,
+      "startTime": 5.165,
+      "word": "在"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.625,
+      "startTime": 5.315,
+      "word": "擦"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.865,
+      "startTime": 5.625,
+      "word": "呢。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 30,
+  "task_id": "7b3f6db9-10a0-4870-9661-baf2e179cbc4",
+  "task_status": 2,
+  "url_expire_time": 1792759819
+ },
+ "message": "ok"
+}

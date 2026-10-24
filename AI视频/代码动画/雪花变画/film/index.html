@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>AI 画图，怎么从一团雪花变出一张画</title>
+<style>
+  @font-face { font-family: NS; src: url(/assets/fonts/NotoSansSC-VF.ttf); font-weight: 100 900; }
+  @font-face { font-family: IN; src: url(/assets/fonts/Inter-VF.ttf); font-weight: 100 900; }
+  @font-face { font-family: JB; src: url(/assets/fonts/JetBrainsMono-VF.ttf); font-weight: 100 800; }
+  html, body { margin: 0; background: #E9EEF2; overflow: hidden; }
+  svg { display: block; }
+  text { font-family: IN, NS; font-kerning: normal; }
+  .mono { font-family: JB, NS; }
+</style>
+</head>
+<body>
+<svg id="s" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <pattern id="dots" width="60" height="60" patternUnits="userSpaceOnUse">
+      <circle cx="30" cy="30" r="2.6" fill="#C8D2DB"/>
+    </pattern>
+    <!-- 贴纸：粗白描边 + 柔和投影 -->
+    <filter id="stk" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="9" result="d"/>
+      <feFlood flood-color="#ffffff"/><feComposite in2="d" operator="in" result="w"/>
+      <feGaussianBlur in="d" stdDeviation="9" result="b"/><feOffset in="b" dy="9" result="bo"/>
+      <feFlood flood-color="#1d2b38" flood-opacity="0.20"/><feComposite in2="bo" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/><feOffset dy="10" result="o"/>
+      <feFlood flood-color="#1d2b38" flood-opacity="0.16"/><feComposite in2="o" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="vig" cx="50%" cy="50%" r="75%">
+      <stop offset="60%" stop-color="#1d2b38" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1d2b38" stop-opacity="0.13"/>
+    </radialGradient>
+    <clipPath id="magClip"><circle cx="0" cy="0" r="96"/></clipPath>
+  </defs>
+  <g id="cam"><g id="world"></g></g>
+  <g id="hud"></g>
+  <rect width="1920" height="1080" fill="url(#vig)" pointer-events="none"/>
+</svg>
+<script>
+'use strict';
+const NS = 'http://www.w3.org/2000/svg', XH = 'http://www.w3.org/1999/xhtml';
+const SLATE = '#263646', MID = '#5E6E7E', PALE = '#D6DFE7', LINE = '#B7C3CE', BG = '#E9EEF2';
+const ACC = '#FF5A36', BLUE = '#3D6FE0', WHITE = '#FFFFFF', SOFT = '#F4F7FA', GREY = '#9FB0C0', GREY2 = '#C3CFDA';
+
+// ---------- 工具 ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, x) => a + (b - a) * x;
+const gauss = x => Math.exp(-x * x);
+const ease = {
+  outCubic: x => 1 - (1 - x) ** 3,
+  inCubic: x => x ** 3,
+  inOutCubic: x => x < .5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2,
+  inOutQuint: x => x < .5 ? 16 * x ** 5 : 1 - (-2 * x + 2) ** 5 / 2,
+  outBack: (x, s = 1.70158) => 1 + (s + 1) * (x - 1) ** 3 + s * (x - 1) ** 2,
+};
+function rng(seed) {                 // 固定种子的随机数（mulberry32），每次渲染结果一样
+  let a = seed >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function txt(parent, x, y, s, o = {}) {
+  const e = el('text', {
+    x, y, 'font-size': o.size || 36, 'font-weight': o.weight || 500, fill: o.fill || SLATE,
+    'text-anchor': o.anchor || 'start', 'letter-spacing': o.ls ?? 0,
+  }, parent);
+  if (o.mono) e.setAttribute('class', 'mono');
+  if (o.opacity != null) e.setAttribute('opacity', o.opacity);
+  e.textContent = s;
+  return e;
+}
+const U = [];                      // 每帧要更新的函数
+const on = f => U.push(f);
+const tr = (g, x, y, s = 1, r = 0) => g.setAttribute('transform', `translate(${x.toFixed(2)},${y.toFixed(2)}) rotate(${r.toFixed(3)}) scale(${s.toFixed(4)})`);
+const op = (e, v) => e.setAttribute('opacity', clamp(v).toFixed(3));
+const fade = (t, a, b, d = .3) => P(t, a, a + d) * (b == null ? 1 : 1 - P(t, b, b + d));
+
+function popper(g, x, y, t0, o = {}) {
+  const dur = o.dur ?? .42, rot = o.rot ?? 0, from = o.from ?? .35;
+  on(t => {
+    const p = P(t, t0, t0 + dur);
+    if (p <= 0) { g.setAttribute('opacity', 0); return; }
+    let s = lerp(from, 1, ease.outBack(p, 2.0)), a = clamp(p * 3.5);
+    const r = rot * (1 - ease.outCubic(p));
+    if (o.out != null) { const q = P(t, o.out, o.out + (o.outDur ?? .3)); a *= 1 - q; s *= 1 - .15 * q; }
+    g.setAttribute('opacity', a.toFixed(3));
+    tr(g, x, y, s * (o.scale ?? 1), r);
+  });
+}
+function rise(e, t0, o = {}) {
+  const dur = o.dur ?? .45, dy = o.dy ?? 22;
+  on(t => {
+    const p = ease.outCubic(P(t, t0, t0 + dur));
+    let a = p;
+    if (o.out != null) a *= 1 - P(t, o.out, o.out + .3);
+    e.setAttribute('opacity', a.toFixed(3));
+    e.setAttribute('transform', `translate(0,${((1 - p) * dy).toFixed(2)})`);
+  });
+}
+function rrect(parent, x, y, w, h, r, fill, extra = {}) {
+  return el('rect', Object.assign({ x, y, width: w, height: h, rx: r, fill }, extra), parent);
+}
+function stampAt(s, x, y, t0, o = {}) {          // 印章砸下
+  const g = el('g', { opacity: 0 }, W);
+  const r = el('g', { transform: 'rotate(-9)' }, g), w = o.w || 210, size = o.size || 42, color = o.color || ACC;
+  rrect(r, -w / 2, -size, w, size * 2, 14, 'rgba(255,255,255,.92)', { stroke: color, 'stroke-width': 7 });
+  txt(r, 0, size * .36, s, { size, weight: 900, fill: color, anchor: 'middle', ls: 2 });
+  on(t => { const p = P(t, t0, t0 + .2); op(g, p > 0 ? 1 - (o.out != null ? P(t, o.out, o.out + .3) : 0) : 0); tr(g, x, y, p > 0 ? lerp(1.8, 1, ease.outCubic(p)) : 0); });
+  return g;
+}
+function appear(g, t0, o = {}) {                // 按绝对坐标画好的组：淡入并上移一点，不缩放
+  on(t => {
+    const p = ease.outCubic(P(t, t0, t0 + (o.dur ?? .4)));
+    let a = p;
+    if (o.out != null) a *= 1 - P(t, o.out, o.out + .3);
+    g.setAttribute('opacity', a.toFixed(3));
+    g.setAttribute('transform', `translate(0,${((1 - p) * (o.dy ?? 24)).toFixed(2)})`);
+  });
+}
+const W = document.getElementById('world'), CAM = document.getElementById('cam'), HUD = document.getElementById('hud');
+// 小团子贴纸：透明 PNG，按比例放进 size×size 的框（不拉伸）；返回内层组，方便再加动作
+function mascot(file, x, y, size, t0, o = {}) {
+  const g = el('g', { opacity: 0 }, W);
+  const body = el('g', {}, g);
+  el('image', { href: `/assets/xiaotuanzi/${file}`, x: -size / 2, y: -size / 2, width: size, height: size, transform: o.flip ? 'scale(-1,1)' : '' }, body);
+  popper(g, x, y, t0, { rot: o.rot ?? -8, from: .5, out: o.out });
+  return body;
+}
+// 抹布：浅蓝的布，几道褶
+function cloth(parent, s = 1) {
+  const g = el('g', { filter: 'url(#stk)', transform: `scale(${s})` }, parent);
+  el('path', { d: 'M-58,-30 Q-20,-52 22,-40 Q60,-30 56,6 Q52,40 14,44 Q-30,50 -52,22 Q-70,-6 -58,-30 Z', fill: '#7FB2E8' }, g);
+  el('path', { d: 'M-40,-18 Q-6,-26 30,-16 M-44,8 Q-4,0 36,12', stroke: '#5E93D0', 'stroke-width': 6, fill: 'none', 'stroke-linecap': 'round' }, g);
+  return g;
+}
+function arrowHead(parent, color, size = 34) {
+  return el('path', { d: `M0,0 L${-size},${-size * .62} L${-size},${size * .62} Z`, fill: color }, parent);
+}
+
+// ---------- 图片：代码画的猫和练习用的图（画在离屏 canvas 上） ----------
+const PIC = {};
+function mk(w, h = w) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+function paint(fn, o = {}, S = 600) { const c = mk(S); const g = c.getContext('2d'); g.lineJoin = 'round'; g.lineCap = 'round'; fn(g, S, o); return c; }
+function ell(g, x, y, rx, ry, rot = 0) { g.beginPath(); g.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); }
+
+function catScene(g, S, o) {
+  const hi = o.style === 'high', x = v => v * S;
+  const C = hi
+    ? { fur: '#2F54FF', fur2: '#00E8FF', line: '#000000', lw: .022, scarf: '#FF0033', scarf2: '#FFF000', ear: '#FF2BD6', bg0: '#FFE600', bg1: '#FF8A00', floor: '#E8004F', cheek: 'rgba(255,0,140,.85)' }
+    : { fur: '#8D9BAF', fur2: '#E2E8EF', line: '#3A4756', lw: .009, scarf: '#E2433B', scarf2: '#B52D27', ear: '#F2A7A1', bg0: '#FFF6E9', bg1: '#F8DCBD', floor: '#ECCBA6', cheek: 'rgba(242,140,140,.45)' };
+  // 背景：暖色墙 + 窗光 + 地面
+  const gr = g.createLinearGradient(0, 0, 0, S); gr.addColorStop(0, C.bg0); gr.addColorStop(1, C.bg1);
+  g.fillStyle = gr; g.fillRect(0, 0, S, S);
+  if (!hi) { const rg = g.createRadialGradient(x(.8), x(.18), 0, x(.8), x(.18), x(.5)); rg.addColorStop(0, 'rgba(255,255,255,.8)'); rg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rg; g.fillRect(0, 0, S, S); }
+  g.fillStyle = C.floor; g.fillRect(0, x(.86), S, x(.14));
+  if (hi) { g.lineWidth = x(.012); g.strokeStyle = '#000'; g.beginPath(); g.moveTo(0, x(.86)); g.lineTo(S, x(.86)); g.stroke(); }
+  g.fillStyle = hi ? 'rgba(0,0,0,.5)' : 'rgba(90,60,30,.18)'; ell(g, x(.5), x(.875), x(.27), x(.035)); g.fill();
+  const LW = x(C.lw);
+  const outline = () => { g.lineWidth = LW; g.strokeStyle = C.line; g.stroke(); };
+  const fill = c => { g.fillStyle = c; g.fill(); };
+  const thick = (w, c) => { g.lineWidth = x(w); g.strokeStyle = C.line; g.stroke(); g.lineWidth = x(w) - LW * 2; g.strokeStyle = c; g.stroke(); };
+
+  function head(cx, cy, rot, closed) {
+    g.save(); g.translate(x(cx), x(cy)); g.rotate(rot);
+    for (const s of [-1, 1]) {           // 耳朵
+      g.beginPath(); g.moveTo(x(s * .06), x(-.12)); g.lineTo(x(s * .155), x(-.235)); g.lineTo(x(s * .17), x(-.05)); g.closePath(); fill(C.fur); outline();
+      g.beginPath(); g.moveTo(x(s * .085), x(-.11)); g.lineTo(x(s * .145), x(-.19)); g.lineTo(x(s * .15), x(-.08)); g.closePath(); fill(C.ear);
+    }
+    ell(g, 0, 0, x(.18), x(.155)); fill(C.fur); outline();
+    for (const s of [-1, 1]) { ell(g, x(s * .1), x(.045), x(.035), x(.022)); fill(C.cheek); }
+    ell(g, 0, x(.05), x(.07), x(.048)); fill(C.fur2);
+    for (const s of [-1, 1]) {           // 眼睛
+      if (closed) { g.beginPath(); g.moveTo(x(s * .065 - .025), x(-.005)); g.quadraticCurveTo(x(s * .065), x(-.04), x(s * .065 + .025), x(-.005)); g.lineWidth = x(.012); g.strokeStyle = C.line; g.stroke(); }
+      else { ell(g, x(s * .065), x(-.01), x(.021), x(.029)); fill(C.line); ell(g, x(s * .065 + .007), x(-.02), x(.007), x(.009)); fill('#FFFFFF'); }
+    }
+    g.beginPath(); g.moveTo(x(-.016), x(.03)); g.lineTo(x(.016), x(.03)); g.lineTo(0, x(.048)); g.closePath(); fill('#E8838A');
+    g.beginPath(); g.moveTo(0, x(.048)); g.quadraticCurveTo(x(-.006), x(.07), x(-.028), x(.066)); g.moveTo(0, x(.048)); g.quadraticCurveTo(x(.006), x(.07), x(.028), x(.066));
+    g.lineWidth = x(.007); g.strokeStyle = C.line; g.stroke();
+    g.lineWidth = x(.005); g.strokeStyle = hi ? '#000' : 'rgba(58,71,86,.7)';
+    for (const s of [-1, 1]) for (const k of [-1, 1]) { g.beginPath(); g.moveTo(x(s * .075), x(.05 + k * .008)); g.lineTo(x(s * .2), x(.04 + k * .03)); g.stroke(); }
+    g.restore();
+  }
+  function scarf(cx, cy, rot, wide) {
+    if (o.scarf === false) return;
+    g.save(); g.translate(x(cx), x(cy)); g.rotate(rot);
+    g.beginPath(); g.moveTo(x(-wide), x(-.01)); g.quadraticCurveTo(0, x(.07), x(wide), x(-.01)); thick(.075, C.scarf);
+    // 垂下来的一截
+    g.beginPath(); g.moveTo(x(.05), x(.02)); g.lineTo(x(.11), x(.02)); g.lineTo(x(.13), x(.17)); g.lineTo(x(.07), x(.18)); g.closePath(); fill(C.scarf); outline();
+    g.lineWidth = x(.012); g.strokeStyle = C.scarf2;
+    for (const k of [.07, .12]) { g.beginPath(); g.moveTo(x(.06 + k * .12), x(k)); g.lineTo(x(.12 + k * .08), x(k - .005)); g.stroke(); }
+    g.lineWidth = x(.007); g.strokeStyle = C.line;
+    for (let k = 0; k < 4; k++) { g.beginPath(); g.moveTo(x(.075 + k * .017), x(.18 - k * .003)); g.lineTo(x(.073 + k * .017), x(.205 - k * .003)); g.stroke(); }
+    g.restore();
+  }
+  if (o.pose === 'B') {        // 趴着、歪头、尾巴竖起来、闭眼笑
+    g.beginPath(); g.moveTo(x(.76), x(.76)); g.bezierCurveTo(x(.92), x(.72), x(.9), x(.42), x(.8), x(.38)); thick(.06, C.fur);
+    ell(g, x(.55), x(.72), x(.27), x(.14)); fill(C.fur); outline();
+    ell(g, x(.5), x(.76), x(.15), x(.07)); fill(C.fur2);
+    for (const px of [.3, .41]) { ell(g, x(px), x(.845), x(.06), x(.032)); fill(C.fur2); outline(); }
+    scarf(.34, .63, -.25, .13);
+    head(.32, .5, -.26, true);
+  } else {                    // 坐着、正面
+    g.beginPath(); g.moveTo(x(.64), x(.82)); g.bezierCurveTo(x(.88), x(.86), x(.9), x(.62), x(.78), x(.55)); thick(.07, C.fur);
+    ell(g, x(.5), x(.68), x(.19), x(.2)); fill(C.fur); outline();
+    ell(g, x(.5), x(.72), x(.1), x(.13)); fill(C.fur2);
+    for (const px of [.43, .57]) { ell(g, x(px), x(.855), x(.055), x(.035)); fill(C.fur2); outline(); }
+    scarf(.5, .5, 0, .15);
+    head(.5, .38, 0, false);
+  }
+  if (hi) {                   // 指路力度太大：颜色冲、边缘硬，加一圈硬高光
+    g.globalCompositeOperation = 'source-over';
+    g.lineWidth = x(.012); g.strokeStyle = '#FFFFFF';
+    g.beginPath(); g.arc(x(.5), x(.38), x(.2), Math.PI * 1.1, Math.PI * 1.45); g.stroke();
+  }
+}
+// 指路力度太小：干净，但跑题——一团看不出是猫的灰东西，没有围巾
+function blobScene(g, S) {
+  const x = v => v * S;
+  const gr = g.createLinearGradient(0, 0, 0, S); gr.addColorStop(0, '#F1F5F8'); gr.addColorStop(1, '#DCE5ED');
+  g.fillStyle = gr; g.fillRect(0, 0, S, S);
+  g.fillStyle = '#C7D3DE'; g.fillRect(0, x(.86), S, x(.14));
+  g.fillStyle = 'rgba(60,80,100,.18)'; ell(g, x(.5), x(.875), x(.3), x(.035)); g.fill();
+  g.fillStyle = '#8796A7';
+  ell(g, x(.5), x(.68), x(.28), x(.19)); g.fill();
+  ell(g, x(.4), x(.5), x(.14), x(.12)); g.fill();
+  ell(g, x(.6), x(.53), x(.12), x(.1)); g.fill();
+  g.fillStyle = '#A3B0BF'; ell(g, x(.44), x(.62), x(.12), x(.07)); g.fill();
+  g.fillStyle = '#7A8899'; ell(g, x(.78), x(.8), x(.08), x(.05)); g.fill();
+}
+function landScene(g, S) {
+  const x = v => v * S;
+  const gr = g.createLinearGradient(0, 0, 0, S); gr.addColorStop(0, '#8FCDF4'); gr.addColorStop(1, '#DDF1FB');
+  g.fillStyle = gr; g.fillRect(0, 0, S, S);
+  g.fillStyle = '#FFC93C'; ell(g, x(.76), x(.24), x(.09), x(.09)); g.fill();
+  g.fillStyle = '#FFFFFF'; for (const [a, b, r] of [[.2, .2, .06], [.27, .18, .075], [.34, .21, .055]]) { ell(g, x(a), x(b), x(r), x(r * .75)); g.fill(); }
+  g.fillStyle = '#7CC46B'; g.beginPath(); g.moveTo(0, x(.7)); g.quadraticCurveTo(x(.3), x(.48), x(.65), x(.7)); g.lineTo(x(.65), S); g.lineTo(0, S); g.fill();
+  g.fillStyle = '#56AA53'; g.beginPath(); g.moveTo(x(.3), S); g.quadraticCurveTo(x(.7), x(.5), S, x(.66)); g.lineTo(S, S); g.fill();
+  g.fillStyle = '#8B5A3C'; g.fillRect(x(.255), x(.5), x(.04), x(.16));
+  g.fillStyle = '#3E9B4F'; ell(g, x(.275), x(.46), x(.09), x(.1)); g.fill();
+  g.fillStyle = '#4FB360'; ell(g, x(.25), x(.43), x(.05), x(.05)); g.fill();
+}
+function flowerScene(g, S) {
+  const x = v => v * S;
+  g.fillStyle = '#FBE6EB'; g.fillRect(0, 0, S, S);
+  g.fillStyle = '#F3CDD6'; g.fillRect(0, x(.8), S, x(.2));
+  g.strokeStyle = '#4FA35A'; g.lineWidth = x(.03); g.beginPath(); g.moveTo(x(.5), x(.72)); g.quadraticCurveTo(x(.46), x(.5), x(.5), x(.36)); g.stroke();
+  g.fillStyle = '#5FB86A'; ell(g, x(.43), x(.58), x(.07), x(.03), -.6); g.fill(); ell(g, x(.57), x(.52), x(.07), x(.03), .6); g.fill();
+  g.fillStyle = '#FF7A59'; for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3; ell(g, x(.5 + Math.cos(a) * .08), x(.33 + Math.sin(a) * .08), x(.065), x(.065)); g.fill(); }
+  g.fillStyle = '#FFD23F'; ell(g, x(.5), x(.33), x(.055), x(.055)); g.fill();
+  g.fillStyle = '#C8693F'; g.beginPath(); g.moveTo(x(.37), x(.7)); g.lineTo(x(.63), x(.7)); g.lineTo(x(.59), x(.88)); g.lineTo(x(.41), x(.88)); g.closePath(); g.fill();
+}
+function houseScene(g, S) {
+  const x = v => v * S;
+  g.fillStyle = '#E2F2FA'; g.fillRect(0, 0, S, S);
+  g.fillStyle = '#9BD18B'; g.fillRect(0, x(.78), S, x(.22));
+  g.fillStyle = '#F4E5C8'; g.fillRect(x(.28), x(.45), x(.44), x(.35));
+  g.fillStyle = '#D9523C'; g.beginPath(); g.moveTo(x(.22), x(.47)); g.lineTo(x(.5), x(.22)); g.lineTo(x(.78), x(.47)); g.closePath(); g.fill();
+  g.fillStyle = '#6B4A3A'; g.fillRect(x(.45), x(.6), x(.1), x(.2));
+  g.fillStyle = '#8FCDF4'; g.fillRect(x(.32), x(.53), x(.09), x(.08)); g.fillRect(x(.59), x(.53), x(.09), x(.08));
+}
+function buildPics() {
+  PIC.catA = paint(catScene, { pose: 'A' });
+  PIC.catA0 = paint(catScene, { pose: 'A', scarf: false });
+  PIC.catB = paint(catScene, { pose: 'B' });
+  PIC.high = paint(catScene, { pose: 'A', style: 'high' });
+  PIC.low = paint(blobScene);
+  PIC.land = paint(landScene);
+  PIC.flower = paint(flowerScene);
+  PIC.house = paint(houseScene);
+}
+
+// ---------- 雪花（噪点）：固定种子，同一个种子永远是同一屏 ----------
+const NZ = {};
+function noise(seed, n = 120) {
+  const k = seed + '_' + n;
+  if (NZ[k]) return NZ[k];
+  const c = mk(n), g = c.getContext('2d'), im = g.createImageData(n, n), r = rng(seed * 7919 + 13);
+  for (let i = 0; i < n * n; i++) {
+    const v = Math.floor(18 + 222 * r());
+    im.data[i * 4] = v; im.data[i * 4 + 1] = v; im.data[i * 4 + 2] = Math.min(255, v + 6); im.data[i * 4 + 3] = 255;
+  }
+  g.putImageData(im, 0, 0);
+  return (NZ[k] = c);
+}
+// 画一帧：底色 → 图（越吵越糊，先出轮廓）→ 叠雪花（a = 雾有多厚）
+function compose(ctx, cw, ch, s) {
+  ctx.save();
+  ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.imageSmoothingEnabled = true;
+  ctx.fillStyle = s.bg || WHITE; ctx.fillRect(0, 0, cw, ch);
+  if (s.tile) {                                  // 纯噪点小块：猜的（seed2）一点点变成真的（seed）
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(noise(s.seed2, s.n || 120), 0, 0, cw, ch);
+    if (s.nmix > 0) { ctx.globalAlpha = s.nmix; ctx.drawImage(noise(s.seed, s.n || 120), 0, 0, cw, ch); }
+    ctx.restore(); return;
+  }
+  if (s.pic) {
+    const b = (s.blur || 0) * cw / 480;
+    if (b > .25) ctx.filter = `blur(${b.toFixed(2)}px)`;
+    ctx.globalAlpha = s.pa ?? 1;
+    const m = b > .25 ? b * 2 : 0;
+    ctx.drawImage(PIC[s.pic], -m, -m, cw + 2 * m, ch + 2 * m);
+    if (s.pic2 && s.mix > 0) { ctx.globalAlpha = (s.pa ?? 1) * s.mix; ctx.drawImage(PIC[s.pic2], -m, -m, cw + 2 * m, ch + 2 * m); }
+    ctx.filter = 'none'; ctx.globalAlpha = 1;
+  }
+  if (s.a > 0) { ctx.imageSmoothingEnabled = false; ctx.globalAlpha = s.a; ctx.drawImage(noise(s.seed, s.n || 120), 0, 0, cw, ch); }
+  ctx.restore();
+}
+// 一块"画布"：白框 + canvas（放在 foreignObject 里，每帧同步画，不用等图片解码）
+function screen(x, y, w, h, res, state, o = {}) {
+  const g = el('g', { opacity: 0 }, o.parent || W);
+  const inner = el('g', {}, g);
+  if (!o.noFrame) rrect(inner, x - 10, y - 10, w + 20, h + 20, 16, WHITE, { filter: 'url(#shadow)' });
+  const fo = el('foreignObject', { x, y, width: w, height: h }, inner);
+  const cv = document.createElementNS(XH, 'canvas');
+  const rh = Math.round(res * h / w);
+  cv.width = res; cv.height = rh;
+  cv.setAttribute('style', `width:${w}px;height:${h}px;display:block;${o.pixel ? 'image-rendering:pixelated;' : ''}`);
+  fo.appendChild(cv);
+  const ctx = cv.getContext('2d');
+  let last = '';
+  on(t => {
+    const s = state(t);
+    if (!s || !(s.vis > 0)) { op(g, 0); return; }
+    op(g, s.vis);
+    const sc = s.scale ?? 1, cx = x + w / 2, cy = y + h / 2;
+    inner.setAttribute('transform', sc === 1 ? '' : `translate(${cx},${cy}) scale(${sc.toFixed(4)}) translate(${-cx},${-cy})`);
+    const key = [s.pic, s.pic2, (s.mix || 0).toFixed(3), (s.pa ?? 1).toFixed(3), (s.a || 0).toFixed(3), (s.blur || 0).toFixed(2), s.seed, s.seed2, (s.nmix || 0).toFixed(3), s.bg, s.tile].join('|');
+    if (key !== last) { compose(ctx, res, rh, s); last = key; }
+  });
+  return { g, inner };
+}
+const popS = (t, t0, d = .42) => { const p = P(t, t0, t0 + d); return p <= 0 ? 0 : lerp(.5, 1, ease.outBack(p, 1.9)); };
+
+// ---------- 节拍 ----------
+let C, EV;
+const arrive = f => f[0] + (f[1] - f[0]) * .42;
+const HOOK = [2160, 1180], C1 = [4400, 1180], C2 = [6600, 1180], C3 = [6600, 2600], C4 = [4400, 2600], C5 = [2200, 2600], C6 = [2200, 4000], C7 = [4400, 4000];
+const CAN0 = { x: 1340, y: 840, s: 580 };
+
+function build() {
+  el('rect', { x: -2000, y: -2000, width: 14000, height: 9000, fill: BG }, W);
+  el('rect', { x: -2000, y: -2000, width: 14000, height: 9000, fill: 'url(#dots)' }, W);
+  buildHook();
+  buildTitle();
+  buildTags();
+  buildLearn();
+  buildWipe();
+  buildGuide();
+  buildKnob();
+  buildSeed();
+  buildLatent();
+  buildOverview();
+  buildClimax();
+  W.appendChild(document.getElementById('hookBox'));     // 输入框压在高潮粒子上面，粒子从它后面飞过
+  buildEnding();
+  buildHud();
+  buildSubs();
+}
+
+// ===== 钩子：输入框 → 以为是一笔一笔画 → 其实是一屏雪花里擦出来 =====
+function buildHook() {
+  const ev = EV, { x, y, s } = CAN0;
+  // 输入框
+  const box = el('g', { id: 'hookBox', opacity: 0 }, W);
+  rrect(box, x, y - 104, s, 74, 37, WHITE, { filter: 'url(#shadow)' });
+  const btn = el('g', {}, box);
+  rrect(btn, x + s - 118, y - 96, 108, 58, 29, ACC);
+  txt(btn, x + s - 64, y - 56, '生成', { size: 30, weight: 800, fill: WHITE, anchor: 'middle' });
+  const inp = txt(box, x + 34, y - 54, '', { size: 34, weight: 700 });
+  const caret = rrect(box, 0, y - 86, 4, 40, 2, ACC);
+  const Q = '一只戴红围巾的猫';
+  on(t => {
+    op(box, P(t, ev.box_in, ev.box_in + .3));
+    const n = Math.floor(P(t, ev.type[0], ev.type[1]) * Q.length + 1e-6);
+    inp.textContent = Q.slice(0, n);
+    caret.setAttribute('x', (x + 36 + n * 34).toFixed(1));
+    op(caret, t < ev.press && Math.floor(t * 2.6) % 2 === 0 ? 1 : 0);
+    const pr = gauss((t - ev.press) / .07);
+    btn.setAttribute('transform', `translate(${x + s - 64},${y - 67}) scale(${(1 - .12 * pr).toFixed(3)}) translate(${-(x + s - 64)},${-(y - 67)})`);
+  });
+  // 画布：片头、高潮、结尾都在这里
+  screen(x, y, s, s, 580, t => {
+    if (t < ev.canvas_in) return null;
+    const vis = P(t, ev.canvas_in, ev.canvas_in + .25);
+    if (t < ev.fly1[1]) {
+      if (t < ev.snow0) return { vis, bg: WHITE };
+      if (t < ev.clean0[0]) return { vis, pic: 'catA', pa: 0, a: P(t, ev.snow0, ev.snow0 + .3), seed: 3 };
+      const a = 1 - ease.inOutCubic(P(t, ev.clean0[0], ev.clean0[1]));
+      return { vis, pic: 'catA', a, blur: 16 * a, seed: 3 };
+    }
+    if (t < ev.land - .4) return { vis, bg: WHITE };
+    if (t < ev.e_snow) return { vis, pic: 'catA', pa: ease.outCubic(P(t, ev.land - .4, ev.land + .05)) };
+    const a = .72 * P(t, ev.e_snow, ev.e_snow + .35) * (1 - ease.inOutCubic(P(t, ev.e_wipe, ev.e_wipe + 1.3)));
+    return { vis, pic: 'catA', a, blur: 6 * a, seed: 3 };
+  });
+  // 铅笔：以为是一笔一笔画的
+  const strokeD = `M${x + 120},${y + 360} C${x + 170},${y + 200} ${x + 260},${y + 150} ${x + 300},${y + 260} S${x + 420},${y + 380} ${x + 470},${y + 210}`;
+  const line = el('path', { d: strokeD, fill: 'none', stroke: '#8C9AA8', 'stroke-width': 10, 'stroke-linecap': 'round', pathLength: 1, opacity: 0 }, W);
+  const probe = el('path', { d: strokeD, fill: 'none', stroke: 'none' }, W);
+  const pen = el('g', { opacity: 0 }, W);
+  const penIn = el('g', { filter: 'url(#stk)', transform: 'rotate(-40)' }, pen);
+  rrect(penIn, -16, -150, 32, 120, 6, '#FFC93C');
+  rrect(penIn, -16, -170, 32, 26, 6, '#F28BA0');
+  el('path', { d: 'M-16,-30 L16,-30 L0,0 Z', fill: '#F3D9B1' }, penIn);
+  el('path', { d: 'M-5,-9 L5,-9 L0,0 Z', fill: SLATE }, penIn);
+  const xg = el('g', { opacity: 0 }, W);
+  const cxm = x + s / 2, cym = y + s / 2 - 10;
+  const x1 = el('path', { d: `M${cxm - 150},${cym - 150} L${cxm + 150},${cym + 150}`, stroke: ACC, 'stroke-width': 30, 'stroke-linecap': 'round', pathLength: 1 }, xg);
+  const x2 = el('path', { d: `M${cxm + 150},${cym - 150} L${cxm - 150},${cym + 150}`, stroke: ACC, 'stroke-width': 30, 'stroke-linecap': 'round', pathLength: 1 }, xg);
+  let L = 0;
+  on(t => {
+    if (!L) L = probe.getTotalLength();
+    const p = ease.inOutCubic(P(t, ev.pencil[0], ev.pencil[1]));
+    const gone = 1 - P(t, ev.snow0 - .1, ev.snow0 + .15);
+    line.setAttribute('stroke-dasharray', `${p} 1`); op(line, (p > 0 ? 1 : 0) * gone);
+    const pt = probe.getPointAtLength(L * p);
+    tr(pen, pt.x, pt.y); op(pen, P(t, ev.pencil[0] - .2, ev.pencil[0]) * (1 - P(t, ev.xmark, ev.xmark + .25)));
+    const q1 = ease.outCubic(P(t, ev.xmark, ev.xmark + .14)), q2 = ease.outCubic(P(t, ev.xmark + .12, ev.xmark + .26));
+    x1.setAttribute('stroke-dasharray', `${q1} 1`); x2.setAttribute('stroke-dasharray', `${q2} 1`);
+    op(xg, (q1 > 0 ? 1 : 0) * gone);
+  });
+  const lbl = txt(W, x + s / 2, y + s + 70, '一屏雪花', { size: 40, weight: 800, fill: MID, anchor: 'middle' });
+  rise(lbl, ev.snow0 + .1, { out: ev.clean0[0] + .8 });
+}
+
+// ===== 片名 =====
+function buildTitle() {
+  const ev = EV, TX = 2060;
+  const t1 = txt(W, TX, 1040, 'AI 画图', { size: 132, weight: 900, ls: 4 });
+  const t2 = txt(W, TX, 1160, '怎么从一团雪花变出一张画', { size: 70, weight: 900, ls: 1 });
+  const hl = el('path', { d: '', stroke: ACC, 'stroke-opacity': .26, 'stroke-width': 26, 'stroke-linecap': 'round' }, W);
+  W.insertBefore(hl, t2);
+  const sub = txt(W, TX + 4, 1240, '从一屏雪花到一张图，背后 6 步', { size: 38, weight: 600, fill: MID, ls: 2 });
+  [t1, t2].forEach((e, i) => on(t => {
+    const t0 = i ? ev.title2 : ev.title1, p = P(t, t0, t0 + .32), cy = i ? 1135 : 1000;
+    const s = p <= 0 ? 1.4 : lerp(1.4, 1, ease.outBack(p, 1.6));
+    op(e, clamp(p * 3) * (1 - P(t, ev.fly1[0], ev.fly1[0] + .45)));
+    e.setAttribute('transform', `translate(${TX},${cy}) scale(${s.toFixed(4)}) translate(${-TX},${-cy})`);
+  }));
+  on(t => { const p = ease.inOutCubic(P(t, ev.title2 + .3, ev.title2 + .75)); hl.setAttribute('d', p > 0 ? `M${TX + 6},1150 H${TX + 6 + 830 * p}` : ''); op(hl, 1 - P(t, ev.fly1[0], ev.fly1[0] + .45)); });
+  rise(sub, ev.sub, { out: ev.fly1[0] });
+}
+
+// ===== 章节标签 =====
+const CENTERS = [C1, C2, C3, C4, C5, C6];
+const TAG_TITLES = ['先学认雾', '往回擦', '文字指路', '指路力度', '换一屏雪花', '先在小图上擦'];
+function buildTags() {
+  const ev = EV;
+  TAG_TITLES.forEach((title, i) => {
+    const x = CENTERS[i][0] - 810, y = CENTERS[i][1] - 410, t0 = ev[`ch${i + 1}_tag`] - .3;
+    const cg = el('g', { opacity: 0 }, W);
+    el('circle', { cx: 0, cy: 0, r: 42, fill: ACC, filter: 'url(#stk)' }, cg);
+    txt(cg, 0, 17, String(i + 1), { size: 48, weight: 800, fill: WHITE, anchor: 'middle' });
+    const tg = el('g', {}, W);
+    const tt = txt(tg, x + 72, y + 21, title, { size: 62, weight: 800, ls: 1 });
+    const mark = el('path', { d: '', stroke: ACC, 'stroke-opacity': .28, 'stroke-width': 20, 'stroke-linecap': 'round', fill: 'none' }, tg);
+    tg.insertBefore(mark, tt);
+    let mw = 0;
+    on(t => {
+      if (!mw) mw = tt.getComputedTextLength();
+      const p = P(t, t0, t0 + .45);
+      op(cg, clamp(p * 4)); tr(cg, x, y, p <= 0 ? 0 : lerp(.3, 1, ease.outBack(p, 2.4)));
+      const q = ease.outCubic(P(t, t0 + .12, t0 + .55));
+      op(tt, q); tt.setAttribute('transform', `translate(${(-30 * (1 - q)).toFixed(1)},0)`);
+      const m = ease.inOutCubic(P(t, t0 + .4, t0 + .85));
+      mark.setAttribute('d', m > 0 ? `M${x + 76},${y + 26} H${x + 76 + mw * m}` : '');
+    });
+  });
+}
+
+// ===== ① 先学认雾：车窗后的照片一步步起雾；看一眼雾图，猜撒进去的噪点 =====
+function buildLearn() {
+  const ev = EV, [cx, cy] = C1;
+  const TRUE = 100, WRONG = 101;
+  // 很多图
+  const many = txt(W, cx - 700, cy + 172, '很多图', { size: 40, weight: 800, anchor: 'middle' });
+  rise(many, ev.many);
+  [['flower', -230, 5], ['house', -90, -4], ['land', 50, 3]].forEach(([pic, dy, rot], i) => {
+    const sc = screen(cx - 785, cy + dy - 60, 170, 120, 170, t => ({ vis: 1, pic }));
+    on(t => { const p = P(t, ev.many + i * .12, ev.many + i * .12 + .4); op(sc.g, clamp(p * 3)); sc.g.setAttribute('transform', `rotate(${rot},${cx - 700},${cy + dy}) translate(0,${((1 - ease.outBack(p, 1.8)) * 30).toFixed(1)})`); });
+  });
+  // 车窗 + 照片
+  const PH = { x: cx - 480, y: cy - 290, w: 440, h: 310 };
+  const level = t => {                       // 一步步起雾：4 步，每步 0.3 秒过渡
+    let a = 0;
+    for (let k = 1; k <= 4; k++) { const tk = lerp(ev.steps[0], ev.fog[1] - .3, (k - 1) / 3); a += .25 * ease.inOutCubic(P(t, tk, tk + .3)); }
+    return a;
+  };
+  // 车门：车窗外只包一圈细窗框，门板只在车窗下面（整圈厚边会像显示器）；车漆色门板，腰线、凹进去的门把手，车窗前角一个后视镜
+  const door = el('g', { opacity: 0 }, W);
+  const DL = PH.x - 70, DR = PH.x + PH.w + 70, DT = PH.y - 70, DB = PH.y + PH.h + 150;
+  const PAINT = '#8DB4E2', PAINT2 = '#6F97C8';
+  const X0 = PH.x - 60, X1 = PH.x + PH.w + 60, Y0 = PH.y + PH.h + 6;
+  el('path', { d: `M${PH.x + 70},${PH.y - 22} H${PH.x + PH.w + 22} V${PH.y + PH.h + 22} H${PH.x - 22} V${PH.y + 90} Z`, fill: 'none', stroke: PAINT, 'stroke-width': 52, 'stroke-linejoin': 'round', filter: 'url(#shadow)' }, door);
+  // 门板左下角挖出轮拱，露出一截前轮（只露上半截，不压下面的缩略图）
+  const WX = X0 + 112, WY = DB + 46;
+  el('clipPath', { id: 'wheelClip' }, W).appendChild(el('rect', { x: WX - 120, y: WY - 120, width: 240, height: 90 }));
+  const wheel = el('g', { 'clip-path': 'url(#wheelClip)' }, door);
+  el('circle', { cx: WX, cy: WY, r: 84, fill: SLATE }, wheel);
+  el('circle', { cx: WX, cy: WY, r: 38, fill: '#C9D3DD' }, wheel);
+  el('path', { d: `M${X0 + 10},${Y0} H${X1 - 16} Q${X1 + 4},${Y0} ${X1 + 2},${Y0 + 24} L${X1 - 2},${DB - 30} Q${X1 - 6},${DB} ${X1 - 36},${DB} H${WX + 93} A104 104 0 0 0 ${WX - 93},${DB} Q${X0},${DB} ${X0 - 6},${DB - 30} L${X0 - 12},${Y0 + 30} Q${X0 - 14},${Y0} ${X0 + 10},${Y0} Z`, fill: PAINT, filter: 'url(#shadow)' }, door);
+  el('path', { d: `M${X0 - 6},${Y0 + 70} Q${(X0 + X1) / 2},${Y0 + 60} ${X1},${Y0 + 66}`, stroke: PAINT2, 'stroke-width': 6, fill: 'none', 'stroke-linecap': 'round' }, door);
+  el('path', { d: `M${X0 - 4},${Y0 + 79} Q${(X0 + X1) / 2},${Y0 + 69} ${X1},${Y0 + 75}`, stroke: WHITE, 'stroke-width': 4, fill: 'none', opacity: .45, 'stroke-linecap': 'round' }, door);
+  el('ellipse', { cx: X1 - 120, cy: Y0 + 50, rx: 62, ry: 15, fill: PAINT2 }, door);
+  rrect(door, X1 - 172, Y0 + 42, 104, 14, 7, '#E4EDF7');
+  el('path', { d: `M${PH.x - 30},${PH.y + PH.h - 70} L${PH.x - 120},${PH.y + PH.h - 96} Q${PH.x - 150},${PH.y + PH.h - 40} ${PH.x - 112},${PH.y + PH.h - 14} L${PH.x - 30},${PH.y + PH.h - 22} Z`, fill: PAINT, stroke: PAINT2, 'stroke-width': 5, 'stroke-linejoin': 'round' }, door);
+  el('path', { d: `M${PH.x - 108},${PH.y + PH.h - 80} Q${PH.x - 132},${PH.y + PH.h - 46} ${PH.x - 104},${PH.y + PH.h - 26}`, stroke: SLATE, 'stroke-width': 10, fill: 'none', 'stroke-linecap': 'round' }, door);
+  screen(PH.x, PH.y, PH.w, PH.h, 440, t => ({ vis: P(t, ev.photos, ev.photos + .3), pic: 'land', a: level(t), seed: TRUE }), { noFrame: true });
+  const frame = el('g', { opacity: 0 }, W);
+  el('path', { d: `M${PH.x + 70},${PH.y - 22} H${PH.x + PH.w + 22} V${PH.y + PH.h + 22} H${PH.x - 22} V${PH.y + 90} Z`, fill: 'none', stroke: SLATE, 'stroke-width': 26, 'stroke-linejoin': 'round' }, frame);
+  on(t => { const p = P(t, ev.photos, ev.photos + .35); op(frame, p); op(door, p); });
+  const winLbl = txt(W, DR + 10, DT - 30, '像车窗慢慢起雾', { size: 34, weight: 800, fill: BLUE, anchor: 'end' });
+  rise(winLbl, ev.window);
+  // 一步步的缩略图
+  const TH = [0, .25, .5, .75, 1], TW = 90, TGap = 98, TY = DB + 44;
+  TH.forEach((a, k) => {
+    const tx = PH.x + 4 + k * TGap;
+    const tk = k === 0 ? ev.steps[0] - .3 : lerp(ev.steps[0], ev.fog[1] - .3, (k - 1) / 3);
+    screen(tx, TY, TW, 64, 90, t => ({ vis: 1, scale: popS(t, tk), pic: 'land', a, seed: TRUE }));
+  });
+  const tcx = k => PH.x + 4 + k * TGap + TW / 2;
+  const first = txt(W, tcx(0), TY + 104, '原图', { size: 26, weight: 700, fill: MID, anchor: 'middle' });
+  rise(first, ev.steps[0]);
+  const last = txt(W, tcx(4), TY + 104, '只剩雪花', { size: 26, weight: 700, fill: MID, anchor: 'middle' });
+  rise(last, ev.fog[1] - .2);
+  const ring = rrect(W, tcx(2) - TW / 2 - 10, TY - 10, TW + 20, 84, 12, 'none', { stroke: ACC, 'stroke-width': 6, opacity: 0 });
+  on(t => op(ring, P(t, ev.pick, ev.pick + .2)));
+  const nLbl = txt(W, tcx(2), TY + 104, '第 N 步', { size: 26, weight: 800, fill: ACC, anchor: 'middle' });
+  rise(nLbl, ev.pick + .1);
+  // 放大镜：雪花点 = 噪点
+  const mag = el('g', { opacity: 0 }, W);
+  const magIn = el('g', { 'clip-path': 'url(#magClip)' }, mag);
+  const r = rng(5);
+  for (let i = 0; i < 12; i++) for (let j = 0; j < 12; j++) { const v = Math.floor(18 + 222 * r()); rrect(magIn, -96 + i * 16, -96 + j * 16, 16, 16, 0, `rgb(${v},${v},${v + 6})`); }
+  el('circle', { cx: 0, cy: 0, r: 96, fill: 'none', stroke: SLATE, 'stroke-width': 14 }, mag);
+  el('path', { d: 'M66,66 L120,120', stroke: SLATE, 'stroke-width': 24, 'stroke-linecap': 'round' }, mag);
+  txt(mag, 0, -120, '雪花点 = 噪点', { size: 32, weight: 800, fill: ACC, anchor: 'middle' });
+  popper(mag, cx + 260, cy - 120, ev.dots_hi, { out: ev.pick - .3 });
+  const magLine = el('path', { d: `M${PH.x + PH.w - 60},${PH.y + 140} L${cx + 160},${cy - 110}`, stroke: SLATE, 'stroke-width': 5, 'stroke-dasharray': '12 10', opacity: 0 }, W);
+  on(t => op(magLine, P(t, ev.dots_hi + .2, ev.dots_hi + .4) * (1 - P(t, ev.pick - .3, ev.pick))));
+  // 右边：挑一张雾图，猜它的噪点
+  const PK = { x: cx + 150, y: cy - 320, w: 300, h: 212 };
+  screen(PK.x, PK.y, PK.w, PK.h, 300, t => ({ vis: 1, scale: popS(t, ev.pick + .15), pic: 'land', a: .5, seed: TRUE }));
+  const gauge = el('g', { opacity: 0 }, W);
+  txt(gauge, PK.x, PK.y + PK.h + 50, '第 N 步', { size: 32, weight: 800, fill: ACC });
+  txt(gauge, PK.x + 128, PK.y + PK.h + 50, '雾有多厚：', { size: 28, weight: 700, fill: MID });
+  rrect(gauge, PK.x + 270, PK.y + PK.h + 28, 120, 26, 13, PALE);
+  const gfill = rrect(gauge, PK.x + 270, PK.y + PK.h + 28, 0, 26, 13, GREY);
+  appear(gauge, ev.pick + .4);
+  on(t => gfill.setAttribute('width', (60 * ease.outCubic(P(t, ev.pick + .5, ev.pick + 1.0))).toFixed(1)));
+  const TG = { x: cx + 120, y: cy + 10, w: 200, h: 150 }, TT = { x: cx + 380, y: cy + 10, w: 200, h: 150 };
+  const skill = t => ease.inOutCubic(P(t, ev.train[0], ev.train[1])) ** .8;
+  screen(TG.x, TG.y, TG.w, TG.h, 200, t => ({ vis: 1, scale: popS(t, ev.guess), tile: 1, seed: TRUE, seed2: WRONG, nmix: skill(t) }));
+  screen(TT.x, TT.y, TT.w, TT.h, 200, t => ({ vis: 1, scale: popS(t, ev.guess + .25), tile: 1, seed: TRUE, seed2: TRUE, nmix: 0 }));
+  const l1 = txt(W, TG.x + TG.w / 2, TG.y - 22, '它猜的噪点', { size: 28, weight: 800, fill: BLUE, anchor: 'middle' });
+  const l2 = txt(W, TT.x + TT.w / 2, TT.y - 22, '真正撒进去的噪点', { size: 28, weight: 800, anchor: 'middle' });
+  rise(l1, ev.guess + .1); rise(l2, ev.guess + .35);
+  const cnt = txt(W, cx + 350, cy + 250, '', { size: 40, weight: 800, anchor: 'middle' });
+  on(t => {
+    op(cnt, P(t, ev.guess + .3, ev.guess + .6));
+    const p = P(t, ev.train[0], ev.train[1]);
+    if (t >= ev.match) { cnt.textContent = '练习几百万次（示例）'; cnt.setAttribute('fill', ACC); return; }
+    const n = Math.max(1, Math.round(Math.pow(10, 6.4 * ease.inCubic(p))));
+    cnt.textContent = `练习 ${n.toLocaleString('en-US')} 次`; cnt.setAttribute('fill', SLATE);
+  });
+  stampAt('越练越像', cx + 350, cy + 90, ev.match, { w: 250, size: 44 });
+  // 小团子：指着屏幕里的 AI（练的是 AI）
+  mascot(C.stickers.note, cx + 730, cy + 150, 250, ev.note, { rot: 8 });
+}
+
+// ===== ② 往回擦：一屏随机雪花，猜雾、擦掉一点，几十步 =====
+function buildWipe() {
+  const ev = EV, [cx, cy] = C2;
+  const CV = { x: cx - 520, y: cy - 310, s: 480 }, SEED = 7;
+  // 已擦了几步（连续值）：两下看得清的，之后快进到 50
+  const nAt = t => ease.inOutCubic(P(t, ev.w1, ev.w1 + .45)) + ease.inOutCubic(P(t, ev.w2, ev.w2 + .45)) + 48 * ease.inOutCubic(P(t, ev.fast[0], ev.fast[1]));
+  const aAt = n => n >= 50 ? 0 : 1 - Math.pow(n / 50, .55);
+  screen(CV.x, CV.y, CV.s, CV.s, 480, t => {
+    const a = aAt(nAt(t));
+    return { vis: P(t, ev.canvas2, ev.canvas2 + .3), pic: 'catA', a, blur: 16 * a, seed: SEED };
+  });
+  const rnd = txt(W, CV.x + CV.s / 2, CV.y + CV.s + 56, '一屏随机雪花', { size: 30, weight: 700, fill: MID, anchor: 'middle' });
+  rise(rnd, ev.rand, { out: ev.fast[0] });
+  // 反过来
+  const rev = el('g', { opacity: 0 }, W);
+  el('path', { d: `M${cx + 120},${cy - 250} a60,60 0 1 1 30,52`, stroke: ACC, 'stroke-width': 12, fill: 'none', 'stroke-linecap': 'round' }, rev);
+  const ah = arrowHead(rev, ACC, 26); ah.setAttribute('transform', `translate(${cx + 150},${cy - 198}) rotate(150)`);
+  txt(rev, cx + 250, cy - 262, '反过来', { size: 56, weight: 900, fill: ACC });
+  txt(rev, cx + 250, cy - 205, '从雪花开始，一点点擦掉雾', { size: 32, weight: 700, fill: MID });
+  appear(rev, ev.flip);
+  // 猜出来的噪点：先弹出来，再飞进画布减掉
+  const GT = { x: cx + 300, y: cy - 130, s: 170 };
+  [[ev.g1, ev.w1, 31], [ev.g2, ev.w2, 32]].forEach(([g0, w0, sd]) => {
+    const tile = screen(GT.x, GT.y, GT.s, GT.s, 170, t => {
+      if (t < g0 || t > w0 + .5) return null;
+      return { vis: 1, tile: 1, seed: SEED, seed2: sd, nmix: .55 };
+    });
+    on(t => {
+      const p = ease.inOutCubic(P(t, w0, w0 + .45)), s0 = popS(t, g0);
+      const dx = lerp(0, CV.x + CV.s / 2 - (GT.x + GT.s / 2), p), dy = lerp(0, CV.y + CV.s / 2 - (GT.y + GT.s / 2), p);
+      const sc = s0 * lerp(1, .35, p);
+      const gx = GT.x + GT.s / 2, gy = GT.y + GT.s / 2;
+      tile.g.setAttribute('transform', `translate(${(gx + dx).toFixed(1)},${(gy + dy).toFixed(1)}) scale(${sc.toFixed(3)}) translate(${-gx},${-gy})`);
+      op(tile.g, t < g0 || t > w0 + .5 ? 0 : 1 - P(t, w0 + .3, w0 + .5));
+    });
+    const lb = txt(W, GT.x + GT.s / 2, GT.y - 22, '猜出来的噪点', { size: 30, weight: 800, fill: BLUE, anchor: 'middle' });
+    rise(lb, g0 + .1, { out: w0 });
+    const minus = txt(W, CV.x + CV.s + 26, CV.y + CV.s / 2 + 30, '−', { size: 110, weight: 900, fill: ACC, anchor: 'middle' });
+    on(t => { const q = P(t, w0 + .2, w0 + .35) * (1 - P(t, w0 + .7, w0 + .95)); op(minus, q); });
+  });
+  // 计步器
+  const cnt = el('g', { opacity: 0 }, W);
+  const cn = txt(cnt, cx + 640, cy + 150, '', { size: 74, weight: 900, anchor: 'middle', mono: true });
+  txt(cnt, cx + 640, cy + 205, '步（示例）', { size: 30, weight: 700, fill: MID, anchor: 'middle' });
+  appear(cnt, ev.g1 - .2);
+  on(t => { const k = Math.min(50, Math.round(nAt(t))); cn.textContent = `${k}/50`; cn.setAttribute('fill', k === 50 ? ACC : SLATE); });
+  // 一排缩略图：一格格变清楚（第 0、10、20……50 步）
+  [0, 10, 20, 30, 40, 50].forEach((n, i) => {
+    const tt = i === 0 ? ev.canvas2 + .6 : ev.fast[0] + (ev.fast[1] - ev.fast[0]) * inv_inout((n - 2) / 48);
+    const a = aAt(n);
+    screen(CV.x + i * 82, CV.y + CV.s + 108, 68, 68, 68, t => ({ vis: 1, scale: popS(t, tt, .3), pic: 'catA', a, blur: 16 * a, seed: SEED }));
+  });
+  stampAt('图出来了', CV.x + CV.s - 40, CV.y + 40, ev.done2, { w: 230, size: 42 });
+  // 小团子拿抹布擦（贴纸朝右，翻过来对着画布）；还在用「用力推」顶替时，手上补一块代码画的抹布
+  const m = mascot(C.stickers.wipe, cx + 120, cy + 70, 300, ev.canvas2 + .2, { flip: true, rot: 6 });
+  if (C.stickers.wipe.startsWith('10_')) { const cl = el('g', {}, m); cl.setAttribute('transform', 'translate(-128,8)'); cloth(cl, .9); }
+  on(t => {
+    let w = 0;
+    for (const w0 of [ev.w1, ev.w2]) w += Math.sin(P(t, w0, w0 + .5) * Math.PI * 2) * 26 * (t > w0 && t < w0 + .5 ? 1 : 0);
+    if (t > ev.fast[0] && t < ev.fast[1]) w += Math.sin((t - ev.fast[0]) * 24) * 18;
+    m.setAttribute('transform', `translate(${w.toFixed(1)},${(-Math.abs(w) * .3).toFixed(1)})`);
+  });
+}
+function inv_inout(y) { y = clamp(y); return y < .5 ? (y / 4) ** (1 / 3) : 1 - ((2 - 2 * y) ** (1 / 3)) / 2; }
+
+// ===== ③ 文字指路：你写的话 → 一串数字 → 指路的箭头，往"戴红围巾的猫"那边擦 =====
+function buildGuide() {
+  const ev = EV, [cx, cy] = C3;
+  const CV = { x: cx + 120, y: cy - 270, s: 460 }, SEED = 11;
+  const g0 = ev.guide[0], g1 = ev.guide[1], mid = lerp(g0, g1, .5);
+  screen(CV.x, CV.y, CV.s, CV.s, 460, t => {
+    const a = 1 - ease.inOutCubic(P(t, g0, g1));
+    return { vis: P(t, ev.canvas3, ev.canvas3 + .3), pic: 'catA0', pic2: 'catA', mix: ease.inOutCubic(P(t, mid, g1)), a, blur: 18 * a, seed: SEED };
+  });
+  // 你写的话
+  const chipX = cx - 400, chipY = cy - 250;
+  const chipG = el('g', { opacity: 0 }, W);
+  rrect(chipG, chipX - 290, chipY - 48, 580, 96, 30, WHITE, { filter: 'url(#shadow)' });
+  const ct = el('text', { x: chipX, y: chipY + 17, 'font-size': 48, 'font-weight': 800, 'text-anchor': 'middle', fill: SLATE }, chipG);
+  const sp = ['一只戴', '红围巾', '的猫'].map(s => { const e = el('tspan', {}, ct); e.textContent = s; return e; });
+  const wl = txt(chipG, chipX, chipY - 72, '你写的话', { size: 30, weight: 700, fill: MID, anchor: 'middle' });
+  on(t => {
+    const p = P(t, ev.prompt3, ev.prompt3 + .35);
+    op(chipG, p * (1 - .2 * P(t, ev.cells[1], ev.cells[1] + .3)));
+    const hot = t > ev.scarf ? 1 : 0;
+    sp[1].setAttribute('fill', hot ? ACC : SLATE);
+  });
+  const chipHot = el('g', { opacity: 0 }, W);
+  rrect(chipHot, chipX - 290, chipY - 48, 580, 96, 30, 'none', { stroke: ACC, 'stroke-width': 6 });
+  on(t => op(chipHot, P(t, ev.scarf, ev.scarf + .2) * (1 - P(t, g1, g1 + .4))));
+  // 一串数字（和上一集"变成数字"一样的格子）
+  const rnd = rng(9), cells = [];
+  for (let k = 0; k < 13; k++) {
+    const v = rnd() * 2 - 1;
+    const col = v > 0 ? `rgba(255,90,54,${(.25 + .75 * v).toFixed(2)})` : `rgba(61,111,224,${(.25 - .75 * v).toFixed(2)})`;
+    cells.push(rrect(W, chipX - 273 + k * 42, cy - 120, 36, 64, 7, col, { opacity: 0 }));
+  }
+  const ref = txt(W, chipX, cy - 22, '一串数字（上一集讲过）', { size: 28, weight: 700, fill: MID, anchor: 'middle' });
+  rise(ref, ev.cells[0] + .4, { out: ev.arrow3 + .2 });
+  // 箭头：格子收拢成一根指路的箭头，一下一下往前拽
+  const AY = cy + 60, AX0 = cx - 650, AX1 = CV.x - 30;
+  const shaft = el('path', { d: `M${AX0},${AY} H${AX1 - 40}`, stroke: ACC, 'stroke-width': 30, 'stroke-linecap': 'round', fill: 'none', pathLength: 1, opacity: 0 }, W);
+  const flow = el('path', { d: `M${AX0},${AY} H${AX1 - 40}`, stroke: WHITE, 'stroke-width': 8, 'stroke-dasharray': '18 34', 'stroke-linecap': 'round', fill: 'none', opacity: 0 }, W);
+  const head = el('g', { opacity: 0 }, W); arrowHead(head, ACC, 62);
+  const al = txt(W, (AX0 + AX1) / 2 - 60, AY - 44, '指路：往"戴红围巾的猫"那边擦', { size: 32, weight: 800, fill: ACC, anchor: 'middle' });
+  rise(al, ev.look3);
+  on(t => {
+    cells.forEach((c, k) => {
+      const p = P(t, ev.cells[0] + k * .05, ev.cells[0] + k * .05 + .25);
+      const m = ease.inOutCubic(P(t, ev.arrow3 + k * .02, ev.arrow3 + .45 + k * .02));
+      const x0 = chipX - 273 + k * 42, y0 = cy - 120;
+      c.setAttribute('x', lerp(x0, AX0 + k * 12, m).toFixed(1)); c.setAttribute('y', lerp(y0, AY - 32, m).toFixed(1));
+      op(c, p * (1 - P(t, ev.arrow3 + .35, ev.arrow3 + .6)));
+    });
+    const ap = ease.outCubic(P(t, ev.arrow3 + .2, ev.arrow3 + .75));
+    shaft.setAttribute('stroke-dasharray', `${ap} 1`); op(shaft, ap > 0 ? 1 : 0);
+    // 往前拽：每"擦一步"箭头头往前冲一下
+    const pulling = t > ev.look3 && t < g1 + .3;
+    const tug = pulling ? Math.max(0, Math.sin((t - ev.look3) * Math.PI * 2 / .7)) ** 3 * 26 : 0;
+    tr(head, lerp(AX0 + 40, AX1 + tug, ap), AY); op(head, ap > .05 ? 1 : 0);
+    op(flow, pulling ? 1 : 0); flow.setAttribute('stroke-dashoffset', (-(t * 160) % 52).toFixed(1));
+  });
+  mascot(C.stickers.ask, cx - 640, cy + 270, 230, ev.q3, { rot: -8 });
+}
+
+// ===== ④ 指路力度：太小跑题，太大太艳太硬，拧回中间 =====
+function buildKnob() {
+  const ev = EV, [cx, cy] = C4;
+  const PS = 270, PY = cy - 270;
+  const xs = [cx - 560, cx, cx + 560], pics = ['low', 'catA', 'high'];
+  const shows = [ev.low + .3, ev.knob_in, ev.high + .3];
+  const active = t => t >= ev.back4 + .3 ? 1 : t >= ev.high + .3 ? 2 : t >= ev.low + .3 ? 0 : 1;
+  xs.forEach((x, i) => {
+    const sc = screen(x - PS / 2, PY, PS, PS, 270, t => {
+      if (t < shows[i]) return null;
+      const dim = active(t) === i ? 1 : .55;
+      return { vis: P(t, shows[i], shows[i] + .3) * dim, scale: popS(t, shows[i]), pic: pics[i] };
+    });
+    const ring = rrect(W, x - PS / 2 - 16, PY - 16, PS + 32, PS + 32, 22, 'none', { stroke: ACC, 'stroke-width': 8, opacity: 0 });
+    on(t => op(ring, t >= shows[i] && active(t) === i && t > ev.low + .3 ? 1 : 0));
+  });
+  const capY = PY + PS + 58;
+  const c0 = txt(W, xs[0], capY, '太小：跑题，不太像猫', { size: 32, weight: 800, fill: BLUE, anchor: 'middle' });
+  const c2 = txt(W, xs[2], capY, '太大：太艳、线条太硬', { size: 32, weight: 800, fill: ACC, anchor: 'middle' });
+  const c1 = txt(W, xs[1], capY, '刚好', { size: 32, weight: 800, anchor: 'middle' });
+  rise(c0, ev.low + .4); rise(c2, ev.high + .4); rise(c1, ev.back4 + .4);
+  const title = el('g', { opacity: 0 }, W);
+  txt(title, cx, cy - 330, '指路力度（提示词相关性，CFG）', { size: 40, weight: 800, anchor: 'middle' });
+  appear(title, ev.knob_in + .2);
+  // 旋钮
+  const KX = cx, KY = cy + 240;
+  const knob = el('g', { opacity: 0 }, W);
+  el('circle', { cx: 0, cy: 0, r: 92, fill: WHITE, filter: 'url(#stk)' }, knob);
+  for (let k = 0; k <= 8; k++) { const a = (-200 + k * 27.5) * Math.PI / 180; el('path', { d: `M${Math.cos(a) * 104},${Math.sin(a) * 104} L${Math.cos(a) * 122},${Math.sin(a) * 122}`, stroke: k < 4 ? BLUE : k > 4 ? ACC : SLATE, 'stroke-width': k === 4 ? 10 : 7, 'stroke-linecap': 'round' }, knob); }
+  const kp = el('path', { d: 'M0,0 L0,-70', stroke: SLATE, 'stroke-width': 14, 'stroke-linecap': 'round' }, knob);
+  el('circle', { cx: 0, cy: 0, r: 16, fill: SLATE }, knob);
+  txt(knob, 0, -138, '7（示例）', { size: 30, weight: 800, anchor: 'middle' });
+  txt(knob, -150, 30, '小', { size: 34, weight: 800, fill: BLUE, anchor: 'middle' });
+  txt(knob, 150, 30, '大', { size: 34, weight: 800, fill: ACC, anchor: 'middle' });
+  popper(knob, KX, KY, ev.knob_in, { from: .6 });
+  const ang = t => {
+    let a = 0;
+    a = lerp(a, -105, ease.inOutCubic(P(t, ev.low, ev.low + .6)));
+    a = lerp(a, 105, ease.inOutCubic(P(t, ev.high, ev.high + .7)));
+    a = lerp(a, 0, ease.inOutCubic(P(t, ev.back4, ev.back4 + .6)));
+    return a;
+  };
+  on(t => kp.setAttribute('transform', `rotate(${ang(t).toFixed(1)})`));
+  // "这股劲儿"：上一章那根箭头，粗细跟着旋钮走
+  const ar = el('g', { opacity: 0 }, W);
+  const sh = el('path', { d: '', stroke: ACC, 'stroke-linecap': 'round', fill: 'none' }, ar);
+  const hd = el('g', {}, ar); arrowHead(hd, ACC, 40);
+  const AX = cx + 330, AY2 = cy + 240;
+  txt(ar, AX + 110, AY2 - 60, '这股劲儿', { size: 30, weight: 800, fill: ACC, anchor: 'middle' });
+  on(t => {
+    op(ar, P(t, ev.strength, ev.strength + .3));
+    const k = ang(t) / 105, wgt = 22 * Math.pow(2.2, k);
+    sh.setAttribute('d', `M${AX},${AY2} H${AX + 200}`); sh.setAttribute('stroke-width', wgt.toFixed(1));
+    hd.setAttribute('transform', `translate(${AX + 236},${AY2}) scale(${(.6 + wgt / 40).toFixed(3)})`);
+  });
+  const m = mascot(C.stickers.knob, KX - 230, KY + 20, 230, ev.knob_in + .3, { rot: 6 });
+  on(t => { const turning = (t > ev.low && t < ev.low + .6) || (t > ev.high && t < ev.high + .7) || (t > ev.back4 && t < ev.back4 + .6); m.setAttribute('transform', `rotate(${turning ? (Math.sin(t * 30) * 4).toFixed(2) : 0})`); });
+}
+
+// ===== ⑤ 换一屏雪花：种子决定起点那屏雪花 =====
+function buildSeed() {
+  const ev = EV, [cx, cy] = C5;
+  const BX = cx - 800, BY = cy - 300;
+  const bar = el('g', { opacity: 0 }, W);
+  rrect(bar, BX, BY, 420, 92, 26, WHITE, { filter: 'url(#shadow)' });
+  txt(bar, BX + 28, BY + 60, '种子', { size: 38, weight: 800, fill: MID });
+  rrect(bar, BX + 130, BY + 14, 270, 64, 16, SOFT, { stroke: PALE, 'stroke-width': 3 });
+  const num = txt(bar, BX + 150, BY + 64, '', { size: 50, weight: 800, mono: true });
+  const cur = rrect(bar, 0, BY + 24, 4, 44, 2, ACC);
+  const lock = el('g', {}, bar);
+  rrect(lock, BX + 6, BY + 120, 26, 22, 5, MID);
+  el('path', { d: `M${BX + 11},${BY + 120} v-8 a8,8 0 0 1 16,0 v8`, stroke: MID, 'stroke-width': 5, fill: 'none' }, lock);
+  txt(bar, BX + 44, BY + 142, '设置不变', { size: 28, weight: 700, fill: MID });
+  appear(bar, ev.seed_in);
+  // 骰子按钮
+  const dice = el('g', { opacity: 0 }, W);
+  const dIn = el('g', {}, dice);
+  rrect(dIn, -46, -46, 92, 92, 20, WHITE, { filter: 'url(#stk)' });
+  [[-22, -22], [22, 22], [0, 0], [-22, 22], [22, -22]].forEach(([a, b]) => el('circle', { cx: a, cy: b, r: 9, fill: ACC }, dIn));
+  txt(dice, 0, 82, '随机', { size: 26, weight: 700, fill: MID, anchor: 'middle' });
+  popper(dice, BX + 490, BY + 46, ev.seed_in + .1);
+  const presses = [ev.press1, ev.press2];
+  on(t => { let s = 1, r = 0; presses.forEach(p0 => { const g = gauss((t - p0) / .08); s -= .16 * g; r += 25 * P(t, p0, p0 + .35) * (t < p0 + .6 ? 1 : 0); }); dIn.setAttribute('transform', `scale(${s.toFixed(3)}) rotate(${(r % 90).toFixed(1)})`); });
+  // 输入框里的数字
+  const roll = rng(4);
+  const rolls = [...Array(40)].map(() => String(Math.floor(roll() * 99999)));
+  on(t => {
+    let s = '';
+    if (t >= ev.press1) s = t < ev.press1 + .3 ? rolls[Math.floor(t * 30) % 20] : '42';
+    if (t >= ev.press2) s = t < ev.press2 + .3 ? rolls[20 + Math.floor(t * 30) % 20] : '1337';
+    if (t >= ev.retype) { const k = Math.floor(P(t, ev.retype + .2, ev.retype + .6) * 2 + 1e-6); s = '42'.slice(0, k); }
+    num.textContent = s;
+    const typing = t >= ev.retype && t < ev.retype + .9;
+    cur.setAttribute('x', (BX + 152 + s.length * 30).toFixed(1)); op(cur, typing && Math.floor(t * 3) % 2 === 0 ? 1 : 0);
+    num.setAttribute('fill', (t > ev.retype + .6 && t < ev.same + 1.5) ? ACC : SLATE);
+  });
+  // 画布：按下骰子 → 那个种子的雪花 → 擦出来
+  const CV = { x: BX, y: cy - 110, s: 400 };
+  const seedAt = t => t >= ev.retype + .7 ? 42 : t >= ev.retype ? 0 : t >= ev.press2 + .3 ? 1337 : t >= ev.press1 + .3 ? 42 : 0;
+  const gen = t => t >= ev.retype ? ev.genA2 : t >= ev.press2 ? ev.genB : ev.genA;
+  screen(CV.x, CV.y, CV.s, CV.s, 400, t => {
+    const vis = P(t, ev.seed_in + .2, ev.seed_in + .5), sd = seedAt(t);
+    if (!sd) return { vis, bg: WHITE };
+    const [a0, a1] = gen(t), a = 1 - ease.inOutCubic(P(t, a0, a1));
+    return { vis, pic: sd === 1337 ? 'catB' : 'catA', a, blur: 16 * a, seed: sd };
+  });
+  // 三次结果
+  const SX = [cx + 10, cx + 280, cx + 550], SY = cy - 170, SS = 230;
+  const res = [[ev.genA[1] + .15, 42, 'catA'], [ev.genB[1] + .15, 1337, 'catB'], [ev.genA2[1] + .15, 42, 'catA']];
+  res.forEach(([t0, sd, pic], i) => {
+    screen(SX[i], SY, SS, SS, 230, t => ({ vis: 1, scale: popS(t, t0), pic }));
+    screen(SX[i] + 18, SY + SS + 30, 70, 70, 70, t => ({ vis: 1, scale: popS(t, t0 + .1), pic: 'catA', a: 1, seed: sd }));
+    const lb = txt(W, SX[i] + 104, SY + SS + 76, `种子 ${sd}`, { size: 30, weight: 800, anchor: 'start', mono: false });
+    rise(lb, t0 + .15);
+  });
+  const bt = Math.max(ev.same, ev.genA2[1] + .4);
+  const br = el('path', { d: `M${SX[0] + SS / 2},${SY - 20} V${SY - 60} H${SX[2] + SS / 2} V${SY - 20}`, stroke: ACC, 'stroke-width': 7, fill: 'none', 'stroke-linejoin': 'round', pathLength: 1, opacity: 0 }, W);
+  on(t => { const p = ease.inOutCubic(P(t, bt, bt + .5)); br.setAttribute('stroke-dasharray', `${p} 1`); op(br, p > 0 ? 1 : 0); });
+  const same = txt(W, (SX[0] + SX[2] + SS) / 2, SY - 78, '同一个种子：同一屏雪花，同一只猫', { size: 32, weight: 800, fill: ACC, anchor: 'middle' });
+  rise(same, bt + .3);
+  const rnd5 = txt(W, SX[1] + SS / 2, SY - 26, '起点雪花是随机的', { size: 28, weight: 700, fill: MID, anchor: 'middle' });
+  rise(rnd5, ev.rand5, { out: bt - .2 });
+  // 小团子按骰子
+  const m = mascot(C.stickers.dice, BX + 660, BY + 40, 230, ev.seed_in + .3, { rot: -6 });
+  on(t => { let d = 0; presses.forEach(p0 => { d += 30 * gauss((t - p0 + .05) / .1); }); m.setAttribute('transform', `translate(${(-d * .6).toFixed(1)},${d.toFixed(1)})`); });
+}
+
+// ===== ⑥ 先在小图上擦：压缩 → 小图上擦 → 解码还原 =====
+function buildLatent() {
+  const ev = EV, [cx, cy] = C6;
+  const BIG = { x: cx - 760, y: cy - 260, s: 400 }, SEED = 21;
+  screen(BIG.x, BIG.y, BIG.s, BIG.s, 400, t => ({ vis: P(t, ev.big6, ev.big6 + .3) * (1 - .6 * P(t, ev.compress, ev.compress + .4)), pic: 'catA', a: 1, seed: SEED }));
+  const bl = txt(W, BIG.x + BIG.s / 2, BIG.y + BIG.s + 56, '大图：512×512', { size: 30, weight: 700, fill: MID, anchor: 'middle' });
+  rise(bl, ev.big6 + .3);
+  const arrow = (x0, x1, y, t0, label, sub) => {
+    const g = el('g', { opacity: 0 }, W);
+    const p = el('path', { d: `M${x0},${y} H${x1 - 30}`, stroke: ACC, 'stroke-width': 14, 'stroke-linecap': 'round', fill: 'none', pathLength: 1 }, g);
+    const h = el('g', {}, g); arrowHead(h, ACC, 34); h.setAttribute('transform', `translate(${x1},${y})`);
+    txt(g, (x0 + x1) / 2, y - 34, label, { size: 38, weight: 900, fill: ACC, anchor: 'middle' });
+    if (sub) txt(g, (x0 + x1) / 2, y + 60, sub, { size: 26, weight: 700, fill: MID, anchor: 'middle' });
+    on(t => { const q = ease.outCubic(P(t, t0, t0 + .45)); p.setAttribute('stroke-dasharray', `${q} 1`); op(g, q > 0 ? 1 : 0); op(h, P(t, t0 + .3, t0 + .45)); });
+  };
+  arrow(cx - 330, cx - 120, cy - 60, ev.compress, '压缩');
+  const SM = { x: cx - 90, y: cy - 150, s: 180 };
+  const wp = t => ease.inOutCubic(P(t, ev.wipe6[0], ev.wipe6[1]));
+  screen(SM.x, SM.y, SM.s, SM.s, 64, t => {
+    const a = 1 - wp(t);
+    return { vis: P(t, ev.compress + .3, ev.compress + .55), scale: popS(t, ev.compress + .3), pic: 'catA', a, blur: 8 * a, seed: SEED, n: 64 };
+  }, { pixel: true });
+  const s1 = txt(W, SM.x + SM.s / 2, SM.y + SM.s + 52, '64×64', { size: 34, weight: 800, anchor: 'middle', mono: true });
+  const s2 = txt(W, SM.x + SM.s / 2, SM.y + SM.s + 96, '每边缩小 8 倍（示例）', { size: 28, weight: 700, fill: MID, anchor: 'middle' });
+  rise(s1, ev.compress + .5); rise(s2, ev.compress + .6);
+  const save = txt(W, SM.x + SM.s / 2, SM.y - 40, '在小图上擦，省力', { size: 32, weight: 800, fill: BLUE, anchor: 'middle' });
+  rise(save, ev.wipe6[0]);
+  // 小抹布在小图上来回擦
+  const mc = el('g', { opacity: 0 }, W); cloth(mc, .7);
+  on(t => {
+    const on_ = t > ev.wipe6[0] - .1 && t < ev.wipe6[1] + .3;
+    op(mc, on_ ? 1 : 0);
+    const u = t - ev.wipe6[0];
+    tr(mc, SM.x + SM.s / 2 + Math.sin(u * 9) * 60, SM.y + SM.s / 2 + 30 - u * 30 + Math.cos(u * 9) * 10, 1, Math.sin(u * 9) * 10);
+  });
+  arrow(cx + 120, cx + 330, cy - 60, ev.decode, '解码还原', '不是简单放大');
+  const OUT = { x: cx + 360, y: cy - 260, s: 400 };
+  screen(OUT.x, OUT.y, OUT.s, OUT.s, 400, t => ({ vis: P(t, ev.decoded[0] + .3, ev.decoded[0] + .6), scale: lerp(.9, 1, ease.outCubic(P(t, ev.decoded[0] + .3, ev.decoded[1]))), pic: 'catA' }));
+  const ol = txt(W, OUT.x + OUT.s / 2, OUT.y + OUT.s + 56, '还原成 512×512 的大图', { size: 30, weight: 700, fill: MID, anchor: 'middle' });
+  rise(ol, ev.decoded[1]);
+}
+
+// ===== 总览：雪花 + 你的话 → 猜雾、擦掉（转圈）→ 解码还原 → 一张画 =====
+function buildOverview() {
+  const ev = EV, [cx, cy] = C7, R0 = 190;
+  const NY = cy - 60;
+  // 镜头飞到 42% 就先摆出骨架：空圈、浅色虚线占位和箭头；旁白念到哪个，哪个再点亮
+  const A = lerp(ev.pull[0], ev.pull[1], .42);
+  const ghost = el('g', { opacity: 0 }, W);
+  const dash = { fill: 'none', stroke: GREY2, 'stroke-width': 6, 'stroke-dasharray': '18 14' };
+  const gChip = rrect(ghost, cx - 330, cy - 470, 660, 92, 30, 'none', dash);
+  const gOut = rrect(ghost, cx + 510, NY - 115, 230, 230, 18, 'none', dash);
+  [[cx - 490, cx - R0 - 30], [cx + R0 + 30, cx + 490]].forEach(([x0, x1]) => {
+    el('path', { d: `M${x0},${NY} H${x1 - 26}`, stroke: GREY2, 'stroke-width': 10, 'stroke-linecap': 'round', 'stroke-dasharray': '4 22' }, ghost);
+    const h = el('g', {}, ghost); arrowHead(h, GREY2, 26); h.setAttribute('transform', `translate(${x1},${NY})`);
+  });
+  appear(ghost, A, { dy: 0 });
+  on(t => { op(gChip, 1 - P(t, ev.n_text, ev.n_text + .3)); op(gOut, 1 - P(t, ev.n_out - .35, ev.n_out)); });
+  screen(cx - 740, NY - 115, 230, 230, 230, t => ({ vis: 1, scale: popS(t, A), pic: 'catA', a: 1, seed: 3 }));
+  const sl = txt(W, cx - 625, NY + 180, '一屏雪花', { size: 54, weight: 900, anchor: 'middle' });
+  rise(sl, ev.n_snow);
+  // 你的一句话
+  const chip = el('g', { opacity: 0 }, W);
+  rrect(chip, cx - 330, cy - 470, 660, 92, 30, WHITE, { filter: 'url(#shadow)' });
+  txt(chip, cx, cy - 409, '你的一句话：一只戴红围巾的猫', { size: 40, weight: 800, anchor: 'middle' });
+  appear(chip, ev.n_text);
+  const down = el('g', { opacity: 0 }, W);
+  el('path', { d: `M${cx},${cy - 368} V${NY - 250}`, stroke: ACC, 'stroke-width': 14, 'stroke-linecap': 'round' }, down);
+  const dh = el('g', {}, down); arrowHead(dh, ACC, 30); dh.setAttribute('transform', `translate(${cx},${NY - 222}) rotate(90)`);
+  txt(down, cx + 30, cy - 300, '指路', { size: 34, weight: 800, fill: ACC });
+  appear(down, ev.n_text + .3, { dy: -12 });
+  // 圈：猜雾 → 擦掉 → 再猜
+  const R = R0;
+  const ring = el('circle', { cx, cy: NY, r: R, fill: WHITE, stroke: LINE, 'stroke-width': 26, opacity: 0, filter: 'url(#shadow)' }, W);
+  const hot = el('circle', { cx, cy: NY, r: R, fill: 'none', stroke: ACC, 'stroke-width': 26, 'stroke-linecap': 'round', pathLength: 1, opacity: 0, transform: `rotate(-90,${cx},${NY})` }, W);
+  const gL = txt(W, cx, NY - 30, '猜雾', { size: 64, weight: 900, anchor: 'middle' });
+  const wL = txt(W, cx, NY + 70, '擦掉', { size: 64, weight: 900, fill: BLUE, anchor: 'middle' });
+  rise(gL, ev.n_guess); rise(wL, ev.n_wipe);
+  const rep = txt(W, cx, NY + R + 78, '重复几十步', { size: 52, weight: 900, fill: ACC, anchor: 'middle' });
+  rise(rep, ev.n_rep[0]);
+  const dot = el('circle', { r: 26, fill: ACC, stroke: WHITE, 'stroke-width': 8, opacity: 0 }, W);
+  on(t => {
+    op(ring, P(t, A + .15, A + .5));
+    const lap = P(t, ev.n_wipe, ev.n_rep[1]) * 3.2;
+    const ang = (lap % 1) * Math.PI * 2 - Math.PI / 2;
+    op(dot, t > ev.n_wipe ? 1 : 0); dot.setAttribute('cx', (cx + Math.cos(ang) * R).toFixed(1)); dot.setAttribute('cy', (NY + Math.sin(ang) * R).toFixed(1));
+    hot.setAttribute('stroke-dasharray', `${(lap % 1).toFixed(3)} 1`); op(hot, t > ev.n_wipe ? .9 : 0);
+  });
+  // 进出箭头
+  const link = (x0, x1, t0, label) => {
+    const g = el('g', { opacity: 0 }, W);
+    el('path', { d: `M${x0},${NY} H${x1 - 26}`, stroke: SLATE, 'stroke-width': 14, 'stroke-linecap': 'round' }, g);
+    const h = el('g', {}, g); arrowHead(h, SLATE, 30); h.setAttribute('transform', `translate(${x1},${NY})`);
+    if (label) txt(g, (x0 + x1) / 2, NY - 36, label, { size: 32, weight: 800, fill: MID, anchor: 'middle' });
+    appear(g, t0, { dy: 0 });
+  };
+  link(cx - 490, cx - R - 30, ev.n_guess - .2);
+  link(cx + R + 30, cx + 490, ev.n_out - .45, '解码还原');
+  screen(cx + 510, NY - 115, 230, 230, 230, t => ({ vis: 1, scale: popS(t, ev.n_out - .35), pic: 'catA' }));
+  const cl = txt(W, cx + 625, NY + 180, '一张画', { size: 54, weight: 900, anchor: 'middle' });
+  rise(cl, ev.n_out - .3);
+}
+
+// ===== 高潮：满屏噪点沿弯弯的轨迹飘，聚成戴红围巾的猫 =====
+const CANC = [CAN0.x + CAN0.s / 2, CAN0.y + CAN0.s / 2 - 20];     // 高潮落地时镜头对准画布
+function buildClimax() {
+  const ev = EV, VX = 560, VY = 560, VW = 2800, VH = 1240, K = .5;      // 粒子层：世界坐标 2800×1240，画布按一半分辨率画
+  const g = el('g', { opacity: 0 }, W);
+  const fo = el('foreignObject', { x: VX, y: VY, width: VW, height: VH }, g);
+  const cv = document.createElementNS(XH, 'canvas'); cv.width = VW * K; cv.height = VH * K;
+  cv.setAttribute('style', `width:${VW}px;height:${VH}px;display:block;`);
+  fo.appendChild(cv);
+  const ctx = cv.getContext('2d');
+  // 目标：从猫图上按 60×60 的格子取颜色
+  const N = 60, cell = CAN0.s / N, src = mk(N), sg = src.getContext('2d');
+  sg.drawImage(PIC.catA, 0, 0, N, N);
+  const px = sg.getImageData(0, 0, N, N).data, r = rng(77), parts = [];
+  // 起点：铺满镜头的一屏雪花（80×45 的格子，略抖开）
+  const starts = [];
+  const SW = 1920 / 1.1, SH = 1080 / 1.1, SX0 = CANC[0] - SW / 2, SY0 = CANC[1] - SH / 2;
+  for (let j = 0; j < 45; j++) for (let i = 0; i < 80; i++) starts.push([SX0 + (i + .5 + (r() - .5) * .8) * SW / 80, SY0 + (j + .5 + (r() - .5) * .8) * SH / 45]);
+  for (let k = starts.length - 1; k > 0; k--) { const m = Math.floor(r() * (k + 1)); [starts[k], starts[m]] = [starts[m], starts[k]]; }
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    const k = (j * N + i) * 4, [sx, sy] = starts[(j * N + i) % starts.length];
+    const tx = CAN0.x + (i + .5) * cell, ty = CAN0.y + (j + .5) * cell;
+    const bend = (r() - .5) * 700, delay = r() * .5;
+    parts.push({ tx, ty, sx, sy, gray: 25 + r() * 215, bend, delay, col: [px[k], px[k + 1], px[k + 2]], wob: r() * 6.28 });
+  }
+  const [c0, c1] = ev.cl, T0 = c0 + .45, span = c1 - T0 - .55;
+  on(t => {
+    const vis = t > c0 - .05 && t < ev.land + .5;
+    op(g, vis ? 1 - P(t, ev.land - .1, ev.land + .35) : 0);
+    if (!vis) return;
+    ctx.setTransform(K, 0, 0, K, -VX * K, -VY * K);
+    ctx.clearRect(VX, VY, VW, VH);
+    const a = P(t, c0, c0 + .3);
+    for (const q of parts) {
+      const raw = P(t, T0 + q.delay, T0 + q.delay + span);
+      const e = ease.inOutCubic(raw);
+      // 弯弯的轨迹：沿起点到终点的垂直方向鼓出去；没出发前原地轻轻抖
+      const dx = q.tx - q.sx, dy = q.ty - q.sy, L = Math.hypot(dx, dy) || 1;
+      const bow = Math.sin(e * Math.PI) * q.bend;
+      const drift = (1 - e) * 6 * Math.sin(t * 7 + q.wob);
+      const x = lerp(q.sx, q.tx, e) - dy / L * bow + drift, y = lerp(q.sy, q.ty, e) + dx / L * bow + drift * .7;
+      const cm = ease.inCubic(P(raw, .4, 1));
+      ctx.globalAlpha = a;
+      ctx.fillStyle = `rgb(${lerp(q.gray, q.col[0], cm) | 0},${lerp(q.gray, q.col[1], cm) | 0},${lerp(q.gray, q.col[2], cm) | 0})`;
+      const sz = lerp(17, cell + .8, ease.inOutCubic(raw));
+      ctx.fillRect(x - sz / 2, y - sz / 2, sz, sz);
+    }
+    ctx.globalAlpha = 1;
+  });
+}
+
+// ===== 结尾 =====
+function buildEnding() {
+  const ev = EV, TX = 2060;
+  const a = txt(W, TX, 960, '下次看到 AI 画图先冒出一屏雪花', { size: 40, weight: 700, fill: MID });
+  const b = txt(W, TX, 1110, '别着急，', { size: 112, weight: 900, ls: 4 });
+  const c = txt(W, TX, 1250, '它正在擦呢。', { size: 112, weight: 900, ls: 4, fill: ACC });
+  rise(a, ev.e_next, { dy: 30 }); rise(b, ev.e_calm, { dy: 50 }); rise(c, ev.e_wipe, { dy: 50 });
+  const sign = txt(W, TX + 4, 1370, (C.brand && C.brand.name) || '', { size: 52, weight: 800, fill: ACC, ls: 4 });
+  rise(sign, ev.sign, { dy: 30 });
+  // 小团子举着抹布
+  const m = el('g', { opacity: 0 }, W);
+  // 有「举着抹布」贴纸时：抹布飞到手里之前是欢呼，落到手里那一刻换成举着抹布；没有就在欢呼贴纸手上补画一块
+  const HOLD = C.stickers.hold;
+  const im0 = el('image', { href: C.brand.mascot, x: -125, y: -125, width: 250, height: 250 }, m);
+  const im1 = HOLD && el('image', { href: `/assets/xiaotuanzi/${HOLD}`, x: -125, y: -125, width: 250, height: 250, opacity: 0 }, m);
+  const HAND = HOLD ? [-70, -39, .5, 0] : [92, -112, .8 / 1.3, -14];      // 抹布落点（贴纸坐标）、缩放、角度
+  const cl = el('g', { transform: `translate(${HAND[0]},${HAND[1]}) rotate(${HAND[3]})`, opacity: 0 }, m); if (!HOLD) cloth(cl, .8);
+  on(t => {
+    const p = P(t, ev.e_wipe - .2, ev.e_wipe + .35);
+    op(m, p > 0 ? clamp(p * 3) : 0);
+    const hop = Math.abs(Math.sin((t - ev.e_wipe) * 3.2)) * 18 * clamp((t - ev.e_wipe) * 2);
+    tr(m, 2890, 1240 - hop - 220 * (1 - ease.outBack(p, 1.5)), 1, Math.sin((t - ev.e_wipe) * 1.6) * 3);
+  });
+  // 擦雪花时，画布前面一块抹布来回擦
+  // 擦完沿弧线飞回小团子手里，手上那块这时才出现（同一时刻只有一块抹布）
+  const wc = el('g', { opacity: 0 }, W); cloth(wc, 1.3);
+  const BACK = [1.1, 1.6];
+  on(t => {
+    const u = t - ev.e_wipe;
+    op(cl, u >= BACK[1] ? 1 : 0);
+    if (HOLD) { op(im0, u >= BACK[1] ? 0 : 1); op(im1, u >= BACK[1] ? 1 : 0); }
+    op(wc, u > -.1 && u < BACK[1] ? 1 : 0);
+    const uw = Math.min(u, BACK[0]);
+    const wx = CAN0.x + CAN0.s / 2 + Math.sin(uw * 8) * 170, wy = CAN0.y + CAN0.s * .3 + uw * 200, wr = Math.sin(uw * 8) * 12;
+    const hop = Math.abs(Math.sin(u * 3.2)) * 18;
+    const hx = 2890 + HAND[0], hy = 1240 - hop + HAND[1];
+    const f = ease.inOutCubic(P(u, BACK[0], BACK[1]));
+    tr(wc, lerp(wx, hx, f), lerp(wy, hy, f) - Math.sin(f * Math.PI) * 260, lerp(1, HAND[2], f), lerp(wr, HAND[3], f));
+  });
+}
+
+// ---------- 字幕 ----------
+function buildSubs() {
+  (C.subs || []).forEach(sb => {
+    const g = el('g', { opacity: 0 }, HUD);
+    const bg = rrect(g, 0, 962, 0, 70, 35, 'rgba(255,255,255,.92)', { filter: 'url(#shadow)' });
+    const tx = txt(g, 960, 1012, sb.text, { size: 44, weight: 700, anchor: 'middle', ls: 1 });
+    const w = tx.getComputedTextLength() + 64;
+    bg.setAttribute('x', (960 - w / 2).toFixed(1)); bg.setAttribute('width', w.toFixed(1));
+    const [a, b] = sb.t;
+    on(t => op(g, clamp((t - a) / .06) * (1 - clamp((t - b + .06) / .06))));
+  });
+}
+
+// ---------- HUD：右上进度胶囊 ----------
+function buildHud() {
+  const ev = EV;
+  const g = el('g', { opacity: 0 }, HUD);
+  rrect(g, 1250, 46, 606, 64, 32, 'rgba(255,255,255,.86)', { filter: 'url(#shadow)' });
+  const dots = [];
+  for (let i = 0; i < 6; i++) {
+    dots.push(el('circle', { cx: 1288 + i * 42, cy: 78, r: 14.5, fill: PALE }, g));
+    txt(g, 1288 + i * 42, 85.5, String(i + 1), { size: 19, weight: 800, fill: WHITE, anchor: 'middle' });
+  }
+  const name = txt(g, 1546, 88, '', { size: 28, weight: 800 });
+  const tags = [1, 2, 3, 4, 5, 6].map(i => ev[`ch${i}_tag`]);
+  on(t => {
+    op(g, P(t, ev.ch1_tag - .1, ev.ch1_tag + .3) * (1 - P(t, ev.pull[0], ev.pull[0] + .4)));
+    let cur = 0;
+    tags.forEach((tt, i) => { if (t >= tt - .3) cur = i; });
+    dots.forEach((c, i) => c.setAttribute('fill', i < cur ? SLATE : i === cur ? ACC : PALE));
+    name.textContent = TAG_TITLES[cur];
+  });
+}
+
+// ---------- 镜头 ----------
+let KEYS;
+function camKeys() {
+  const ev = EV;
+  const k = (t, p, z, fly = false, dx = 0, dy = 0) => ({ t, x: p[0] + dx, y: p[1] + dy, z, fly });
+  return [
+    k(0, HOOK, 1.0), k(ev.fly1[0], HOOK, 1.03, false, 6, 3),
+    k(ev.fly1[1], C1, 1.0, true), k(ev.fly2[0], C1, 1.03, false, 6, 4),
+    k(ev.fly2[1], C2, 1.0, true), k(ev.fly3[0], C2, 1.03, false, 6, 4),
+    k(ev.fly3[1], C3, 1.0, true), k(ev.fly4[0], C3, 1.03, false, -6, 4),
+    k(ev.fly4[1], C4, 1.0, true), k(ev.fly5[0], C4, 1.03, false, -6, 4),
+    k(ev.fly5[1], C5, 1.0, true), k(ev.fly6[0], C5, 1.03, false, 0, 6),
+    k(ev.fly6[1], C6, 1.0, true), k(ev.pull[0], C6, 1.03, false, 6, 0),
+    k(ev.pull[1], C7, 1.0, true), k(ev.fly_cl[0], C7, 1.03),
+    k(ev.fly_cl[1], CANC, 1.1, true), k(ev.end_b - .3, CANC, 1.14),
+    k(ev.end_b + .9, HOOK, 1.0, true), k(C.duration, HOOK, 1.04),
+  ];
+}
+function camAt(t) {
+  let i = 0;
+  while (i < KEYS.length - 2 && t >= KEYS[i + 1].t) i++;
+  const a = KEYS[i], b = KEYS[i + 1];
+  const p = P(t, a.t, b.t);
+  if (!b.fly) return { x: lerp(a.x, b.x, p), y: lerp(a.y, b.y, p), z: lerp(a.z, b.z, p) };
+  const e = ease.inOutQuint(p);
+  const lz = Math.exp(lerp(Math.log(a.z), Math.log(b.z), ease.inOutCubic(p)));
+  const dist = Math.hypot(b.x - a.x, b.y - a.y);
+  const dip = Math.min(.22, dist / 12000) * Math.sin(Math.PI * p);
+  return { x: lerp(a.x, b.x, e), y: lerp(a.y, b.y, e), z: lz * (1 - dip) };
+}
+
+// ---------- 入口 ----------
+window.DEMO = { width: 1920, height: 1080, fps: 30, duration: 60 };
+window.renderAt = async (t) => {
+  const cam = camAt(t);
+  CAM.setAttribute('transform', `translate(960,540) scale(${cam.z.toFixed(5)}) translate(${(-cam.x).toFixed(2)},${(-cam.y).toFixed(2)})`);
+  for (const f of U) f(t, cam);
+};
+(async () => {
+  C = await (await fetch('cues.json')).json();
+  EV = C.ev;
+  window.DEMO.duration = C.duration;
+  await document.fonts.load('800 40px NS', 'AI画图怎么从一团雪花变出一张画先学认雾往回擦文字指路'); await document.fonts.load('600 30px JB', '0123456789/'); await document.fonts.load('800 40px IN', 'AI');
+  await document.fonts.ready;
+  await Promise.all(Object.values(C.stickers).concat([C.brand.mascot.split('/').pop()]).map(f => new Promise(res => { const im = new Image(); im.onload = im.onerror = res; im.src = `/assets/xiaotuanzi/${f}`; })));
+  buildPics();
+  KEYS = camKeys();
+  build();
+  const q = new URLSearchParams(location.search);
+  await window.renderAt(+(q.get('t') || 0));
+  window.__ready = true;
+})();
+</script>
+</body>
+</html>

@@ -4,3 +4,12 @@ __pycache__/
 *.mp4
 *.wav
 *.mp3
+
+# 代码动画工程：本机和云端各自生成的依赖、产物（成片用草稿 Release 交付，见 AI视频/代码动画/云端/README.md）
+AI视频/代码动画/*/node_modules
+AI视频/代码动画/*/lib
+AI视频/代码动画/*/.venv
+AI视频/代码动画/*/film/out/
+*.bak*
+# 配音要提交：节拍和字幕都按它对时，重配要花额度
+!AI视频/代码动画/*/voice/lines/*.mp3

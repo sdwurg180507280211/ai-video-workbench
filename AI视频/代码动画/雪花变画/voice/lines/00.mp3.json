@@ -1,0 +1,190 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf3-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/oYgbW1ALbD2i6SIngGAAOxUfG60QAiEBA2BBBa?x-expires=1792759838&x-signature=HhhM%2FmZDaJrmLvKPCBQyyJg27RM%3D",
+  "req_text_length": 33,
+  "sentences": [
+   {
+    "endTime": 2.895,
+    "startTime": 0.585,
+    "text": "AI 画图，不是一笔一笔画的。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.695,
+      "startTime": 0.585,
+      "word": "AI"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.925,
+      "startTime": 0.755,
+      "word": "画"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.245,
+      "startTime": 0.925,
+      "word": "图，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.605,
+      "startTime": 1.495,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.775,
+      "startTime": 1.605,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.915,
+      "startTime": 1.775,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.095,
+      "startTime": 1.915,
+      "word": "笔"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.165,
+      "startTime": 2.095,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.315,
+      "startTime": 2.165,
+      "word": "笔"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.665,
+      "startTime": 2.315,
+      "word": "画"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.895,
+      "startTime": 2.665,
+      "word": "的。"
+     }
+    ]
+   },
+   {
+    "endTime": 7.57,
+    "startTime": 3.275,
+    "text": "它是从一屏雪花里，一点一点擦出来的。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 3.435,
+      "startTime": 3.275,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.615,
+      "startTime": 3.435,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.835,
+      "startTime": 3.615,
+      "word": "从"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.995,
+      "startTime": 3.835,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.305,
+      "startTime": 3.995,
+      "word": "屏"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.555,
+      "startTime": 4.305,
+      "word": "雪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.815,
+      "startTime": 4.555,
+      "word": "花"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.985,
+      "startTime": 4.815,
+      "word": "里，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.435,
+      "startTime": 5.285,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.655,
+      "startTime": 5.435,
+      "word": "点"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.795,
+      "startTime": 5.655,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.105,
+      "startTime": 5.795,
+      "word": "点"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.525,
+      "startTime": 6.215,
+      "word": "擦"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.695,
+      "startTime": 6.525,
+      "word": "出"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.895,
+      "startTime": 6.695,
+      "word": "来"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.075,
+      "startTime": 6.895,
+      "word": "的。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 33,
+  "task_id": "ffe0b450-08f2-4124-af91-d01488d69c85",
+  "task_status": 2,
+  "url_expire_time": 1792759838
+ },
+ "message": "ok"
+}

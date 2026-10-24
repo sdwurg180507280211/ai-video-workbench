@@ -1,0 +1,190 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf6-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/osCcNkT2EFGAk00AIqEDkefwAA6dgnw7AC2uBt?x-expires=1792759808&x-signature=mzViCnUwwjNccsLS3laMu4wqyLU%3D",
+  "req_text_length": 33,
+  "sentences": [
+   {
+    "endTime": 3.855,
+    "startTime": 0.325,
+    "text": "这股劲儿还能调大小：太小，它不太听你的；",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.485,
+      "startTime": 0.325,
+      "word": "这"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.605,
+      "startTime": 0.485,
+      "word": "股"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.785,
+      "startTime": 0.605,
+      "word": "劲"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.925,
+      "startTime": 0.785,
+      "word": "儿"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.105,
+      "startTime": 0.965,
+      "word": "还"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.235,
+      "startTime": 1.105,
+      "word": "能"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.445,
+      "startTime": 1.235,
+      "word": "调"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.625,
+      "startTime": 1.445,
+      "word": "大"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.865,
+      "startTime": 1.835,
+      "word": "小："
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.305,
+      "startTime": 2.145,
+      "word": "太"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.635,
+      "startTime": 2.305,
+      "word": "小，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.955,
+      "startTime": 2.815,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.075,
+      "startTime": 2.955,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.225,
+      "startTime": 3.075,
+      "word": "太"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.445,
+      "startTime": 3.225,
+      "word": "听"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.615,
+      "startTime": 3.445,
+      "word": "你"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.855,
+      "startTime": 3.615,
+      "word": "的；"
+     }
+    ]
+   },
+   {
+    "endTime": 7.155,
+    "startTime": 4.115,
+    "text": "太大，颜色太艳、线条太硬。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 4.315,
+      "startTime": 4.115,
+      "word": "太"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.595,
+      "startTime": 4.315,
+      "word": "大，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.925,
+      "startTime": 4.795,
+      "word": "颜"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.085,
+      "startTime": 4.925,
+      "word": "色"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.365,
+      "startTime": 5.085,
+      "word": "太"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.395,
+      "startTime": 5.365,
+      "word": "艳、"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.925,
+      "startTime": 5.685,
+      "word": "线"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.085,
+      "startTime": 5.925,
+      "word": "条"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.255,
+      "startTime": 6.085,
+      "word": "太"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.535,
+      "startTime": 6.255,
+      "word": "硬。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 33,
+  "task_id": "934fb590-7335-45a6-aefe-80e1a07486b0",
+  "task_status": 2,
+  "url_expire_time": 1792759808
+ },
+ "message": "ok"
+}

@@ -1,0 +1,293 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf6-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/oI7qFQn6ANAiAtokgIF02kCDxfPYJf0EA0CG2A?x-expires=1792759810&x-signature=0wFaYvxsB2IuYFAiekrST6%2Fi6CE%3D",
+  "req_text_length": 48,
+  "sentences": [
+   {
+    "endTime": 2.185,
+    "startTime": 0.385,
+    "text": "为什么每次画的都不一样？",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.495,
+      "startTime": 0.385,
+      "word": "为"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.645,
+      "startTime": 0.495,
+      "word": "什"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.745,
+      "startTime": 0.645,
+      "word": "么"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.925,
+      "startTime": 0.745,
+      "word": "每"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.185,
+      "startTime": 0.925,
+      "word": "次"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.365,
+      "startTime": 1.185,
+      "word": "画"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.475,
+      "startTime": 1.365,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.625,
+      "startTime": 1.475,
+      "word": "都"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.755,
+      "startTime": 1.625,
+      "word": "不"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.915,
+      "startTime": 1.755,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.185,
+      "startTime": 1.915,
+      "word": "样？"
+     }
+    ]
+   },
+   {
+    "endTime": 5.075,
+    "startTime": 2.425,
+    "text": "因为起点那屏雪花是随机的。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 2.595,
+      "startTime": 2.425,
+      "word": "因"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.805,
+      "startTime": 2.595,
+      "word": "为"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.125,
+      "startTime": 2.805,
+      "word": "起"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.375,
+      "startTime": 3.125,
+      "word": "点"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.605,
+      "startTime": 3.425,
+      "word": "那"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.795,
+      "startTime": 3.605,
+      "word": "屏"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.985,
+      "startTime": 3.795,
+      "word": "雪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.215,
+      "startTime": 3.985,
+      "word": "花"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.385,
+      "startTime": 4.215,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.585,
+      "startTime": 4.385,
+      "word": "随"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.835,
+      "startTime": 4.585,
+      "word": "机"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.075,
+      "startTime": 4.835,
+      "word": "的。"
+     }
+    ]
+   },
+   {
+    "endTime": 10.175,
+    "startTime": 5.355,
+    "text": "同一个模型、同样的设置和种子，就能画出同一张。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 5.545,
+      "startTime": 5.355,
+      "word": "同"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.645,
+      "startTime": 5.545,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.765,
+      "startTime": 5.645,
+      "word": "个"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.045,
+      "startTime": 5.765,
+      "word": "模"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.075,
+      "startTime": 6.045,
+      "word": "型、"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.715,
+      "startTime": 6.485,
+      "word": "同"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.825,
+      "startTime": 6.715,
+      "word": "样"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.925,
+      "startTime": 6.825,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.195,
+      "startTime": 6.925,
+      "word": "设"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.385,
+      "startTime": 7.195,
+      "word": "置"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.555,
+      "startTime": 7.385,
+      "word": "和"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.815,
+      "startTime": 7.555,
+      "word": "种"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.075,
+      "startTime": 7.815,
+      "word": "子，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.415,
+      "startTime": 8.265,
+      "word": "就"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.565,
+      "startTime": 8.415,
+      "word": "能"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.765,
+      "startTime": 8.565,
+      "word": "画"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.945,
+      "startTime": 8.765,
+      "word": "出"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.135,
+      "startTime": 8.945,
+      "word": "同"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.275,
+      "startTime": 9.135,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.565,
+      "startTime": 9.275,
+      "word": "张。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 48,
+  "task_id": "2834072d-bb85-4281-9ec7-80866177ed24",
+  "task_status": 2,
+  "url_expire_time": 1792759810
+ },
+ "message": "ok"
+}

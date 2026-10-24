@@ -1,0 +1,358 @@
+{
+ "code": 20000000,
+ "data": {
+  "audio_url": "https://lf26-lab-speech-tt-sign.bytespeech.com/tos-cn-o-14155/oYF2aYAAIfG3bIfLSwIKGrlkeAzC2SAAIuJ1eD?x-expires=1792759905&x-signature=Lf2yig7L2FKDafguSVKBHArFVpQ%3D",
+  "req_text_length": 62,
+  "sentences": [
+   {
+    "endTime": 7.625,
+    "startTime": 0.285,
+    "text": "先看它怎么学：给很多图一步步撒上噪点，也就是那些雪花点，就像车窗慢慢起雾。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 0.485,
+      "startTime": 0.285,
+      "word": "先"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.645,
+      "startTime": 0.485,
+      "word": "看"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.815,
+      "startTime": 0.645,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 0.965,
+      "startTime": 0.815,
+      "word": "怎"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.055,
+      "startTime": 0.965,
+      "word": "么"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.375,
+      "startTime": 1.345,
+      "word": "学："
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.815,
+      "startTime": 1.675,
+      "word": "给"
+     },
+     {
+      "confidence": 0,
+      "endTime": 1.985,
+      "startTime": 1.815,
+      "word": "很"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.155,
+      "startTime": 1.985,
+      "word": "多"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.565,
+      "startTime": 2.155,
+      "word": "图"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.755,
+      "startTime": 2.615,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 2.905,
+      "startTime": 2.755,
+      "word": "步"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.035,
+      "startTime": 2.905,
+      "word": "步"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.205,
+      "startTime": 3.035,
+      "word": "撒"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.385,
+      "startTime": 3.205,
+      "word": "上"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.615,
+      "startTime": 3.385,
+      "word": "噪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 3.875,
+      "startTime": 3.615,
+      "word": "点，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.305,
+      "startTime": 4.195,
+      "word": "也"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.405,
+      "startTime": 4.305,
+      "word": "就"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.535,
+      "startTime": 4.405,
+      "word": "是"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.635,
+      "startTime": 4.535,
+      "word": "那"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.805,
+      "startTime": 4.635,
+      "word": "些"
+     },
+     {
+      "confidence": 0,
+      "endTime": 4.995,
+      "startTime": 4.805,
+      "word": "雪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.205,
+      "startTime": 4.995,
+      "word": "花"
+     },
+     {
+      "confidence": 0,
+      "endTime": 5.445,
+      "startTime": 5.205,
+      "word": "点，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.035,
+      "startTime": 5.915,
+      "word": "就"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.205,
+      "startTime": 6.035,
+      "word": "像"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.435,
+      "startTime": 6.205,
+      "word": "车"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.735,
+      "startTime": 6.435,
+      "word": "窗"
+     },
+     {
+      "confidence": 0,
+      "endTime": 6.875,
+      "startTime": 6.735,
+      "word": "慢"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.015,
+      "startTime": 6.875,
+      "word": "慢"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.305,
+      "startTime": 7.015,
+      "word": "起"
+     },
+     {
+      "confidence": 0,
+      "endTime": 7.625,
+      "startTime": 7.305,
+      "word": "雾。"
+     }
+    ]
+   },
+   {
+    "endTime": 12.985,
+    "startTime": 7.875,
+    "text": "它天天练一件事：看一眼起雾的图，猜出撒进去的噪点。",
+    "words": [
+     {
+      "confidence": 0,
+      "endTime": 7.995,
+      "startTime": 7.875,
+      "word": "它"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.185,
+      "startTime": 7.995,
+      "word": "天"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.385,
+      "startTime": 8.185,
+      "word": "天"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.545,
+      "startTime": 8.385,
+      "word": "练"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.665,
+      "startTime": 8.545,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 8.865,
+      "startTime": 8.665,
+      "word": "件"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.115,
+      "startTime": 9.085,
+      "word": "事："
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.665,
+      "startTime": 9.465,
+      "word": "看"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.735,
+      "startTime": 9.665,
+      "word": "一"
+     },
+     {
+      "confidence": 0,
+      "endTime": 9.915,
+      "startTime": 9.735,
+      "word": "眼"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.165,
+      "startTime": 9.915,
+      "word": "起"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.315,
+      "startTime": 10.165,
+      "word": "雾"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.435,
+      "startTime": 10.315,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 10.835,
+      "startTime": 10.435,
+      "word": "图，"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.195,
+      "startTime": 10.995,
+      "word": "猜"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.345,
+      "startTime": 11.195,
+      "word": "出"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.545,
+      "startTime": 11.345,
+      "word": "撒"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.665,
+      "startTime": 11.545,
+      "word": "进"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.805,
+      "startTime": 11.665,
+      "word": "去"
+     },
+     {
+      "confidence": 0,
+      "endTime": 11.925,
+      "startTime": 11.805,
+      "word": "的"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.135,
+      "startTime": 11.925,
+      "word": "噪"
+     },
+     {
+      "confidence": 0,
+      "endTime": 12.375,
+      "startTime": 12.135,
+      "word": "点。"
+     }
+    ]
+   }
+  ],
+  "synthesize_text_length": 62,
+  "task_id": "78f8181b-8924-4bfb-a06e-cb949aab5717",
+  "task_status": 2,
+  "url_expire_time": 1792759905
+ },
+ "message": "ok"
+}
