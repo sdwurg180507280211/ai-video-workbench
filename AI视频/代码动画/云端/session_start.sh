@@ -16,6 +16,8 @@ fetch_skill_raw() {
     mkdir -p "/opt/my-skills/skills/opus-code-video/$(dirname "$f")"
     curl -fsSL -A xiaotuanzi-routine/1 "$base/$f" -o "/opt/my-skills/skills/opus-code-video/$f" || echo "[session] 下载失败 $f"
   done
+  local rs=/opt/my-skills/skills/seedance-short-drama/scripts/review_script.py   # 剧本审稿（DeepSeek）
+  mkdir -p "$(dirname "$rs")" && curl -fsSL -A xiaotuanzi-routine/1 "https://raw.githubusercontent.com/$SKILLS_REPO/main/skills/seedance-short-drama/scripts/review_script.py" -o "$rs" || echo "[session] 下载失败 review_script.py"
 }
 if [ -d /opt/my-skills/.git ]; then git -C /opt/my-skills pull -q --ff-only 2>/dev/null || true
 else rm -rf /opt/my-skills; git clone -q --depth 1 "https://github.com/$SKILLS_REPO" /opt/my-skills 2>/dev/null || fetch_skill_raw; fi
@@ -38,5 +40,5 @@ ok() { [ "$1" ] && echo "有" || echo "缺"; }
 echo "[session] 视频制作环境：ffmpeg $(ok "$(command -v ffmpeg)")，Chrome $(ok "$(ls /opt/chrome 2>/dev/null)")，" \
      "Python 库 $(ok "$(ls /opt/venv-video/bin/python 2>/dev/null)")，mgaudio $(ok "$(ls -d /opt/mg-styles-15/lib/audio 2>/dev/null)")，" \
      "视频技能 $(ok "$(ls ~/ideaProjects/my-skills/skills/opus-code-video/SKILL.md 2>/dev/null)")；" \
-     "IMAGE_API_KEY $(ok "${IMAGE_API_KEY:-}")，DOUBAO_SPEECH_API_KEY $(ok "${DOUBAO_SPEECH_API_KEY:-}")。做片前先读 AI视频/代码动画/云端/README.md"
+     "IMAGE_API_KEY $(ok "${IMAGE_API_KEY:-}")，DOUBAO_SPEECH_API_KEY $(ok "${DOUBAO_SPEECH_API_KEY:-}")，DEEPSEEK_API_KEY $(ok "${DEEPSEEK_API_KEY:-}")。做片前先读 AI视频/代码动画/云端/README.md"
 exit 0

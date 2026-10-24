@@ -13,6 +13,7 @@
      IMAGE_API_KEY=…            # 生图网关，和公众号环境同一个
      IMAGE_API_BASE=https://yunyihui.mystic.net.cn/image-api/v1
      DOUBAO_SPEECH_API_KEY=…    # 豆包语音，Mac 上 ~/.config/volc-speech/api-key
+     DEEPSEEK_API_KEY=…         # 剧本审稿，Mac 上 ~/.config/deepseek/api-key
      BASH_DEFAULT_TIMEOUT_MS=600000
      BASH_MAX_TIMEOUT_MS=3600000
      ```
@@ -46,6 +47,10 @@
   它会把原画质成片、720p 小样和封面传到 GitHub 的草稿 Release，只有仓库主人看得到。用户在仓库的 Releases 页下载。
 - **要提交的**：画面代码、节拍、配乐脚本、配音 mp3（`voice/lines/` 已在 `.gitignore` 里放行）、新贴纸、封面插画原图、封面 jpg、`交接.md`、`作品.json`。
 - **密钥**：只报告「有」或「没有」，不打印，不写进文件，不 `set -x`。
+
+## 每日定时任务
+
+每天全自动做一支片（用户 2026-10-24 授权，不等批稿），提示词和设置见 [每日定时任务.md](每日定时任务.md)，选题见 [../选题清单.md](../选题清单.md)。
 
 ## 共用的东西
 
