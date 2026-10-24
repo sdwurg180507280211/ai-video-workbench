@@ -7,6 +7,12 @@ ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 SKILLS_REPO=sdwurg180507280211/my-skills
 mkdir -p ~/ideaProjects
 
+# 环境没配安装脚本（或缓存过期没装上）时，在这里补装一遍：慢几分钟，但能跑
+if [ ! -e /opt/chrome ] || [ ! -x /opt/venv-video/bin/python ]; then
+  echo "[session] 没找到 Chrome 或 Python 库，现在运行 setup.sh 补装（建议把它贴进环境的 Setup script，就不用每次装）"
+  bash "$ROOT/AI视频/代码动画/云端/setup.sh" 2>&1 | grep '^\[setup\]' || echo "[session] setup.sh 有失败的步骤"
+fi
+
 # 视频技能每次会话拉最新的：先 git，不行就按清单从 raw.githubusercontent.com 下载
 fetch_skill_raw() {
   local base="https://raw.githubusercontent.com/$SKILLS_REPO/main/skills/opus-code-video" f
@@ -31,8 +37,8 @@ else rm -rf /opt/my-skills; git clone -q --depth 1 "https://github.com/$SKILLS_R
 # 每支片：lib → mgaudio，.venv → /opt/venv-video，node_modules 按 package.json 装
 for pkg in "$ROOT"/AI视频/代码动画/*/package.json; do
   d=$(dirname "$pkg")
-  [ -e "$d/lib" ] || ln -s ~/ideaProjects/mg-styles-15/lib "$d/lib"
-  [ -e "$d/.venv" ] || ln -s /opt/venv-video "$d/.venv"
+  [ -e "$d/lib" ] || [ -L "$d/lib" ] || ln -s ~/ideaProjects/mg-styles-15/lib "$d/lib"   # -L：目标还没装好的软链接也算已有
+  [ -e "$d/.venv" ] || [ -L "$d/.venv" ] || ln -s /opt/venv-video "$d/.venv"
   [ -d "$d/node_modules" ] || (cd "$d" && npm install --no-audit --no-fund --loglevel=error >/dev/null 2>&1) || echo "[session] npm install 失败：$d"
 done
 

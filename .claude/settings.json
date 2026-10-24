@@ -4,7 +4,7 @@
       {
         "matcher": "startup|resume",
         "hooks": [
-          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/AI视频/代码动画/云端/session_start.sh\"", "timeout": 300 }
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/AI视频/代码动画/云端/session_start.sh\"", "timeout": 900 }
         ]
       }
     ]
