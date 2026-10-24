@@ -265,6 +265,18 @@ async function main() {
       const ff = ffmpeg(['-f', 'image2pipe', '-framerate', String(FPS * MB), '-c:v', 'png', '-i', '-',
         '-vf', vf, '-r', String(FPS), '-c:v', 'ffv1', '-level', '3', '-threads', '2', '-pix_fmt', 'bgr0', seg]);
       for (let f = a; f < b; f++) {
+        // 页面可以声明这一帧不需要运动模糊（window.blurAt(t) 为 false，例如镜头不动时）：只截一张，重复写 MB 次，省掉 MB-1 次截图
+        if (MB > 1 && !TM && await page.evaluate((t) => typeof window.blurAt === 'function' && !window.blurAt(t), f / FPS)) {
+          await seek(page, f / FPS);
+          const buf = await shot(page, W, H);
+          for (let s = 0; s < MB; s++) await writeAsync(ff.p.stdin, buf);
+          doneFrames++;
+          if (doneFrames % 30 === 0) {
+            const el = (performance.now() - t0) / 1000;
+            console.log(`  ${doneFrames}/${f1 - f0} frames  ${el.toFixed(1)}s  (${(el / doneFrames).toFixed(2)}s/frame)`);
+          }
+          continue;
+        }
         for (let s = 0; s < MB; s++) {
           let t = MB > 1 ? Math.max(0, (f + SHUTTER * ((s + 0.5) / MB - 0.5)) / FPS) : f / FPS;
           if (TM) {

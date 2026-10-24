@@ -974,6 +974,13 @@ function camAt(t) {
 
 // ---------- 入口 ----------
 window.DEMO = { width: 1920, height: 1080, fps: 30, duration: 60 };
+// 渲染器问：这一帧要不要运动模糊？只有镜头在飞（前后各多 2 帧）或奖杯砸下镜头抖动时才要，其余帧只截一张
+window.blurAt = (t) => {
+  if (!KEYS) return true;
+  const pad = 2 / 30;
+  for (let i = 1; i < KEYS.length; i++) if (KEYS[i].fly && t > KEYS[i - 1].t - pad && t < KEYS[i].t + pad) return true;
+  return t > EV.land - pad && t < EV.land + .5;
+};
 window.renderAt = async (t) => {
   const cam = camAt(t);
   // 奖杯砸下时镜头抖一下
